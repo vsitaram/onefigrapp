@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+	<style type="text/css">
+	</style>
+
+</head>
+<body>
+	<div class = "row" style="height: 1000px;">
+	  <label>Materialize Multi Select</label>
+	  <select multiple class="select_all">
+	    <option value="" disabled selected>Choose your option</option>
+	    <option value = "1">Mango</option>
+	    <option value = "24">Orange</option>
+	    <option value = "3">Apple</option>
+	    <option value = "4">Cucumber</option>
+	    <option value = "5">Litchi</option>
+	  </select>              
+	</div>  
+
+	<div class="input-field col s12">
+	    <select>
+	      <option value="" disabled selected>Choose your option</option>
+	      <option value="1">Option 1</option>
+	      <option value="2">Option 2</option>
+	      <option value="3">Option 3</option>
+	    </select>
+	    <label>Materialize Select</label>
+	 </div>
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+		    // $('select').val([1]);
+		    $('select').formSelect();
+		    $('select.select_all').siblings('ul').prepend('<li id=sm_select_all><span>Select All</span></li>');
+		    $('li#sm_select_all').on('click', function () {
+		      var jq_elem = $(this), 
+		          jq_elem_span = jq_elem.find('span'),
+		          select_all = jq_elem_span.text() == 'Select All',
+		          set_text = select_all ? 'Select None' : 'Select All';
+		      jq_elem_span.text(set_text);
+		      jq_elem.siblings('li').filter(function() {
+		        return $(this).find('input').prop('checked') != select_all;
+		      }).click();
+		    });
+		})
+	</script>
+
+</body>
+</html>

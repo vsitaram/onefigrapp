@@ -1,0 +1,30 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+django = "*"
+boto3 = "*"
+django-storages = "*"
+pandas = "*"
+requests = "*"
+pandas-datareader = "*"
+numpy = "*"
+scipy = "*"
+sklearn = "*"
+statsmodels = "*"
+setuptools = "*"
+python-decouple = "*"
+dj-database-url = "*"
+gunicorn = "*"
+whitenoise = "*"
+psycopg2 = "*"
+django-heroku = "*"
+holidays = "*"
+django-cleanup = "*"
+
+[requires]
+python_version = "3.6"

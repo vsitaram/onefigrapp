@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design for Bootstrap</title>
+  <!-- MDB icon -->
+  <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  {% load static %}
+
+  <!-- MDB icon -->
+  <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{% static 'app/css/bootstrap.min.css' %}">
+  <!-- Material Design Bootstrap -->
+  <link rel="stylesheet" href="{% static 'app/css/mdb.min.css' %}">
+  <!-- MDBootstrap Datatables  -->
+  <link rel="stylesheet" href="{% static 'app/css/addons/datatables.min.css' %}">
+  <!-- Your custom styles (optional) -->
+  <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+
+  <style type="text/css">
+    #breadcrumb a {
+      color: #E57200;
+    }
+
+    hr {
+      margin-bottom: 0;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <!--Navbar-->
+  <nav class="navbar navbar-dark" style="background-color: #232d4b;">
+    <a class="navbar-brand" href="{% url 'app:index' %}">
+      <img src="{% static 'app/img/uva_library_logo.svg' %} " height="30" alt="UVA Library">
+    </a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-sm my-2 my-sm-0 rounded text-white" href="{% url 'app:logout' %}" style="background-color: #E57200">Logout</a>
+    {% else %}
+        <a class="btn btn-sm my-2 my-sm-0 rounded text-white" href="{% url 'app:login' %}" style="background-color: #E57200">Login</a>
+    {% endif %}
+  </nav>
+  <!-- Navbar -->
+
+  <main>
+    <div class="container-fluid" id="breadcrumb_container">
+      <div class="row pt-3" style="background-color: #141e3c">
+        <p class="ml-4 text-white"><a href="{% url 'app:tools' %}" style="color: #E57200">All Tools</a>  <i class="fas fa-chevron-right mx-2" style="font-size:12px;"></i> Journals by Discipline</p>
+      </div>
+    </div>
+    
+    <div class="container my-5" id="title_description">
+      <h3 class="mb-4">Journals by Discipline Tool</h3>
+      <p>Descriptions and important notes</p>
+    </div>
+
+    <hr class="orange lighten-4">
+
+    <div class="container-fluid" id="metrics_data">
+      <div class="row">
+        <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
+          <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
+            <h4 class="mb-4">Disciplines</h4>
+
+            <select class="browser-default custom-select mb-5">
+              <option selected>Select Discipline</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+
+            <h4 class="mb-3">Metrics</h4>
+
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="metrics_downloads" checked>
+              <label class="custom-control-label" for="metrics_downloads">Downloads</label>
+            </div>
+
+            <div id="metrics_downloads_options" class="ml-4">
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
+                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent</label>
+              </div>
+
+              <div id="metrics_downloads_options_recent_types" class="ml-4">
+                <div class="custom-control custom-checkbox mb-2">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_count" checked>
+                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_count">Count</label>
+                </div>
+
+                <div class="custom-control custom-checkbox mb-2">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_percent">
+                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_percent">Percent</label>
+                </div>
+              </div>
+              
+
+              <div class="custom-control custom-checkbox mb-2">
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
+                <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
+              </div>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="metrics_publications">
+              <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="metrics_citations">
+              <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <div class="ml-xl-3 text-center pt-3 col-xl-6">
+              <button type="button" class="btn btn-sm text-white" id="metrics_show_all" style="background-color: #E57200;">Show All</button>
+            </div>
+            <div class="ml-xl-n5 text-center pt-3 col-xl-6">
+              <button type="button" class="btn btn-sm text-white" id="metrics_hide_all" style="background-color: #E57200;">Hide All</button>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-md-8 pt-3" style="">
+          <!-- Downloads -->
+          <div id="downloads">
+            <!-- Recent Downloads -->
+            <div id="downloads_recent">
+              <!-- Recent Downloads Count -->
+              <div id="downloads_recent_count">
+                <h4 class="mb-5" id="downloads_recent_count_title">Journals by Downloads - Recent (Counts)</h4>
+                <div id="downloads_recent_count_data" style="width:100%; height:400px;"></div>
+              </div>
+              <!-- Recent Downloads Percent -->
+              <div id="downloads_recent_percent">
+                <h4 class="mb-5" id="downloads_recent_percent_title">Journals by Downloads - Recent (Percent)</h4>
+                <div id="downloads_recent_percent_data" style="width:100%; height:400px;"></div>
+              </div>
+            </div>
+            <div id="downloads_alltime">
+              <h4 class="mb-5" id="downloads_alltime_title">Journals by Downloads - All Time</h4>
+              <div id="downloads_alltime_data" style="width:100%; height:400px;"></div>
+            </div>
+          </div>
+
+          <div id="publications">
+            <h4 class="mb-5" id="publications_title">Journals by Publications by UVA Authors</h4>
+            <div id="publications_data" style="width:100%; height:400px;"></div>
+          </div>
+
+          <div id="citations">
+            <h4 class="mb-5" id="citations_title">Journals by Citations by UVA Authors</h4>
+            <div id="citations_data" style="width:100%; height:400px;"></div>
+          </div>
+          
+          
+
+        </div>
+      </div>
+    </div>
+  </main>
+  
+
+  <!-- jQuery -->
+  <script type="text/javascript" src="{% static 'app/js/jquery.min.js' %}"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="{% static 'app/js/popper.min.js' %}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="{% static 'app/js/bootstrap.min.js' %}"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="{% static 'app/js/mdb.min.js' %}"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <!-- Your custom scripts (optional) -->
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      $('#downloads_recent_percent').hide();
+      $('#downloads_alltime').hide();
+      $('#publications').hide();
+      $('#citations').hide();
+    });
+
+    $("input[id='metrics_downloads']").on('change', function() {
+      if( $(this).is(':checked') ) {
+        $('#metrics_downloads_options').show();
+        if( $("input[id='metrics_downloads_options_recent']").is(':checked')) {
+          $("input[id='metrics_downloads_options_recent_types']").show();
+        }
+        else {
+          $("input[id='metrics_downloads_options_recent_types']").hide(); 
+        }
+        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
+          $('#downloads_recent_count').show();
+        }
+        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
+          $('#downloads_recent_percent').show();
+        }
+        if( $("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
+          $('#downloads_alltime').show();
+        }
+      } else {
+        $('#metrics_downloads_options').hide();
+        $('#downloads_recent_count').hide();
+        $('#downloads_recent_percent').hide();
+        $('#downloads_alltime').hide();
+      }
+    });
+
+    $("input[id='metrics_downloads_options_recent']").on('change', function() {
+      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
+          $('#metrics_downloads_options_recent_types').show();
+          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
+            $('#downloads_recent_count').show();
+          }
+          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
+            $('#downloads_recent_percent').show();
+          }
+      }          
+      else {
+        $('#metrics_downloads_options_recent_types').hide();
+        $('#downloads_recent_count').hide();
+        $('#downloads_recent_percent').hide();
+      }
+    });
+
+    $("input[id='metrics_downloads_options_recent_types_count']").on('change', function() {
+      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
+        $('#downloads_recent_count').show();
+      }          
+      else {
+        $('#downloads_recent_count').hide();
+      }
+    });
+
+    $("input[id='metrics_downloads_options_recent_types_percent']").on('change', function() {
+      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
+        $('#downloads_recent_percent').show();
+      }          
+      else {
+        $('#downloads_recent_percent').hide();
+      }
+    });
+
+    $("input[id='metrics_downloads_options_alltime']").on('change', function() {
+      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
+          $('#downloads_alltime').show();
+      }          
+      else {
+        $('#downloads_alltime').hide();
+      }
+    });
+
+    $("input[id='metrics_publications']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#publications').show();
+      }          
+      else {
+        $('#publications').hide();
+      }
+    });
+
+    $("input[id='metrics_citations']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#citations').show();
+      }          
+      else {
+        $('#citations').hide();
+      }
+    });
+
+    $('#metrics_show_all').on('click', function() {
+      $('#downloads_recent_count').show();
+      $('#downloads_recent_percent').show();
+      $('#downloads_alltime').show();
+      $('#publications').show();
+      $('#citations').show();
+
+      $("#metrics_downloads_options").show();
+      $("#metrics_downloads_options_recent_types").show();
+
+      $("input[id='metrics_downloads']").prop('checked', true);
+      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
+      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
+      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
+      $("input[id='metrics_publications']").prop('checked', true);
+      $("input[id='metrics_citations']").prop('checked', true);
+    });
+
+    $('#metrics_show_all').on('click', function() {
+      $('#downloads_recent_count').show();
+      $('#downloads_recent_percent').show();
+      $('#downloads_alltime').show();
+      $('#publications').show();
+      $('#citations').show();
+
+      $("#metrics_downloads_options").show();
+      $("#metrics_downloads_options_recent_types").show();
+
+      $("input[id='metrics_downloads']").prop('checked', true);
+      $("input[id='metrics_downloads_options_recent']").prop('checked', true);
+      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
+      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
+      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
+      $("input[id='metrics_publications']").prop('checked', true);
+      $("input[id='metrics_citations']").prop('checked', true);
+    });
+
+    $('#metrics_hide_all').on('click', function() {
+      $('#downloads_recent_count').hide();
+      $('#downloads_recent_percent').hide();
+      $('#downloads_alltime').hide();
+      $('#publications').hide();
+      $('#citations').hide();
+
+      $("#metrics_downloads_options").hide();
+      $("#metrics_downloads_options_recent_types").hide();
+
+      $("input[id='metrics_downloads']").prop('checked', false);
+      $("input[id='metrics_downloads_options_recent']").prop('checked', false);
+      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', false);
+      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', false);
+      $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
+      $("input[id='metrics_publications']").prop('checked', false);
+      $("input[id='metrics_citations']").prop('checked', false);
+    });
+
+
+    $(window).on('load resize', function() {
+      $('#metrics_column').height( function() {
+        if( $(document).width() < 768) {
+          heights = 0;
+          $('#metrics_column').children().each( function() {
+            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+            console.log($(this).attr('id') + ": " + heights);
+          });
+          // alert(heights);
+          console.log("Total heights: " + heights);
+          console.log("Window height: " + $(window).height());
+          console.log("Result: " + heights);
+
+          return heights + 64;
+        }
+        else {
+          elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
+          heights = 0;
+          $(elements.join(', ')).each( function() {
+            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+            console.log($(this).attr('id')+ ": " + heights);
+          });
+          // alert(heights);
+          console.log("Total heights: " + heights);
+          console.log("Document height: " + $(document).height());
+          console.log("Result: " + ($(document).height() - heights));
+
+          return $(document).height() - heights - 1;
+        }
+        
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myChart = Highcharts.chart('downloads_recent_count_data', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myChart = Highcharts.chart('downloads_recent_percent_data', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myChart = Highcharts.chart('downloads_alltime_data', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myChart = Highcharts.chart('publications_data', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var myChart = Highcharts.chart('citations_data', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Fruit Consumption'
+            },
+            xAxis: {
+                categories: ['Apples', 'Bananas', 'Oranges']
+            },
+            yAxis: {
+                title: {
+                    text: 'Fruit eaten'
+                }
+            },
+            series: [{
+                name: 'Jane',
+                data: [1, 0, 4]
+            }, {
+                name: 'John',
+                data: [5, 7, 3]
+            }]
+        });
+    });
+
+
+
+
+  </script>
+
+</body>
+</html>
