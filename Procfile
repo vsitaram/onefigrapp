@@ -1,1 +1,1 @@
-web: gunicorn aifedge.wsgi --log-file -
+web: gunicorn onefigrapp.wsgi --log-file -
