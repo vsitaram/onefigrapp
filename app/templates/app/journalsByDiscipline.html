@@ -132,36 +132,31 @@
           </div>
           
         </div>
-        <div class="col-md-8 pt-3" style="">
+        <div class="col-md-8" style="">
           <!-- Downloads -->
-          <div id="downloads">
+          <div id="downloads mt-0">
             <!-- Recent Downloads -->
             <div id="downloads_recent">
               <!-- Recent Downloads Count -->
-              <div id="downloads_recent_count">
-                <h4 class="mb-5" id="downloads_recent_count_title">Journals by Downloads - Recent (Counts)</h4>
-                <div id="downloads_recent_count_data" style="width:100%; height:400px;"></div>
+              <div class="mt-3" id="downloads_recent_count">
+                <div id="downloads_recent_count_graph" style="width:100%; height:400px;"></div>
               </div>
               <!-- Recent Downloads Percent -->
-              <div id="downloads_recent_percent">
-                <h4 class="mb-5" id="downloads_recent_percent_title">Journals by Downloads - Recent (Percent)</h4>
-                <div id="downloads_recent_percent_data" style="width:100%; height:400px;"></div>
+              <div class="mt-5" id="downloads_recent_percent">
+                <div id="downloads_recent_percent_graph" style="width:100%; height:400px;"></div>
               </div>
             </div>
-            <div id="downloads_alltime">
-              <h4 class="mb-5" id="downloads_alltime_title">Journals by Downloads - All Time</h4>
-              <div id="downloads_alltime_data" style="width:100%; height:400px;"></div>
+            <div class="mt-5" id="downloads_alltime">
+              <div id="downloads_alltime_graph" style="width:100%; height:400px;"></div>
             </div>
           </div>
 
-          <div id="publications">
-            <h4 class="mb-5" id="publications_title">Journals by Publications by UVA Authors</h4>
-            <div id="publications_data" style="width:100%; height:400px;"></div>
+          <div class="mt-5" id="publications">
+            <div id="publications_graph" style="width:100%; height:400px;"></div>
           </div>
 
-          <div id="citations">
-            <h4 class="mb-5" id="citations_title">Journals by Citations by UVA Authors</h4>
-            <div id="citations_data" style="width:100%; height:400px;"></div>
+          <div class="mt-5" id="citations">
+            <div id="citations_graph" style="width:100%; height:400px;"></div>
           </div>
           
           
@@ -180,7 +175,8 @@
   <script type="text/javascript" src="{% static 'app/js/bootstrap.min.js' %}"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/mdb.min.js' %}"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>  
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
 
@@ -215,6 +211,8 @@
         $('#downloads_recent_percent').hide();
         $('#downloads_alltime').hide();
       }
+
+      
     });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
@@ -232,6 +230,8 @@
         $('#downloads_recent_count').hide();
         $('#downloads_recent_percent').hide();
       }
+
+      
     });
 
     $("input[id='metrics_downloads_options_recent_types_count']").on('change', function() {
@@ -250,6 +250,8 @@
       else {
         $('#downloads_recent_percent').hide();
       }
+
+      
     });
 
     $("input[id='metrics_downloads_options_alltime']").on('change', function() {
@@ -259,6 +261,8 @@
       else {
         $('#downloads_alltime').hide();
       }
+
+  
     });
 
     $("input[id='metrics_publications']").on('change', function() {
@@ -268,6 +272,8 @@
       else {
         $('#publications').hide();
       }
+
+      
     });
 
     $("input[id='metrics_citations']").on('change', function() {
@@ -277,6 +283,8 @@
       else {
         $('#citations').hide();
       }
+
+    
     });
 
     $('#metrics_show_all').on('click', function() {
@@ -295,6 +303,8 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
+
+      
     });
 
     $('#metrics_show_all').on('click', function() {
@@ -314,6 +324,8 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
+
+      
     });
 
     $('#metrics_hide_all').on('click', function() {
@@ -333,10 +345,11 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
       $("input[id='metrics_citations']").prop('checked', false);
+
     });
 
 
-    $(window).on('load resize', function() {
+    function resetMetricColumnHeight() {
       $('#metrics_column').height( function() {
         if( $(document).width() < 768) {
           heights = 0;
@@ -346,12 +359,12 @@
             paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
             paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
             heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            console.log($(this).attr('id') + ": " + heights);
+            // console.log($(this).attr('id') + ": " + heights);
           });
           // alert(heights);
-          console.log("Total heights: " + heights);
-          console.log("Window height: " + $(window).height());
-          console.log("Result: " + heights);
+          // console.log("Total heights: " + heights);
+          // console.log("Window height: " + $(window).height());
+          // console.log("Result: " + heights);
 
           return heights + 64;
         }
@@ -364,146 +377,271 @@
             paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
             paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
             heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            console.log($(this).attr('id')+ ": " + heights);
+            // console.log($(this).attr('id')+ ": " + heights);
           });
           // alert(heights);
-          console.log("Total heights: " + heights);
-          console.log("Document height: " + $(document).height());
-          console.log("Result: " + ($(document).height() - heights));
+          // console.log("Total heights: " + heights);
+          // console.log("Document height: " + $(document).height());
+          // console.log("Result: " + ($(document).height() - heights));
 
           return $(document).height() - heights - 3 - 1;
         }
         
       });
+    }
+
+    $(window).on('load', function() {
+      resetMetricColumnHeight();
     });
 
+    $(document).on('resize', function() {
+      resetMetricColumnHeight();
+    });
+
+
+    var downloadsRecentCountGraphCategoriesString = "{{ downloads_recent_count_graph_categories }}";
+    // console.log(downloadsRecentCountGraphCategoriesString);
+    var downloadsRecentCountGraphCategories = downloadsRecentCountGraphCategoriesString.slice(7, downloadsRecentCountGraphCategoriesString.length-7).split("&#x27;, &#x27;");
+    // console.log(downloadsRecentCountGraphCategories);
+    var downloadsRecentCountGraphCountsString = "{{ downloads_recent_count_graph_counts }}";
+    // console.log(downloadsRecentCountGraphCountString);
+    var downloadsRecentCountGraphCounts = Array.from(downloadsRecentCountGraphCountsString.slice(1, downloadsRecentCountGraphCountsString.length-1).split(", "), x => parseFloat(x));
+    // console.log(downloadsRecentCountGraphCounts);
+
     document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_recent_count_data', {
+        var myChart = Highcharts.chart('downloads_recent_count_graph', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Fruit Consumption'
+                text: 'Journals by Downloads - Recent (Counts)',
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
             },
             xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
+                categories: downloadsRecentCountGraphCategories,
+                // min: 0,
+                // max: 4,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
             },
             yAxis: {
                 title: {
-                    text: 'Fruit eaten'
+                    text: 'Number of Journals'
                 }
             },
+            legend: {
+                enabled: false
+            },
             series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
+                // name: 'Jane',
+                data: downloadsRecentCountGraphCounts
+            }],
+            credits: {
+                enabled: false
+            },
         });
     });
 
+
+    var downloadsRecentPercentGraphCategoriesString = "{{ downloads_recent_percent_graph_categories }}"; // Need to change input from Django
+    // console.log(downloadsRecentPercentGraphCategoriesString);
+    var downloadsRecentPercentGraphCategories = downloadsRecentPercentGraphCategoriesString.slice(7, downloadsRecentPercentGraphCategoriesString.length-7).split("&#x27;, &#x27;");
+    // console.log(downloadsRecentPercentGraphCategories);
+    var downloadsRecentPercentGraphCountsString = "{{ downloads_recent_percent_graph_counts }}"; // Need to change input from Django
+    // console.log(downloadsRecentPercentGraphCountString);
+    var downloadsRecentPercentGraphCounts = Array.from(downloadsRecentPercentGraphCountsString.slice(1, downloadsRecentPercentGraphCountsString.length-1).split(", "), x => parseFloat(x));
+    // console.log(downloadsRecentPercentGraphCounts);
+
     document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_recent_percent_data', {
+        var myChart = Highcharts.chart('downloads_recent_percent_graph', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Fruit Consumption'
+                text: 'Journals by Downloads - Recent (Percent)',
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
             },
             xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
+                categories: downloadsRecentPercentGraphCategories,
+                // min: 0,
+                // max: 4,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
             },
             yAxis: {
                 title: {
-                    text: 'Fruit eaten'
+                    text: 'Number of Journals'
                 }
             },
+            legend: {
+                enabled: false
+            },
             series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
+                // name: 'Jane',
+                data: downloadsRecentPercentGraphCounts
+            }],
+            credits: {
+                enabled: false
+            },
         });
     });
 
+    var downloadsAllTimeGraphCategoriesString = "{{ downloads_alltime_graph_categories }}"; // Need to change input from Django
+    // console.log(downloadsAllTimeGraphCategoriesString);
+    var downloadsAllTimeGraphCategories = downloadsAllTimeGraphCategoriesString.slice(7, downloadsAllTimeGraphCategoriesString.length-7).split("&#x27;, &#x27;");
+    // console.log(downloadsAllTimeGraphCategories);
+    var downloadsAllTimeGraphCountsString = "{{ downloads_alltime_graph_counts }}"; // Need to change input from Django
+    // console.log(downloadsAllTimeGraphCountsString);
+    var downloadsAllTimeGraphCounts = Array.from(downloadsAllTimeGraphCountsString.slice(1, downloadsAllTimeGraphCountsString.length-1).split(", "), x => parseFloat(x));
+    // console.log(downloadsAllTimeGraphCounts);    
+
     document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_alltime_data', {
+        var myChart = Highcharts.chart('downloads_alltime_graph', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Fruit Consumption'
+                text: 'Journals by Downloads - All Time',
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
             },
             xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
+                categories: downloadsAllTimeGraphCategories,
+                // min: 0,
+                // max: 4,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
             },
             yAxis: {
                 title: {
-                    text: 'Fruit eaten'
+                    text: 'Number of Journals'
                 }
             },
+            legend: {
+                enabled: false
+            },
             series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
+                // name: 'Jane',
+                data: downloadsAllTimeGraphCounts
+            }],
+            credits: {
+                enabled: false
+            },
         });
     });
 
+    var publicationsGraphCategoriesString = "{{ publications_graph_categories }}"; // Need to change input from Django
+    // console.log(publicationsGraphCategoriesString);
+    var publicationsGraphCategories = publicationsGraphCategoriesString.slice(7, publicationsGraphCategoriesString.length-7).split("&#x27;, &#x27;");
+    // console.log(publicationsGraphCategories);
+    var publicationsGraphCountsString = "{{ publications_graph_counts }}"; // Need to change input from Django
+    // console.log(publicationsGraphCountsString);
+    var publicationsGraphCounts = Array.from(publicationsGraphCountsString.slice(1, publicationsGraphCountsString.length-1).split(", "), x => parseFloat(x));
+    // console.log(publicationsGraphCounts);
+
     document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('publications_data', {
+        var myChart = Highcharts.chart('publications_graph', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Fruit Consumption'
+                text: 'Journals by Publications by UVA Authors',
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
             },
             xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
+                categories: publicationsGraphCategories,
+                // min: 0,
+                // max: 4,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
             },
             yAxis: {
                 title: {
-                    text: 'Fruit eaten'
+                    text: 'Number of Journals'
                 }
             },
+            legend: {
+                enabled: false
+            },
             series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
+                // name: 'Jane',
+                data: publicationsGraphCounts
+            }],
+            credits: {
+                enabled: false
+            },
         });
     });
 
+    var citationsGraphCategoriesString = "{{ citations_graph_categories }}"; // Need to change input from Django
+    // console.log(citationsGraphCategoriesString);
+    var citationsGraphCategories = citationsGraphCategoriesString.slice(7, citationsGraphCategoriesString.length-7).split("&#x27;, &#x27;");
+    // console.log(citationsGraphCategories);
+    var citationsGraphCountsString = "{{ citations_graph_counts }}"; // Need to change input from Django
+    // console.log(citationsGraphCountsString);
+    var citationsGraphCounts = Array.from(citationsGraphCountsString.slice(1, citationsGraphCountsString.length-1).split(", "), x => parseFloat(x));
+    // console.log(citationsGraphCounts);
+
     document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('citations_data', {
+        var myChart = Highcharts.chart('citations_graph', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Fruit Consumption'
+                text: 'Journals by Citations by UVA Authors',
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
             },
             xAxis: {
-                categories: ['Apples', 'Bananas', 'Oranges']
+                categories: citationsGraphCategories,
+                // min: 0,
+                // max: 4,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
             },
             yAxis: {
                 title: {
-                    text: 'Fruit eaten'
+                    text: 'Number of Journals'
                 }
             },
+            legend: {
+                enabled: false
+            },
             series: [{
-                name: 'Jane',
-                data: [1, 0, 4]
-            }, {
-                name: 'John',
-                data: [5, 7, 3]
-            }]
+                // name: 'Jane',
+                data: citationsGraphCounts
+            }],
+            credits: {
+                enabled: false
+            },
         });
     });
 

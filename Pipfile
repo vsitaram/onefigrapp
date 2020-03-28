@@ -25,6 +25,8 @@ psycopg2 = "*"
 django-heroku = "*"
 holidays = "*"
 django-cleanup = "*"
+matplotlib = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.6"
