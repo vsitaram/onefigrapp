@@ -82,3 +82,17 @@ def journalsByDiscipline(request):
         'citations_graph_data': json.dumps(figure8(columns[3])),
     }
     return render(request, template_name, context)
+
+@login_required
+def journalsByProvider(request):
+    template_name = 'app/journalsByProvider.html'
+    columns = ['Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers']
+    context = {
+        'disciplines_list': get_disciplines_list(),
+        'downloads_recent_count_graph_data': json.dumps(figure8(columns[1])),
+        'downloads_recent_percent_graph_data': json.dumps(figure8(columns[1])),
+        'downloads_alltime_graph_data': json.dumps(figure8(columns[0])),
+        'publications_graph_data': json.dumps(figure8(columns[2])),
+        'citations_graph_data': json.dumps(figure8(columns[3])),
+    }
+    return render(request, template_name, context)
