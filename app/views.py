@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 import datetime as datetime
 from dateutil.relativedelta import relativedelta
 
+import json
 from .Figure8 import *
 
 # from .models import File
@@ -71,17 +72,13 @@ def tools(request):
 @login_required
 def journalsByDiscipline(request):
     template_name = 'app/journalsByDiscipline.html'
+    columns = ['Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers']
     context = {
-        'downloads_recent_count_graph_categories': list(figure8b().keys()),
-        'downloads_recent_count_graph_counts': list(figure8b().values()),
-        'downloads_recent_percent_graph_categories': list(figure8b().keys()),
-        'downloads_recent_percent_graph_counts': list(figure8b().values()),
-        'downloads_alltime_graph_categories': list(figure8a().keys()),
-        'downloads_alltime_graph_counts': list(figure8a().values()),
-        'publications_graph_categories': list(figure8c().keys()),
-        'publications_graph_counts': list(figure8c().values()),
-        'citations_graph_categories': list(figure8d().keys()),
-        'citations_graph_counts': list(figure8d().values()),
-
+        'disciplines_list': get_disciplines_list(),
+        'downloads_recent_count_graph_data': json.dumps(figure8(columns[1])),
+        'downloads_recent_percent_graph_data': json.dumps(figure8(columns[1])),
+        'downloads_alltime_graph_data': json.dumps(figure8(columns[0])),
+        'publications_graph_data': json.dumps(figure8(columns[2])),
+        'citations_graph_data': json.dumps(figure8(columns[3])),
     }
     return render(request, template_name, context)

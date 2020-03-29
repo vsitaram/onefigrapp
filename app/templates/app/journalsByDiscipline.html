@@ -398,15 +398,27 @@
       resetMetricColumnHeight();
     });
 
+    function processViewData(dataString) {
+      dataString = dataString.replace(/&amp;/g, "&");
+      dataString = dataString.replace(/&quot;/g, "\"");
+      // console.log(dataString);
+      // Get rid of random special characters
+      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
+      dataString = dataString.replace(/NaN/g, "0.0");
+      // console.log(downloadsAllTimeGraphCategoriesString);
+      // console.log(downloadsAllTimeGraphCategoriesString.slice(1040, 1070));
+      var dataJSON = JSON.parse(dataString);
+      // console.log(dataJSON);
 
-    var downloadsRecentCountGraphCategoriesString = "{{ downloads_recent_count_graph_categories }}";
-    // console.log(downloadsRecentCountGraphCategoriesString);
-    var downloadsRecentCountGraphCategories = downloadsRecentCountGraphCategoriesString.slice(7, downloadsRecentCountGraphCategoriesString.length-7).split("&#x27;, &#x27;");
-    // console.log(downloadsRecentCountGraphCategories);
-    var downloadsRecentCountGraphCountsString = "{{ downloads_recent_count_graph_counts }}";
-    // console.log(downloadsRecentCountGraphCountString);
-    var downloadsRecentCountGraphCounts = Array.from(downloadsRecentCountGraphCountsString.slice(1, downloadsRecentCountGraphCountsString.length-1).split(", "), x => parseFloat(x));
-    // console.log(downloadsRecentCountGraphCounts);
+      return dataJSON;
+    }
+
+    var disciplinesList = "{{ disciplines_list|safe }}";
+    console.log(disciplinesList);
+
+    var downloadsRecentCountGraphDataString = "{{ downloads_recent_count_graph_data }}";
+    var downloadsRecentCountGraphData = processViewData(downloadsRecentCountGraphDataString);
+    console.log(downloadsRecentCountGraphData); 
 
     document.addEventListener('DOMContentLoaded', function () {
         var myChart = Highcharts.chart('downloads_recent_count_graph', {
@@ -422,7 +434,7 @@
                 }
             },
             xAxis: {
-                categories: downloadsRecentCountGraphCategories,
+                categories: Object.keys(downloadsRecentCountGraphData.Architecture),
                 // min: 0,
                 // max: 4,
                 scrollbar: {
@@ -440,7 +452,7 @@
             },
             series: [{
                 // name: 'Jane',
-                data: downloadsRecentCountGraphCounts
+                data: Object.values(downloadsRecentCountGraphData.Architecture),
             }],
             credits: {
                 enabled: false
@@ -448,15 +460,9 @@
         });
     });
 
-
-    var downloadsRecentPercentGraphCategoriesString = "{{ downloads_recent_percent_graph_categories }}"; // Need to change input from Django
-    // console.log(downloadsRecentPercentGraphCategoriesString);
-    var downloadsRecentPercentGraphCategories = downloadsRecentPercentGraphCategoriesString.slice(7, downloadsRecentPercentGraphCategoriesString.length-7).split("&#x27;, &#x27;");
-    // console.log(downloadsRecentPercentGraphCategories);
-    var downloadsRecentPercentGraphCountsString = "{{ downloads_recent_percent_graph_counts }}"; // Need to change input from Django
-    // console.log(downloadsRecentPercentGraphCountString);
-    var downloadsRecentPercentGraphCounts = Array.from(downloadsRecentPercentGraphCountsString.slice(1, downloadsRecentPercentGraphCountsString.length-1).split(", "), x => parseFloat(x));
-    // console.log(downloadsRecentPercentGraphCounts);
+    var downloadsRecentPercentGraphDataString = "{{ downloads_recent_percent_graph_data }}";
+    var downloadsRecentPercentGraphData = processViewData(downloadsRecentPercentGraphDataString);
+    console.log(downloadsRecentPercentGraphData);   
 
     document.addEventListener('DOMContentLoaded', function () {
         var myChart = Highcharts.chart('downloads_recent_percent_graph', {
@@ -472,7 +478,7 @@
                 }
             },
             xAxis: {
-                categories: downloadsRecentPercentGraphCategories,
+                categories: Object.keys(downloadsRecentPercentGraphData.Architecture),
                 // min: 0,
                 // max: 4,
                 scrollbar: {
@@ -490,7 +496,7 @@
             },
             series: [{
                 // name: 'Jane',
-                data: downloadsRecentPercentGraphCounts
+                data: Object.values(downloadsRecentPercentGraphData.Architecture),
             }],
             credits: {
                 enabled: false
@@ -498,14 +504,9 @@
         });
     });
 
-    var downloadsAllTimeGraphCategoriesString = "{{ downloads_alltime_graph_categories }}"; // Need to change input from Django
-    // console.log(downloadsAllTimeGraphCategoriesString);
-    var downloadsAllTimeGraphCategories = downloadsAllTimeGraphCategoriesString.slice(7, downloadsAllTimeGraphCategoriesString.length-7).split("&#x27;, &#x27;");
-    // console.log(downloadsAllTimeGraphCategories);
-    var downloadsAllTimeGraphCountsString = "{{ downloads_alltime_graph_counts }}"; // Need to change input from Django
-    // console.log(downloadsAllTimeGraphCountsString);
-    var downloadsAllTimeGraphCounts = Array.from(downloadsAllTimeGraphCountsString.slice(1, downloadsAllTimeGraphCountsString.length-1).split(", "), x => parseFloat(x));
-    // console.log(downloadsAllTimeGraphCounts);    
+    var downloadsAllTimeGraphDataString = "{{ downloads_alltime_graph_data }}";
+    var downloadsAllTimeGraphData = processViewData(downloadsAllTimeGraphDataString);
+    console.log(downloadsAllTimeGraphData);   
 
     document.addEventListener('DOMContentLoaded', function () {
         var myChart = Highcharts.chart('downloads_alltime_graph', {
@@ -521,7 +522,7 @@
                 }
             },
             xAxis: {
-                categories: downloadsAllTimeGraphCategories,
+                categories: Object.keys(downloadsAllTimeGraphData.Architecture),
                 // min: 0,
                 // max: 4,
                 scrollbar: {
@@ -539,7 +540,7 @@
             },
             series: [{
                 // name: 'Jane',
-                data: downloadsAllTimeGraphCounts
+                data: Object.values(downloadsAllTimeGraphData.Architecture),
             }],
             credits: {
                 enabled: false
@@ -547,14 +548,9 @@
         });
     });
 
-    var publicationsGraphCategoriesString = "{{ publications_graph_categories }}"; // Need to change input from Django
-    // console.log(publicationsGraphCategoriesString);
-    var publicationsGraphCategories = publicationsGraphCategoriesString.slice(7, publicationsGraphCategoriesString.length-7).split("&#x27;, &#x27;");
-    // console.log(publicationsGraphCategories);
-    var publicationsGraphCountsString = "{{ publications_graph_counts }}"; // Need to change input from Django
-    // console.log(publicationsGraphCountsString);
-    var publicationsGraphCounts = Array.from(publicationsGraphCountsString.slice(1, publicationsGraphCountsString.length-1).split(", "), x => parseFloat(x));
-    // console.log(publicationsGraphCounts);
+    var publicationsDataString = "{{ publications_graph_data }}";
+    var publicationsData = processViewData(publicationsDataString);
+    console.log(publicationsData); 
 
     document.addEventListener('DOMContentLoaded', function () {
         var myChart = Highcharts.chart('publications_graph', {
@@ -570,7 +566,7 @@
                 }
             },
             xAxis: {
-                categories: publicationsGraphCategories,
+                categories: Object.keys(publicationsData.Architecture),
                 // min: 0,
                 // max: 4,
                 scrollbar: {
@@ -588,7 +584,7 @@
             },
             series: [{
                 // name: 'Jane',
-                data: publicationsGraphCounts
+                data: Object.values(publicationsData.Architecture),
             }],
             credits: {
                 enabled: false
@@ -596,14 +592,9 @@
         });
     });
 
-    var citationsGraphCategoriesString = "{{ citations_graph_categories }}"; // Need to change input from Django
-    // console.log(citationsGraphCategoriesString);
-    var citationsGraphCategories = citationsGraphCategoriesString.slice(7, citationsGraphCategoriesString.length-7).split("&#x27;, &#x27;");
-    // console.log(citationsGraphCategories);
-    var citationsGraphCountsString = "{{ citations_graph_counts }}"; // Need to change input from Django
-    // console.log(citationsGraphCountsString);
-    var citationsGraphCounts = Array.from(citationsGraphCountsString.slice(1, citationsGraphCountsString.length-1).split(", "), x => parseFloat(x));
-    // console.log(citationsGraphCounts);
+    var citationsDataString = "{{ publications_graph_data }}";
+    var citationsData = processViewData(citationsDataString);
+    console.log(citationsData); 
 
     document.addEventListener('DOMContentLoaded', function () {
         var myChart = Highcharts.chart('citations_graph', {
@@ -619,7 +610,7 @@
                 }
             },
             xAxis: {
-                categories: citationsGraphCategories,
+                categories: Object.keys(citationsData.Architecture),
                 // min: 0,
                 // max: 4,
                 scrollbar: {
@@ -637,7 +628,7 @@
             },
             series: [{
                 // name: 'Jane',
-                data: citationsGraphCounts
+                data: Object.values(citationsData.Architecture),
             }],
             credits: {
                 enabled: false

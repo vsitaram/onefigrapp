@@ -33,7 +33,7 @@ def getData():
 
     
 
-    object_key = 'JournalsPerProvider.xls'
+    object_key = 'JournalsPerProvider_withoutQuotes.xls'
     obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
     data = obj['Body'].read()
     df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
@@ -48,7 +48,7 @@ def make_disciplines_column():
     domain, field, subfield columns. The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
     not currently exist in the original 1figr dataset and therefore must be generated upon running this function."""
 
-#    original_1figr_dataset = pd.read_excel(filename, sheet_name='Journals per Provider', skiprows=8)
+    # original_1figr_dataset = pd.read_excel('JournalsPerProvider.xls', skiprows=8)
     original_1figr_dataset = journalsByDisciplineData
 
     #logic for every permutation of domain, field, subfield column with the end result defined in the "disciplines" column    
@@ -248,8 +248,16 @@ def make_disciplines_column():
     
     return original_1figr_dataset
 
+def get_disciplines_list():
+    original_1figr_data_with_disciplines = make_disciplines_column()
+    disciplines_data = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
+    disciplines_list = []
+    for key, item in disciplines_data:
+        disciplines_list.append(key)
 
-def figure8a():
+    return disciplines_list
+
+def figure8(column_as_count):
     """Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
     'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
     Disciplines has mapped those field categories into more UVA specific language
@@ -268,21 +276,81 @@ def figure8a():
     
     # subset_by_provider = original_1figr_data_with_disciplines.loc[original_1figr_data_with_disciplines['Provider'] == provider_name]
     # print(subset_by_provider.columns)
+    # original_1figr_data_with_disciplines = original_1figr_data_with_disciplines[original_1figr_data_with_disciplines['Journal'] != original_1figr_data_with_disciplines['Provider']]
+    disciplines_data = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
 
-    disciplines_data = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False).sum().values.tolist()
-    disciplines_data.sort(key=lambda row: row[4], reverse=True)
+    ret = {}
+
+    for key, item in disciplines_data:
+        group = disciplines_data.get_group(key)
+        journals = group['Journal'].values.tolist()
+        counts = group[column_as_count].values.tolist()
+        journals_for_discipline = dict(zip(journals, counts))
+        journals_for_discipline_sorted_by_counts = {k: v for k, v in sorted(journals_for_discipline.items(), key=lambda item: item[1], reverse=True)}
+        ret[key] = journals_for_discipline_sorted_by_counts
+        
+    # disciplines_data.sort(key=lambda row: row[4], reverse=True)
     # print(disciplines_data)
 
-    disciplines_and_counts = { i[0] : i[4] for i in disciplines_data }
+    # disciplines_and_counts = { i[0] : i[4] for i in disciplines_data }
+
+    # print(ret)
+    # print(len(list(disciplines_and_counts.keys())))
+    # print("\n")
+    # print(len(list(disciplines_and_counts.values())))
+    # return disciplines_and_counts
+    return ret
+
+# figure8('Downloads JR1 2017')
+
+def figure8a():
+    """Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
+    'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
+    Disciplines has mapped those field categories into more UVA specific language
+    
+    Chart Type: Line
+    Y-Axis: Discipline 
+    Y-Axis Data Source: Original 1Figr Dataset, reusable_functions.py
+    
+    X-Axis: Number of JR1 Downloads
+    X-Axis Data Source: Original 1Figr Dataset, reusable_functions.py
+    """
+    
+    original_1figr_data_with_disciplines = make_disciplines_column()
+    # print(original_1figr_data_with_disciplines['Provider'])
+    print(original_1figr_data_with_disciplines.columns)
+    
+    # subset_by_provider = original_1figr_data_with_disciplines.loc[original_1figr_data_with_disciplines['Provider'] == provider_name]
+    # print(subset_by_provider.columns)
+    # original_1figr_data_with_disciplines = original_1figr_data_with_disciplines[original_1figr_data_with_disciplines['Journal'] != original_1figr_data_with_disciplines['Provider']]
+    disciplines_data = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
+
+    ret = {}
+
+    for key, item in disciplines_data:
+        group = disciplines_data.get_group(key)
+        journals = group['Journal'].values.tolist()
+        counts = group['Downloads JR1 2017'].values.tolist()
+        journals_for_discipline = {
+            "journals": journals, 
+            "counts": counts
+        }
+        ret[key] = journals_for_discipline
+        
+    # disciplines_data.sort(key=lambda row: row[4], reverse=True)
+    # print(disciplines_data)
+
+    # disciplines_and_counts = { i[0] : i[4] for i in disciplines_data }
 
     # print(disciplines_and_counts)
     # print(len(list(disciplines_and_counts.keys())))
     # print("\n")
     # print(len(list(disciplines_and_counts.values())))
-    return disciplines_and_counts
+    # return disciplines_and_counts
+    return ret
 
+# print(str(figure8a()))
 # figure8a()
-
 
 def figure8b():
     """Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
