@@ -29,12 +29,12 @@ def getData():
     # AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
     # AWS_DATA_LOCATION = config('AWS_DATA_LOCATION')
 
-    client = boto3.client('s3', aws_access_key_id='AKIAZDMATQMHIN5TXHIG',
-            aws_secret_access_key='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')
+    client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
     
 
     object_key = 'JournalsPerProvider_withoutQuotes.xls'
-    obj = client.get_object(Bucket='onefigrapp', Key=object_key)
+    obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
     data = obj['Body'].read()
     df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
     # print(df)
@@ -323,8 +323,8 @@ def journals_by_provider():
 
 	metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
 	journals_by_provider_df = journalsByDisciplineData.groupby(['Provider'], as_index=False).sum()
-	print(journals_by_provider_df)
-	print(journals_by_provider_df.columns)
+	# print(journals_by_provider_df)
+	# print(journals_by_provider_df.columns)
 	
 	provider_list = get_provider_list()
 
@@ -334,7 +334,7 @@ def journals_by_provider():
 		for metric in metrics:
 			journals_by_provider_dict[row['Provider']][metric] = row[metric] / 2
     
-	# print(journals_by_provider_dict)
+	print(journals_by_provider_dict)
 
 	ret = { provider: {} for provider in provider_list }
 	

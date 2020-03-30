@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>UVA RDS - Journals by Discipline</title>
+  <title>UVA RDS - Providers by Metric</title>
 
   {% load static %}
 
@@ -56,12 +56,12 @@
   <main>
     <div class="container-fluid" id="breadcrumb_container">
       <div class="row pt-3" style="background-color: #141e3c">
-        <p class="ml-4 text-white"><a href="{% url 'app:tools' %}" style="color: #E57200">All Tools</a>  <i class="fas fa-chevron-right mx-2" style="font-size:12px;"></i> Journals by Discipline</p>
+        <p class="ml-4 text-white"><a href="{% url 'app:tools' %}" style="color: #E57200">All Tools</a>  <i class="fas fa-chevron-right mx-2" style="font-size:12px;"></i> Providers by Metric</p>
       </div>
     </div>
     
     <div class="container my-5" id="title_description">
-      <h3 class="mb-4">Journals by Discipline Tool</h3>
+      <h3 class="mb-4">Providers by Metric Tool</h3>
       <p>Descriptions and important notes</p>
     </div>
 
@@ -617,33 +617,28 @@
 
 
     $("#discipline_select").on("change", function() {
-        console.log($("#discipline_select").val());
-        console.log(typeof($("#discipline_select").val()));
+        // console.log($("#discipline_select").val());
+        // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.series.data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
-          console.log('downloadsRecentCountGraphChart');
+          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
 
           downloadsRecentPercentGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentPercentGraphConfig.series.data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          var downloadsRecentPercentGraphChart = Highcharts.chart('downloads_recent_percent_graph', downloadsRecentPercentGraphConfig);
-          console.log('downloadsRecentPercentGraphChart');
+          downloadsRecentPercentGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
 
           downloadsAllTimeGraphConfig.xAxis.categories = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]);
-          downloadsAllTimeGraphConfig.series.data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
-          var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
-          console.log('downloadsAllTimeGraphChart');
+          downloadsAllTimeGraphConfig.series[0].data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
+          downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
 
           publicationsConfig.xAxis.categories = Object.keys(chartData[metrics[2]][$("#discipline_select").val()]);
-          publicationsConfig.series.data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
-          var publicationsChart = Highcharts.chart('publications_graph', publicationsConfig);
-          console.log('publicationsChart');
+          publicationsConfig.series[0].data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
+          publicationsChart.update(publicationsConfig);
 
           citationsConfig.xAxis.categories = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]);
-          citationsConfig.series.data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
-          var citationsChart = Highcharts.chart('citations_graph', citationsConfig);
-          console.log('citationsChart');
+          citationsConfig.series[0].data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
+          citationsChart.update(citationsConfig);
         }
     });
 

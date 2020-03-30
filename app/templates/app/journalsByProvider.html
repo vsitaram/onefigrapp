@@ -197,9 +197,9 @@
 
 
     var providersListString = "{{ providers_list }}";
-    console.log(providersListString);
+    // console.log(providersListString);
     var providersList = processViewData(providersListString);
-    console.log(providersList); 
+    // console.log(providersList); 
 
     function loadProvidersList() {
       for(var i = 0; i < providersList.length; i++) {
@@ -212,7 +212,10 @@
       }
     }
 
-    loadProvidersList();
+    $(document).ready( function() {
+      loadProvidersList();
+    });
+   
 
     var chartDataString = "{{ chart_data }}";
     var chartData = processViewData(chartDataString);
@@ -256,13 +259,15 @@
     var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
 
     $("#provider_select").on("change", function() {
-        console.log($("#provider_select").val());
-        console.log(typeof($("#provider_select").val()));
+        // console.log($("#provider_select").val());
+        // console.log(typeof($("#provider_select").val()));
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
           downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[$("#provider_select").val()]);
-          downloadsRecentCountGraphConfig.series.data = Object.values(chartData[$("#provider_select").val()]);
-          var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
-          console.log('downloadsRecentCountGraphChart');
+          console.log(downloadsRecentCountGraphConfig.xAxis.categories);
+          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[$("#provider_select").val()]);
+          console.log(downloadsRecentCountGraphConfig.series[0].data);
+          // downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
+          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
         }
     });
 

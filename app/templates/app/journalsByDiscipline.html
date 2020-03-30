@@ -640,33 +640,28 @@
 
 
     $("#discipline_select").on("change", function() {
-        console.log($("#discipline_select").val());
-        console.log(typeof($("#discipline_select").val()));
+        // console.log($("#discipline_select").val());
+        // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.series.data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
-          console.log('downloadsRecentCountGraphChart');
+          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
 
           downloadsRecentPercentGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentPercentGraphConfig.series.data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          var downloadsRecentPercentGraphChart = Highcharts.chart('downloads_recent_percent_graph', downloadsRecentPercentGraphConfig);
-          console.log('downloadsRecentPercentGraphChart');
+          downloadsRecentPercentGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
 
           downloadsAllTimeGraphConfig.xAxis.categories = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]);
-          downloadsAllTimeGraphConfig.series.data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
-          var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
-          console.log('downloadsAllTimeGraphChart');
+          downloadsAllTimeGraphConfig.series[0].data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
+          downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
 
           publicationsConfig.xAxis.categories = Object.keys(chartData[metrics[2]][$("#discipline_select").val()]);
-          publicationsConfig.series.data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
-          var publicationsChart = Highcharts.chart('publications_graph', publicationsConfig);
-          console.log('publicationsChart');
+          publicationsConfig.series[0].data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
+          publicationsChart.update(publicationsConfig);
 
           citationsConfig.xAxis.categories = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]);
-          citationsConfig.series.data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
-          var citationsChart = Highcharts.chart('citations_graph', citationsConfig);
-          console.log('citationsChart');
+          citationsConfig.series[0].data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
+          citationsChart.update(citationsConfig);
         }
     });
 
