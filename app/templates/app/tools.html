@@ -107,6 +107,36 @@
                   </div>
                   <!--Grid column-->
 
+                  <!--Grid column-->
+                  <div class="col-lg-4 col-md-12 mb-4">
+                      <!--Card-->
+                      <div class="card">
+                          <!--Card content-->
+                          <div class="card-body container">
+                              <div class="row mb-2">
+                                  <!--Title-->
+                                  <h4 class="card-title col text-left">Providers By Metric</h4>      
+                              </div>
+                              
+                              <div class="row mb-2">
+                                  <!--Text-->
+                                  <p class="card-text col-12">
+                                      See how journal providers are used across the University!
+                                  </p>
+                              </div> 
+
+                              <div class="row d-flex justify-content-center">
+                                  <div>
+                                      <a href="{% url 'app:providersByMetric' %}" class="btn btn-sm text-white" style="background-color: #E57200">Get Started</a>  
+                                  </div>
+                              </div> 
+                                                  
+                          </div>
+                      </div>
+                      <!--/.Card-->
+                  </div>
+                  <!--Grid column-->
+
           </div>
           <!--Grid row-->
       </section>
@@ -125,6 +155,10 @@
   <script type="text/javascript" src="{% static 'app/js/bootstrap.min.js' %}"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/mdb.min.js' %}"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js"></script>
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
     new WOW().init();

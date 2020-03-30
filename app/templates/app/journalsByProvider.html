@@ -71,66 +71,13 @@
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
-            <h4 class="mb-4">Disciplines</h4>
+            <h4 class="mb-4">Providers</h4>
 
-            <select class="browser-default custom-select mb-5">
-              <option selected>Select Discipline</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
+            <select class="browser-default custom-select mb-5" id="provider_select">
+              <option>Select Provider</option>
             </select>
 
-            <h4 class="mb-3">Metrics</h4>
-
-            <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_downloads" checked>
-              <label class="custom-control-label" for="metrics_downloads">Downloads</label>
-            </div>
-
-            <div id="metrics_downloads_options" class="ml-4">
-              <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
-                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent</label>
-              </div>
-
-              <div id="metrics_downloads_options_recent_types" class="ml-4">
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_count" checked>
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_count">Count</label>
-                </div>
-
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_percent">
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_percent">Percent</label>
-                </div>
-              </div>
-              
-
-              <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
-                <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
-              </div>
-            </div>
-
-            <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_publications">
-              <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
-            </div>
-
-            <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_citations">
-              <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
-            </div>
           </div>
-          <div class="row align-items-center">
-            <div class="ml-xl-3 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_show_all" style="background-color: #E57200;">Show All</button>
-            </div>
-            <div class="ml-xl-n5 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_hide_all" style="background-color: #E57200;">Hide All</button>
-            </div>
-          </div>
-          
         </div>
         <div class="col-md-8" style="">
           <!-- Downloads -->
@@ -139,24 +86,24 @@
             <div id="downloads_recent">
               <!-- Recent Downloads Count -->
               <div class="mt-3" id="downloads_recent_count">
-                <div id="downloads_recent_count_graph" style="width:100%; height:400px;"></div>
+                <div id="downloads_recent_count_graph" style="width:100%; height:475px;"></div>
               </div>
               <!-- Recent Downloads Percent -->
               <div class="mt-5" id="downloads_recent_percent">
-                <div id="downloads_recent_percent_graph" style="width:100%; height:400px;"></div>
+                <div id="downloads_recent_percent_graph" style="width:100%; height:475px;"></div>
               </div>
             </div>
             <div class="mt-5" id="downloads_alltime">
-              <div id="downloads_alltime_graph" style="width:100%; height:400px;"></div>
+              <div id="downloads_alltime_graph" style="width:100%; height:475px;"></div>
             </div>
           </div>
 
           <div class="mt-5" id="publications">
-            <div id="publications_graph" style="width:100%; height:400px;"></div>
+            <div id="publications_graph" style="width:100%; height:475px;"></div>
           </div>
 
           <div class="mt-5" id="citations">
-            <div id="citations_graph" style="width:100%; height:400px;"></div>
+            <div id="citations_graph" style="width:100%; height:475px;"></div>
           </div>
           
           
@@ -179,175 +126,6 @@
   <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>  
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
-
-    $(document).ready(function() {
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
-    });
-
-    $("input[id='metrics_downloads']").on('change', function() {
-      if( $(this).is(':checked') ) {
-        $('#metrics_downloads_options').show();
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked')) {
-          $("input[id='metrics_downloads_options_recent_types']").show();
-        }
-        else {
-          $("input[id='metrics_downloads_options_recent_types']").hide(); 
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-          $('#downloads_recent_count').show();
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-          $('#downloads_recent_percent').show();
-        }
-        if( $("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $('#downloads_alltime').show();
-        }
-      } else {
-        $('#metrics_downloads_options').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-        $('#downloads_alltime').hide();
-      }
-
-      
-    });
-
-    $("input[id='metrics_downloads_options_recent']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#metrics_downloads_options_recent_types').show();
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-            $('#downloads_recent_count').show();
-          }
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-            $('#downloads_recent_percent').show();
-          }
-      }          
-      else {
-        $('#metrics_downloads_options_recent_types').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-      }
-
-      
-    });
-
-    $("input[id='metrics_downloads_options_recent_types_count']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_count').show();
-      }          
-      else {
-        $('#downloads_recent_count').hide();
-      }
-    });
-
-    $("input[id='metrics_downloads_options_recent_types_percent']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_percent').show();
-      }          
-      else {
-        $('#downloads_recent_percent').hide();
-      }
-
-      
-    });
-
-    $("input[id='metrics_downloads_options_alltime']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#downloads_alltime').show();
-      }          
-      else {
-        $('#downloads_alltime').hide();
-      }
-
-  
-    });
-
-    $("input[id='metrics_publications']").on('change', function() {
-      if( $(this).is(':checked') ) {
-          $('#publications').show();
-      }          
-      else {
-        $('#publications').hide();
-      }
-
-      
-    });
-
-    $("input[id='metrics_citations']").on('change', function() {
-      if( $(this).is(':checked') ) {
-          $('#citations').show();
-      }          
-      else {
-        $('#citations').hide();
-      }
-
-    
-    });
-
-    $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
-
-      $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
-
-      $("input[id='metrics_downloads']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
-
-      
-    });
-
-    $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
-
-      $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
-
-      $("input[id='metrics_downloads']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
-
-      
-    });
-
-    $('#metrics_hide_all').on('click', function() {
-      $('#downloads_recent_count').hide();
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
-
-      $("#metrics_downloads_options").hide();
-      $("#metrics_downloads_options_recent_types").hide();
-
-      $("input[id='metrics_downloads']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
-      $("input[id='metrics_publications']").prop('checked', false);
-      $("input[id='metrics_citations']").prop('checked', false);
-
-    });
-
 
     function resetMetricColumnHeight() {
       $('#metrics_column').height( function() {
@@ -405,237 +183,88 @@
       // Get rid of random special characters
       dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
       dataString = dataString.replace(/NaN/g, "0.0");
-      // console.log(downloadsAllTimeGraphCategoriesString);
-      // console.log(downloadsAllTimeGraphCategoriesString.slice(1040, 1070));
+      // console.log(dataString);
+      // var num = 5182;
+      // if (dataString.length > num + 20) {
+      //   console.log(dataString.slice(num - 20, num + 20));
+      // }
+      
       var dataJSON = JSON.parse(dataString);
       // console.log(dataJSON);
 
       return dataJSON;
     }
 
-    var disciplinesList = "{{ disciplines_list|safe }}";
-    console.log(disciplinesList);
 
-    var downloadsRecentCountGraphDataString = "{{ downloads_recent_count_graph_data }}";
-    var downloadsRecentCountGraphData = processViewData(downloadsRecentCountGraphDataString);
-    console.log(downloadsRecentCountGraphData); 
+    var providersListString = "{{ providers_list }}";
+    console.log(providersListString);
+    var providersList = processViewData(providersListString);
+    console.log(providersList); 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_recent_count_graph', {
-            chart: {
-                type: 'bar'
-            },
+    function loadProvidersList() {
+      for(var i = 0; i < providersList.length; i++) {
+        var newOption = document.createElement('option');
+        newOption.setAttribute('value', providersList[i]);
+        if(i == 0) newOption.selected = true;
+        newOption.innerHTML = providersList[i];
+        $( "#provider_select" ).append(newOption);
+        // console.log(providersList[i]);
+      }
+    }
+
+    loadProvidersList();
+
+    var chartDataString = "{{ chart_data }}";
+    var chartData = processViewData(chartDataString);
+    console.log(chartData); 
+
+    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+
+    var downloadsRecentCountGraphConfig = {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Journals by Downloads - Recent (Counts)',
+            fontFamily: 'Segoe UI',
+            style: {
+              fontWeight: 10,
+              fontSize: 20,
+            }
+        },
+        xAxis: {
+            categories: Object.keys(chartData[providersList[0]]),
+            tickLength: 0
+        },
+        yAxis: {
             title: {
-                text: 'Journals by Downloads - Recent (Counts)',
-                fontFamily: 'Segoe UI',
-                style: {
-                  fontWeight: 10,
-                  fontSize: 20,
-                }
-            },
-            xAxis: {
-                categories: Object.keys(downloadsRecentCountGraphData.Architecture),
-                // min: 0,
-                // max: 4,
-                scrollbar: {
-                    enabled: true
-                },
-                tickLength: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Journals'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                // name: 'Jane',
-                data: Object.values(downloadsRecentCountGraphData.Architecture),
-            }],
-            credits: {
-                enabled: false
-            },
-        });
+                text: 'Number of Downloads'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        series: [{
+            name: 'Downloads',
+            data: Object.values(chartData[providersList[0]]),
+        }],
+        credits: {
+            enabled: false
+        },
+    };
+
+    var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
+
+    $("#provider_select").on("change", function() {
+        console.log($("#provider_select").val());
+        console.log(typeof($("#provider_select").val()));
+        if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
+          downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[$("#provider_select").val()]);
+          downloadsRecentCountGraphConfig.series.data = Object.values(chartData[$("#provider_select").val()]);
+          var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
+          console.log('downloadsRecentCountGraphChart');
+        }
     });
-
-    var downloadsRecentPercentGraphDataString = "{{ downloads_recent_percent_graph_data }}";
-    var downloadsRecentPercentGraphData = processViewData(downloadsRecentPercentGraphDataString);
-    console.log(downloadsRecentPercentGraphData);   
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_recent_percent_graph', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Journals by Downloads - Recent (Percent)',
-                fontFamily: 'Segoe UI',
-                style: {
-                  fontWeight: 10,
-                  fontSize: 20,
-                }
-            },
-            xAxis: {
-                categories: Object.keys(downloadsRecentPercentGraphData.Architecture),
-                // min: 0,
-                // max: 4,
-                scrollbar: {
-                    enabled: true
-                },
-                tickLength: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Journals'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                // name: 'Jane',
-                data: Object.values(downloadsRecentPercentGraphData.Architecture),
-            }],
-            credits: {
-                enabled: false
-            },
-        });
-    });
-
-    var downloadsAllTimeGraphDataString = "{{ downloads_alltime_graph_data }}";
-    var downloadsAllTimeGraphData = processViewData(downloadsAllTimeGraphDataString);
-    console.log(downloadsAllTimeGraphData);   
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('downloads_alltime_graph', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Journals by Downloads - All Time',
-                fontFamily: 'Segoe UI',
-                style: {
-                  fontWeight: 10,
-                  fontSize: 20,
-                }
-            },
-            xAxis: {
-                categories: Object.keys(downloadsAllTimeGraphData.Architecture),
-                // min: 0,
-                // max: 4,
-                scrollbar: {
-                    enabled: true
-                },
-                tickLength: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Journals'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                // name: 'Jane',
-                data: Object.values(downloadsAllTimeGraphData.Architecture),
-            }],
-            credits: {
-                enabled: false
-            },
-        });
-    });
-
-    var publicationsDataString = "{{ publications_graph_data }}";
-    var publicationsData = processViewData(publicationsDataString);
-    console.log(publicationsData); 
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('publications_graph', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Journals by Publications by UVA Authors',
-                fontFamily: 'Segoe UI',
-                style: {
-                  fontWeight: 10,
-                  fontSize: 20,
-                }
-            },
-            xAxis: {
-                categories: Object.keys(publicationsData.Architecture),
-                // min: 0,
-                // max: 4,
-                scrollbar: {
-                    enabled: true
-                },
-                tickLength: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Journals'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                // name: 'Jane',
-                data: Object.values(publicationsData.Architecture),
-            }],
-            credits: {
-                enabled: false
-            },
-        });
-    });
-
-    var citationsDataString = "{{ publications_graph_data }}";
-    var citationsData = processViewData(citationsDataString);
-    console.log(citationsData); 
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var myChart = Highcharts.chart('citations_graph', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: 'Journals by Citations by UVA Authors',
-                fontFamily: 'Segoe UI',
-                style: {
-                  fontWeight: 10,
-                  fontSize: 20,
-                }
-            },
-            xAxis: {
-                categories: Object.keys(citationsData.Architecture),
-                // min: 0,
-                // max: 4,
-                scrollbar: {
-                    enabled: true
-                },
-                tickLength: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Journals'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            series: [{
-                // name: 'Jane',
-                data: Object.values(citationsData.Architecture),
-            }],
-            credits: {
-                enabled: false
-            },
-        });
-    });
-
 
 
 

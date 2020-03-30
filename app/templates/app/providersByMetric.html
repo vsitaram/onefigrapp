@@ -71,11 +71,6 @@
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
-            <h4 class="mb-4">Disciplines</h4>
-
-            <select class="browser-default custom-select mb-5" id="discipline_select">
-              <option>Select Discipline</option>
-            </select>
 
             <h4 class="mb-3">Metrics</h4>
 
@@ -182,8 +177,6 @@
       $('#downloads_alltime').hide();
       $('#publications').hide();
       $('#citations').hide();
-
-      loadDisciplinesList()
     });
 
     $("input[id='metrics_downloads']").on('change', function() {
@@ -416,22 +409,6 @@
       return dataJSON;
     }
 
-    var disciplinesListString = "{{ disciplines_list }}";
-    // console.log(disciplinesListString);
-    var disciplinesList = processViewData(disciplinesListString);
-    console.log(disciplinesList); 
-
-    function loadDisciplinesList() {
-      for(var i = 0; i < disciplinesList.length; i++) {
-        var newOption = document.createElement('option');
-        newOption.setAttribute('value', disciplinesList[i]);
-        if(i == 0) newOption.selected = true;
-        newOption.innerHTML = disciplinesList[i];
-        $( "#discipline_select" ).append(newOption);
-        // console.log(disciplinesList[i]);
-      }
-    }
-
     var chartDataString = "{{ chart_data }}";
     var chartData = processViewData(chartDataString);
     console.log(chartData); 
@@ -451,7 +428,7 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[0]][disciplinesList[0]]),
+            categories: Object.keys(chartData[metrics[0]]),
             min: 0,
             max: 15,
             scrollbar: {
@@ -469,7 +446,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[0]][disciplinesList[0]]),
+            data: Object.values(chartData[metrics[0]]),
         }],
         credits: {
             enabled: false
@@ -491,7 +468,7 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[0]][disciplinesList[0]]),
+            categories: Object.keys(chartData[metrics[0]]),
             min: 0,
             max: 15,
             scrollbar: {
@@ -509,7 +486,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[0]][disciplinesList[0]]),
+            data: Object.values(chartData[metrics[0]]),
         }],
         credits: {
             enabled: false
@@ -531,7 +508,7 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[1]][disciplinesList[0]]),
+            categories: Object.keys(chartData[metrics[1]]),
             min: 0,
             max: 15,
             scrollbar: {
@@ -549,7 +526,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[1]][disciplinesList[0]]),
+            data: Object.values(chartData[metrics[1]]),
         }],
         credits: {
             enabled: false
@@ -571,7 +548,7 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[2]][disciplinesList[0]]),
+            categories: Object.keys(chartData[metrics[2]]),
             min: 0,
             max: 15,
             scrollbar: {
@@ -588,7 +565,7 @@
             enabled: false
         },
         series: [{
-            data: Object.values(chartData[metrics[2]][disciplinesList[0]]),
+            data: Object.values(chartData[metrics[2]]),
         }],
         credits: {
             name: 'Publications',
@@ -611,7 +588,7 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[3]][disciplinesList[0]]),
+            categories: Object.keys(chartData[metrics[3]]),
             min: 0,
             max: 15,
             scrollbar: {
@@ -629,7 +606,7 @@
         },
         series: [{
             name: 'Citations',
-            data: Object.values(chartData[metrics[3]][disciplinesList[0]]),
+            data: Object.values(chartData[metrics[3]]),
         }],
         credits: {
             enabled: false

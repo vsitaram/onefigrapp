@@ -5,56 +5,7 @@ import datetime as datetime
 from dateutil.relativedelta import relativedelta
 
 import json
-from .Figure8 import *
-
-# from .models import File
-
-"""
-def dashboard(request):
-    template_name = 'app/dashboard.html'
-    current_holdings = Pitch.objects.filter(currently_invested=True)
-    recent_pitches = Pitch.objects.order_by('-pitch_date')[:6]
-    context = {
-    	'current_holdings': current_holdings,
-    	'recent_pitches': recent_pitches,
-        'portfolio_year_to_date_return': portfolio_year_to_date_return(),
-        'one_year_risk_adjusted_return_from_NAV': one_year_risk_adjusted_return_from_NAV(threeFactor=True),
-        'AIFNAVDataForTemplate': AIFNAVDataForTemplate(),
-        'AIFIndexDataForTemplate': AIFIndexDataForTemplate()
-
-    }
-    
-    context['portfolio_one_year_return'] = portfolio_one_year_return() #1 year
-    return render(request, template_name, context)
-
-@login_required
-def pitches(request):
-    template_name = 'app/pitches.html'
-    pitch_list = Pitch.objects.all()
-    context = {
-    	'pitch_list': pitch_list
-    }
-    return render(request, template_name, context)
-
-@login_required
-def pitch(request, pitch_id):
-    template_name = 'app/pitch.html'
-    pitch = get_object_or_404(Pitch, pk=pitch_id)
-    documents = pitch.document_set.all()
-    context = {
-    	'pitch' : pitch,
-        'documents': documents,
-        'securites_year_to_date_return': securities_year_to_date_return(securities=[pitch.stock_ticker], weights=[1])
-    }
-    if pitch.investment_entered==True:
-        context['one_year_risk_adjusted_return_from_securities'] = one_year_risk_adjusted_return_from_securities(threeFactor=False, securities=[pitch.stock_ticker], weights=[1])
-        if pitch.currently_invested:
-            context['security_total_return'] = security_total_return(securities=[pitch.stock_ticker], entry_price=pitch.entry_price, entry_date=pitch.entry_date, exit_price=None, exit_date=datetime.datetime.today().strftime('%Y-%m-%d'))
-        else:
-            context['security_total_return'] = 1.0 
-    return render(request, template_name, context)
-
-"""
+from .onefigr_analysis import *
 
 def login(request):
 	template_name = 'app/login.html'
@@ -72,27 +23,26 @@ def tools(request):
 @login_required
 def journalsByDiscipline(request):
     template_name = 'app/journalsByDiscipline.html'
-    columns = ['Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers']
     context = {
-        'disciplines_list': get_disciplines_list(),
-        'downloads_recent_count_graph_data': json.dumps(figure8(columns[1])),
-        'downloads_recent_percent_graph_data': json.dumps(figure8(columns[1])),
-        'downloads_alltime_graph_data': json.dumps(figure8(columns[0])),
-        'publications_graph_data': json.dumps(figure8(columns[2])),
-        'citations_graph_data': json.dumps(figure8(columns[3])),
+        'disciplines_list': json.dumps(get_disciplines_list()),
+        'chart_data': json.dumps(journals_by_discipline()),
     }
     return render(request, template_name, context)
 
 @login_required
 def journalsByProvider(request):
     template_name = 'app/journalsByProvider.html'
-    columns = ['Downloads JR1 2017', 'Downloads JR5 2017 in 2017', 'References', 'Papers']
     context = {
-        'disciplines_list': get_disciplines_list(),
-        'downloads_recent_count_graph_data': json.dumps(figure8(columns[1])),
-        'downloads_recent_percent_graph_data': json.dumps(figure8(columns[1])),
-        'downloads_alltime_graph_data': json.dumps(figure8(columns[0])),
-        'publications_graph_data': json.dumps(figure8(columns[2])),
-        'citations_graph_data': json.dumps(figure8(columns[3])),
+        'providers_list': json.dumps(get_provider_list()),
+        'chart_data': json.dumps(journals_by_provider()),
+    }
+    return render(request, template_name, context)
+
+@login_required
+def providersByMetric(request):
+    template_name = 'app/providersByMetric.html'
+    context = {
+        'providers_list': json.dumps(get_provider_list()),
+        'chart_data': json.dumps(providers_by_metric()),
     }
     return render(request, template_name, context)
