@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import StrMethodFormatter
 import matplotlib.patches as mpatches
 
+import math
 import boto3
 import io
 import json
@@ -30,7 +31,6 @@ def getData():
 
     client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-
     
 
     object_key = 'JournalsPerProvider_withoutQuotes.xls'
@@ -286,7 +286,9 @@ def figure8(column_as_count):
         journals = group['Journal'].values.tolist()
         counts = group[column_as_count].values.tolist()
         journals_for_discipline = dict(zip(journals, counts))
-        journals_for_discipline_sorted_by_counts = {k: v for k, v in sorted(journals_for_discipline.items(), key=lambda item: item[1], reverse=True)}
+        journals_for_discipline_sorted_by_counts = {}
+        for k, v in sorted(journals_for_discipline.items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
+            journals_for_discipline_sorted_by_counts[k] = 0.0 if math.isnan(v) else v
         ret[key] = journals_for_discipline_sorted_by_counts
         
     # disciplines_data.sort(key=lambda row: row[4], reverse=True)
@@ -299,6 +301,8 @@ def figure8(column_as_count):
     # print("\n")
     # print(len(list(disciplines_and_counts.values())))
     # return disciplines_and_counts
+    with open('file.txt', 'w') as file:
+        file.write(json.dumps(ret))
     return ret
 
 # figure8('Downloads JR1 2017')
