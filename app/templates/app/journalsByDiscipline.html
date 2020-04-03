@@ -87,7 +87,7 @@
             <div id="metrics_downloads_options" class="ml-4">
               <div class="custom-control custom-checkbox mb-2">
                 <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
-                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent</label>
+                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent (JR5)</label>
               </div>
 
               <div id="metrics_downloads_options_recent_types" class="ml-4">
@@ -437,6 +437,7 @@
     console.log(chartData); 
 
     var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+    // console.log(chartData[metrics[2]][disciplinesList[0]].categories)
 
     var downloadsRecentCountGraphConfig = {
         chart: {
@@ -450,8 +451,24 @@
               fontSize: 20,
             }
         },
+        tooltip: {
+            formatter: function() {
+                var s = '<small>'+ this.x + '</small>';
+
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                });
+
+                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+
+                return s;
+            },
+            shared: true,
+            useHTML: false
+        },
         xAxis: {
-            categories: Object.keys(chartData[metrics[0]][disciplinesList[0]]),
+            categories: chartData[metrics[0]][disciplinesList[0]].categories,
+            providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
             scrollbar: {
@@ -469,7 +486,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[0]][disciplinesList[0]]),
+            data: chartData[metrics[0]][disciplinesList[0]].counts,
         }],
         credits: {
             enabled: false
@@ -491,13 +508,29 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[0]][disciplinesList[0]]),
+            categories: chartData[metrics[0]][disciplinesList[0]].categories,
+            providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
             scrollbar: {
                 enabled: true
             },
             tickLength: 0
+        },
+        tooltip: {
+            formatter: function() {
+                var s = '<small>'+ this.x + '</small>';
+
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                });
+
+                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+
+                return s;
+            },
+            shared: true,
+            useHTML: false
         },
         yAxis: {
             title: {
@@ -509,7 +542,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[0]][disciplinesList[0]]),
+            data: chartData[metrics[0]][disciplinesList[0]].counts,
         }],
         credits: {
             enabled: false
@@ -523,7 +556,7 @@
             type: 'bar'
         },
         title: {
-            text: 'Journals by Downloads - All Time',
+            text: 'Journals by Downloads - Alltime',
             fontFamily: 'Segoe UI',
             style: {
               fontWeight: 10,
@@ -531,13 +564,29 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[1]][disciplinesList[0]]),
+            categories: chartData[metrics[1]][disciplinesList[0]].categories,
+            providerMap: chartData[metrics[1]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
             scrollbar: {
                 enabled: true
             },
             tickLength: 0
+        },
+        tooltip: {
+            formatter: function() {
+                var s = '<small>'+ this.x + '</small>';
+
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                });
+
+                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+
+                return s;
+            },
+            shared: true,
+            useHTML: false
         },
         yAxis: {
             title: {
@@ -549,7 +598,7 @@
         },
         series: [{
             name: 'Downloads',
-            data: Object.values(chartData[metrics[1]][disciplinesList[0]]),
+            data: chartData[metrics[1]][disciplinesList[0]].counts,
         }],
         credits: {
             enabled: false
@@ -563,7 +612,7 @@
             type: 'bar'
         },
         title: {
-            text: 'Journals by Publications by UVA Authors',
+            text: 'Journals by Publications',
             fontFamily: 'Segoe UI',
             style: {
               fontWeight: 10,
@@ -571,13 +620,29 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[2]][disciplinesList[0]]),
+            categories: chartData[metrics[2]][disciplinesList[0]].categories,
+            providerMap: chartData[metrics[2]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
             scrollbar: {
                 enabled: true
             },
             tickLength: 0
+        },
+        tooltip: {
+            formatter: function() {
+                var s = '<small>'+ this.x + '</small>';
+
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                });
+
+                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+
+                return s;
+            },
+            shared: true,
+            useHTML: false
         },
         yAxis: {
             title: {
@@ -588,10 +653,10 @@
             enabled: false
         },
         series: [{
-            data: Object.values(chartData[metrics[2]][disciplinesList[0]]),
+            name: 'Publications',
+            data: chartData[metrics[2]][disciplinesList[0]].counts,
         }],
         credits: {
-            name: 'Publications',
             enabled: false
         },
     };
@@ -603,7 +668,7 @@
             type: 'bar'
         },
         title: {
-            text: 'Journals by Citations by UVA Authors',
+            text: 'Journals by Citations',
             fontFamily: 'Segoe UI',
             style: {
               fontWeight: 10,
@@ -611,13 +676,29 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[metrics[3]][disciplinesList[0]]),
+            categories: chartData[metrics[3]][disciplinesList[0]].categories,
+            providerMap: chartData[metrics[3]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
             scrollbar: {
                 enabled: true
             },
             tickLength: 0
+        },
+        tooltip: {
+            formatter: function() {
+                var s = '<small>'+ this.x + '</small>';
+
+                $.each(this.points, function(i, point) {
+                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                });
+
+                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+
+                return s;
+            },
+            shared: true,
+            useHTML: false
         },
         yAxis: {
             title: {
@@ -629,7 +710,7 @@
         },
         series: [{
             name: 'Citations',
-            data: Object.values(chartData[metrics[3]][disciplinesList[0]]),
+            data: chartData[metrics[3]][disciplinesList[0]].counts,
         }],
         credits: {
             enabled: false

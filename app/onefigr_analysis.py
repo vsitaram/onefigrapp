@@ -282,14 +282,21 @@ def journals_by_discipline():
     	journals_by_discipline_by_metric_dict = {}
 
     	for key, item in journals_by_discipline_df:
-    		group = journals_by_discipline_df.get_group(key)
+    		group = journals_by_discipline_df.get_group(key).sort_values(by=[metric], ascending=False).fillna(0)
     		journals = group['Journal'].values.tolist()
+    		providers = group['Provider'].values.tolist()
     		counts = group[metric].values.tolist()
-    		journals_by_discipline_dict = dict(zip(journals, counts))
-    		journals_by_discipline_dict_sorted_by_counts = {}
-    		for k, v in sorted(journals_by_discipline_dict.items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
-    			journals_by_discipline_dict_sorted_by_counts[k] = 0.0 if math.isnan(v) else v
-    		journals_by_discipline_by_metric_dict[key] = journals_by_discipline_dict_sorted_by_counts
+    		journals_and_provider_dict = dict(zip(journals, providers))
+    		journals_by_discipline_dict = {}
+
+    		for index in range(0, len(journals)):
+    			journals_by_discipline_dict = {
+    				'categories': journals,
+    				'providerMap': journals_and_provider_dict,
+    				'counts': counts
+    			}
+    		
+    		journals_by_discipline_by_metric_dict[key] = journals_by_discipline_dict
 
     	ret[metric] = journals_by_discipline_by_metric_dict
         
@@ -334,7 +341,7 @@ def journals_by_provider():
 		for metric in metrics:
 			journals_by_provider_dict[row['Provider']][metric] = row[metric] / 2
     
-	print(journals_by_provider_dict)
+	# print(journals_by_provider_dict)
 
 	ret = { provider: {} for provider in provider_list }
 	
