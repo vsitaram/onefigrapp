@@ -129,7 +129,7 @@
           </div>
           
         </div>
-        <div class="col-md-8" style="">
+        <div class="col-md-8">
           <!-- Downloads -->
           <div id="downloads mt-0">
             <!-- Recent Downloads -->
@@ -343,6 +343,7 @@
 
     function resetMetricColumnHeight() {
       $('#metrics_column').height( function() {
+        var ret = 0;
         if( $(document).width() < 768) {
           heights = 0;
           $('#metrics_column').children().each( function() {
@@ -358,7 +359,7 @@
           // console.log("Window height: " + $(window).height());
           // console.log("Result: " + heights);
 
-          return heights + 64;
+          ret =  heights + 64;
         }
         else {
           elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
@@ -376,9 +377,11 @@
           // console.log("Document height: " + $(document).height());
           // console.log("Result: " + ($(document).height() - heights));
 
-          return $(document).height() - heights - 3 - 1;
+          ret = $(window).height() - heights - 3 - 1;
         }
-        
+
+        return ret;
+
       });
     }
 
