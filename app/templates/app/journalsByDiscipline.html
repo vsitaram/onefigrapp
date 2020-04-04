@@ -177,14 +177,7 @@
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
 
-    $(document).ready(function() {
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
-
-      loadDisciplinesList()
-    });
+    
 
     $("input[id='metrics_downloads']").on('change', function() {
       if( $(this).is(':checked') ) {
@@ -389,7 +382,13 @@
       });
     }
 
-    $(window).on('load', function() {
+    $('#downloads_recent_percent').hide();
+    $('#downloads_alltime').hide();
+    $('#publications').hide();
+    $('#citations').hide();
+
+    $(document).on('ready', function() {
+      loadDisciplinesList()
       resetMetricColumnHeight();
     });
 
