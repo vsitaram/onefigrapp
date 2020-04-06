@@ -385,19 +385,21 @@
       });
     }
 
+
     $('#downloads_recent_percent').hide();
     $('#downloads_alltime').hide();
     $('#publications').hide();
     $('#citations').hide();
+    
+    resetMetricColumnHeight();
 
     $(document).on('ready', function() {
-      loadDisciplinesList()
-      resetMetricColumnHeight();
+      loadDisciplinesList();
     });
 
-    $(document).on('click', function() {
-      resetMetricColumnHeight();
-    });
+    // $(document).on('click', function() {
+    //   resetMetricColumnHeight();
+    // });
 
     function processViewData(dataString) {
       dataString = dataString.replace(/&amp;/g, "&");
