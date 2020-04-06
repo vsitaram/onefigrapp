@@ -1,1 +1,1 @@
-web: gunicorn onefigrapp.wsgi --log-file -
+web: gunicorn --timeout 120 onefigrapp.wsgi --log-file -
