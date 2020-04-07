@@ -393,9 +393,6 @@
     
     resetMetricColumnHeight();
 
-    $(document).on('ready', function() {
-      loadDisciplinesList();
-    });
 
     // $(document).on('click', function() {
     //   resetMetricColumnHeight();
@@ -432,9 +429,14 @@
         if(i == 0) newOption.selected = true;
         newOption.innerHTML = disciplinesList[i];
         $( "#discipline_select" ).append(newOption);
-        // console.log(disciplinesList[i]);
+        console.log(disciplinesList[i]);
       }
     }
+
+    loadDisciplinesList();
+    // $(document).on('load', function() {
+    //   loadDisciplinesList();
+    // });
 
     var chartDataString = "{{ chart_data }}";
     var chartData = processViewData(chartDataString);
@@ -728,24 +730,29 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
+          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
+          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
           downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
 
-          downloadsRecentPercentGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentPercentGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
+          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
+          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
           downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
 
-          downloadsAllTimeGraphConfig.xAxis.categories = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]);
-          downloadsAllTimeGraphConfig.series[0].data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[1]][$("#discipline_select").val()].categories;
+          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[1]][$("#discipline_select").val()].providerMap;
+          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[1]][$("#discipline_select").val()].counts;
           downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
 
-          publicationsConfig.xAxis.categories = Object.keys(chartData[metrics[2]][$("#discipline_select").val()]);
-          publicationsConfig.series[0].data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[2]][$("#discipline_select").val()].categories;
+          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[2]][$("#discipline_select").val()].providerMap;
+          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[2]][$("#discipline_select").val()].counts;
           publicationsChart.update(publicationsConfig);
 
-          citationsConfig.xAxis.categories = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]);
-          citationsConfig.series[0].data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[3]][$("#discipline_select").val()].categories;
+          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[3]][$("#discipline_select").val()].providerMap;
+          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[3]][$("#discipline_select").val()].counts;
           citationsChart.update(citationsConfig);
         }
     });
