@@ -465,7 +465,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -531,7 +531,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -587,7 +587,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -612,6 +612,10 @@
     };
 
     var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
+
+    console.log(chartData[metrics[2]][disciplinesList[0]].categories);
+    console.log(chartData[metrics[2]][disciplinesList[0]].providerMap);
+    console.log(chartData[metrics[2]][disciplinesList[0]].counts);
 
     var publicationsConfig = {
         chart: {
@@ -643,7 +647,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -699,7 +703,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Journal: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
