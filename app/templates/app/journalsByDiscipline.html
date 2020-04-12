@@ -541,7 +541,7 @@
 
             var text = "";
             if (result.length > 0 && result.length < resultCount) {
-                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> journals matching "' + query + '"';
             } else if (result.length > 0) {
                 text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
             } else {
@@ -572,7 +572,6 @@
           // console.log(options[i].value);
           if (discipline.localeCompare(options[i].value) == 0) {
             options[i].selected = true;
-            $("#discipline_select").change();
             break;
           }
         }
@@ -580,6 +579,8 @@
       else {
         options[0].selected = true;
       }
+
+      $("#discipline_select").change();
     }
 
     var downloadsRecentCountGraphConfig = {
