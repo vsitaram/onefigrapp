@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="{% static 'app/css/addons/datatables.min.css' %}">
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'app/css/jquery.typeahead.min.css' %}">
 
   <style type="text/css">
     #breadcrumb a {
@@ -73,9 +74,41 @@
           <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
             <h4 class="mb-4">Disciplines</h4>
 
-            <select class="browser-default custom-select mb-5" id="discipline_select">
+            <select class="browser-default custom-select mb-2" id="discipline_select">
               <option>Select Discipline</option>
             </select>
+
+            <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Find Discipline for Your Journal</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearModalText()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body mt-5">
+                        <var id="result-container" class="result-container"></var>
+                       <div class="typeahead__container mb-5">
+                           <div class="typeahead__field">
+                               <div class="typeahead__query">
+                                   <input placeholder="Search" autocomplete="off" id="modal_journal_input">
+                               </div>
+                           </div>
+                       </div>
+
+                       <p id="result_message_container"></p>
+
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center">
+                    <a type="button" class="btn" data-dismiss="modal" onclick="findAndSetDisciplineForJournal()" style="background-color: #E57200">Use Discipline</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="mb-5"><small><a href="" data-toggle="modal" data-target="#modalLoginForm">Which discipline is my journal in?</a></small></p>
 
             <h4 class="mb-3">Metrics</h4>
 
@@ -170,6 +203,8 @@
   <script type="text/javascript" src="{% static 'app/js/popper.min.js' %}"></script>
   <!-- Bootstrap core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'app/js/jquery.typeahead.min.js' %}"></script>
+  
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/mdb.min.js' %}"></script>
   <script src="https://code.highcharts.com/stock/highstock.js"></script>
@@ -177,7 +212,6 @@
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
 
-    
 
     $("input[id='metrics_downloads']").on('change', function() {
       if( $(this).is(':checked') ) {
@@ -443,7 +477,110 @@
     console.log(chartData); 
 
     var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-    // console.log(chartData[metrics[2]][disciplinesList[0]].categories)
+    // console.log(chartData[metrics[0]][disciplinesList[0]].categories);
+
+
+    var journalsAndDisciplinesMapString = "{{ journals_and_disciplines_map }}";
+    var journalsAndDisciplinesMap = processViewData(journalsAndDisciplinesMapString);
+    console.log(journalsAndDisciplinesMap);
+    
+    var journalTitles = Object.keys(journalsAndDisciplinesMap);
+    // var journalTitles = ["Construction and Building Materials", "Cities", "Landscape and Urban Planning", "Land Use Policy", "Building and Environment", "International Journal of Project Management", "Energy and Buildings", "Cement and Concrete Research", "Architectural Design", "Journal of the American Planning Association", "City, Culture and Society", "Cement and Concrete Composites", "Habitat International", "Journal of Architectural Education", "Urban studies (Abingdon)", "Automation in Construction", "Buildings & Landscapes", "Journal of Planning History", "Structural and Multidisciplinary Optimization", "City and Community", "Economic Development Quarterly", "Journal of Materials in Civil Engineering", "Advanced Engineering Informatics", "Mechanism and Machine Theory", "Design Studies", "Finite Elements in Analysis and Design", "Journal of Architecture RIBA", "Journal of Planning Literature", "Urban Design International", "Computer-Aided Design", "Local Environment", "Housing Policy Debate", "Landscape Research", "Urban Affairs Review", "Building Research & Information", "Journal of Construction Engineering and Management", "Housing Studies", "International Journal of Civil Engineering (Tehran)", "Journal of Computing in Civil Engineering", "Planning Theory", "The Annals of Regional Science", "Design Issues", "Journal of Urban Affairs", "City (London)", "Journal of Mechanical Design (1990)", "Journal of Planning Education and Research", "Materials and Structures", "Engineering with Computers", "Indoor Air", "International Journal of Sustainable Built Environment", "International Journal of Urban Sustainable Development", "Planning Theory and Practice", "Regional Studies", "Studies in the History of Gardens and Designed Landscapes", "Case Studies in Construction Materials", "Environmental Impact Assessment Review", "Frontiers of Architectural Research", "Journal of Architectural Engineering", "Journal of Building Engineering", "Journal of Computing and Information Science in Engineering", "Journal of Housing and the Built Environment", "Journal of Management in Engineering", "Journal of Urban Planning and Development", "Nexus Network Journal", "Papers in Regional Science", "Urban Policy and Research", "ACM Transactions on Design Automation of Electronic Systems", "Housing, Theory and Society", "International Journal of Concrete Structures and Materials", "Journal of Urban Design", "Planning Practice and Research", "Progress in Planning", "The Design Journal", "Urban Research and Practice", "Architectural Theory Review", "Building Simulation", "Buildings (Basel)", "Environment and Urbanization", "European Planning Studies", "Growth and Change", "Journal of Environmental Planning and Management", "Journal of Mechanisms and Robotics", "Planning Perspectives", "Architectural History", "Community Development Journal", "Construction Management and Economics", "Environment and Planning. B, Urban Analytics and City Science", "International Journal of Architectural Heritage - Conservation, Analysis, and Restoration", "International Journal of Housing Policy", "International Journal of Pavement Research and Technology", "International Journal of Urban and Regional Research", "International Planning Studies", "Journal of Computational Design and Engineering", "Journal of Professional Issues in Engineering Education and Practice", "Journal of Urban Technology", "Journal of Urbanism - International Research on Placemaking and Urban Sustainability", "Local Economy", "Multibody System Dynamics", "Queensland Review", "Sustainability - Science, Practice, and Policy"]
+    
+    /*
+    journalsAndProvidersMap = {
+      "Construction and Building Materials": "Architecture",
+      "Cities": "Architecture",
+      "Landscape and Urban Planning": "Architecture",
+      "Land Use Policy": "Architecture",
+      "Building and Environment": "Architecture",
+      "International Journal of Project Management": "Architecture",
+      "Energy and Buildings": "Architecture",
+      "Cement and Concrete Research": "Architecture",
+      "Architectural Design": "Architecture",
+      "Journal of the American Planning Association": "Architecture",
+      "City, Culture and Society": "Architecture",
+      "Cement and Concrete Composites": "Architecture",
+      "Habitat International": "Elsevier",
+      "Journal of Architectural Education": "Architecture",
+      "Urban studies (Abingdon)": "Architecture",
+      "Automation in Construction": "Architecture",
+      "Buildings & Landscapes": "Architecture",
+      "Journal of Planning History": "Architecture",
+      "Structural and Multidisciplinary Optimization": "Architecture",
+      "City and Community": "Architecture",
+      "Economic Development Quarterly": "Architecture",
+      "Journal of Materials in Civil Engineering": "Architecture",
+      "Advanced Engineering Informatics": "Architecture",
+      "Mechanism and Machine Theory": "Architecture",
+      "Design Studies": "Architecture",
+      "Finite Elements in Analysis and Design": "Architecture",
+      "Journal of Architecture RIBA": "Architecture",
+      "Journal of Planning Literature": "Architecture"
+    };
+    */
+
+    $.typeahead({
+        input: '#modal_journal_input',
+        order: "desc",
+        source: {
+            data: journalTitles
+        },
+        callback: {
+          onClickAfter: function (node, a, item, event) {
+              event.preventDefault();
+              $('#result-container').text('');
+              var text = item.display + " is in the <b>" + journalsAndDisciplinesMap[item.display] + "</b> discipline";
+              console.log(item);
+              console.log(text);
+              $('#result_message_container').html(text);
+    
+          },
+          onResult: function (node, query, result, resultCount) {
+            if (query === "") return;
+
+            var text = "";
+            if (result.length > 0 && result.length < resultCount) {
+                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+            } else if (result.length > 0) {
+                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
+            } else {
+                text = 'No results matching "' + query + '"';
+            }
+            $('#result-container').html(text);
+          }
+        }
+    
+    });
+
+
+    function clearModalText() {
+      var title = $("#modal_journal_input").val("");
+      var title = $("#result_message_container").text("");
+    }
+
+    function findAndSetDisciplineForJournal() {
+      var title = $("#modal_journal_input").val();
+      console.log(title);
+      clearModalText();
+      var discipline = journalsAndDisciplinesMap[title];
+      console.log(discipline);
+
+      var options = $('#discipline_select').children();
+      if (discipline != null) {
+        for (var i = 1; i < options.length; i++) {
+          // console.log(options[i].value);
+          if (discipline.localeCompare(options[i].value) == 0) {
+            options[i].selected = true;
+            $("#discipline_select").change();
+            break;
+          }
+        }
+      }
+      else {
+        options[0].selected = true;
+      }
+    }
 
     var downloadsRecentCountGraphConfig = {
         chart: {
@@ -613,9 +750,9 @@
 
     var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
 
-    console.log(chartData[metrics[2]][disciplinesList[0]].categories);
-    console.log(chartData[metrics[2]][disciplinesList[0]].providerMap);
-    console.log(chartData[metrics[2]][disciplinesList[0]].counts);
+    // console.log(chartData[metrics[2]][disciplinesList[0]].categories);
+    // console.log(chartData[metrics[2]][disciplinesList[0]].providerMap);
+    // console.log(chartData[metrics[2]][disciplinesList[0]].counts);
 
     var publicationsConfig = {
         chart: {

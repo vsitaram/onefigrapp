@@ -257,6 +257,16 @@ def get_disciplines_list():
 
 	return disciplines_list
 
+def journals_and_disciplines_map():
+	necessary_columns = ['Journal', 'Discipline','Domain']
+	figr_data = make_disciplines_column()[necessary_columns].dropna()
+	# figr_data = figr_data.loc[figr_data['Domain'] != "N/A"]
+	journals = figr_data['Journal'].values.tolist()
+	disciplines = figr_data['Discipline'].values.tolist()
+	journals_and_disciplines_dict = dict(zip(journals, disciplines))
+
+	return journals_and_disciplines_dict
+
 def journals_by_discipline():
 	"""Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
 	'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.

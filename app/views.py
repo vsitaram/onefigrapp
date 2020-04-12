@@ -26,6 +26,7 @@ def journalsByDiscipline(request):
     context = {
         'disciplines_list': json.dumps(get_disciplines_list()),
         'chart_data': json.dumps(journals_by_discipline()),
+        'journals_and_disciplines_map': json.dumps(journals_and_disciplines_map())
     }
     return render(request, template_name, context)
 
