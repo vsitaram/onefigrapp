@@ -959,6 +959,7 @@
         for(var j = 0; j < categories.length; j++) {
           var index = chartData[metrics[i]][disciplinesList[0]].categories.indexOf(categories[j]);
           var count = chartData[metrics[i]][disciplinesList[0]].counts[index];
+          if(index == -1) count = 0;
           newArr.push(count);
         }
         tableCounts.push(newArr);
