@@ -68,6 +68,11 @@
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Journals by Discipline Tool</h3>
       <p>Descriptions and important notes</p>
+      <p style="display: hidden;" id="downloads-checked"></p>
+      <p style="display: hidden;" id="recent-checked"></p>
+      <p style="display: hidden;" id="alltime-checked"></p>
+      <p style="display: hidden;" id="publications-checked"></p>
+      <p style="display: hidden;" id="citations-checked"></p>
     </div>
 
     <hr class="orange lighten-4">
@@ -97,7 +102,7 @@
                        <div class="typeahead__container mb-5">
                            <div class="typeahead__field">
                                <div class="typeahead__query">
-                                   <input placeholder="Search" autocomplete="off" id="modal_journal_input">
+                                   <input placeholder="Enter Journal Title" autocomplete="off" id="modal_journal_input">
                                </div>
                            </div>
                        </div>
@@ -116,8 +121,8 @@
 
             <!-- Default checked -->
             <div class="custom-control custom-switch mb-4">
-              <input type="checkbox" class="custom-control-input pl-4" id="metrics_toggle" unchecked>
-              <label class="custom-control-label" for="metrics_toggle">Show Data in Table</label>
+              <input type="checkbox" class="custom-control-input pl-4" id="table_toggle" unchecked>
+              <label class="custom-control-label" for="table_toggle">Show Data in Table</label>
             </div>
 
             <h4 class="mb-3">Metrics</h4>
@@ -131,20 +136,7 @@
               <div class="custom-control custom-checkbox mb-2">
                 <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
                 <label class="custom-control-label" for="metrics_downloads_options_recent">Recent (JR5)</label>
-              </div>
-
-              <div id="metrics_downloads_options_recent_types" class="ml-4">
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_count" checked>
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_count">Count</label>
-                </div>
-
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_percent">
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_percent">Percent</label>
-                </div>
-              </div>
-              
+              </div>             
 
               <div class="custom-control custom-checkbox mb-2">
                 <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
@@ -175,27 +167,20 @@
         </div>
         <div class="col-md-8">
           <!-- Downloads -->
-          <div id="downloads_graphs">
+          <div id="charts">
             <!-- Recent Downloads -->
-            <div id="downloads_recent">
-              <!-- Recent Downloads Count -->
-              <div class="mt-3" id="downloads_recent_count">
-                <div id="downloads_recent_count_graph" style="width:100%; height:475px;"></div>
-              </div>
-              <!-- Recent Downloads Percent -->
-              <div class="mt-5" id="downloads_recent_percent">
-                <div id="downloads_recent_percent_graph" style="width:100%; height:475px;"></div>
-              </div>
+            <div class="mt-3" id="charts_downloads_recent">
+              <div id="charts_downloads_recent_chart" style="width:100%; height:475px;"></div>
             </div>
-            <div class="mt-5" id="downloads_alltime">
-              <div id="downloads_alltime_graph" style="width:100%; height:475px;"></div>
+            <div class="mt-5" id="charts_downloads_alltime">
+              <div id="charts_downloads_alltime_chart" style="width:100%; height:475px;"></div>
             </div>
-            <div class="mt-5" id="publications">
-              <div id="publications_graph" style="width:100%; height:475px;"></div>
+            <div class="mt-5" id="charts_publications">
+              <div id="charts_publications_chart" style="width:100%; height:475px;"></div>
             </div>
 
-            <div class="mt-5" id="citations">
-              <div id="citations_graph" style="width:100%; height:475px;"></div>
+            <div class="mt-5" id="charts_citations">
+              <div id="charts_citations_chart" style="width:100%; height:475px;"></div>
             </div>
 
           </div>
@@ -203,11 +188,11 @@
             <table id="dt-select" class="table table-striped table-bordered" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>JR1</th>
-                  <th>JR5</th>
-                  <th>Publications</th>
-                  <th>Citations</th>                 
+                  <th class="journal-title-column">Title</th>
+                  <th class="recent-column">Recent (JR5)</th>
+                  <th class="alltime-column">Alltime (JR1)</th>
+                  <th class="publications-column">Publications</th>
+                  <th class="citations-column">charts_citations</th>                 
                 </tr>
               </thead>
               <tbody id="table_body">
@@ -241,80 +226,38 @@
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
    
-
     $("input[id='metrics_downloads']").on('change', function() {
       if( $(this).is(':checked') ) {
         $('#metrics_downloads_options').show();
         if( $("input[id='metrics_downloads_options_recent']").is(':checked')) {
-          $("input[id='metrics_downloads_options_recent_types']").show();
-        }
-        else {
-          $("input[id='metrics_downloads_options_recent_types']").hide(); 
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-          $('#downloads_recent_count').show();
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-          $('#downloads_recent_percent').show();
+          $('#charts_downloads_recent').show();
         }
         if( $("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $('#downloads_alltime').show();
+          $('#charts_downloads_alltime').show();
         }
       } else {
         $('#metrics_downloads_options').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-        $('#downloads_alltime').hide();
+        $('#charts_downloads_recent').hide();
+        $('#charts_downloads_alltime').hide();
       }
-
-      
     });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
       if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#metrics_downloads_options_recent_types').show();
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-            $('#downloads_recent_count').show();
-          }
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-            $('#downloads_recent_percent').show();
-          }
+          $('#charts_downloads_recent').show();
       }          
       else {
-        $('#metrics_downloads_options_recent_types').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-      }
-
-      
+        $('#charts_downloads_recent').hide();
+      }    
     });
-
-    $("input[id='metrics_downloads_options_recent_types_count']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_count').show();
-      }          
-      else {
-        $('#downloads_recent_count').hide();
-      }
-    });
-
-    $("input[id='metrics_downloads_options_recent_types_percent']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_percent').show();
-      }          
-      else {
-        $('#downloads_recent_percent').hide();
-      }
-
-      
-    });
+    
 
     $("input[id='metrics_downloads_options_alltime']").on('change', function() {
       if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#downloads_alltime').show();
+          $('#charts_downloads_alltime').show();
       }          
       else {
-        $('#downloads_alltime').hide();
+        $('#charts_downloads_alltime').hide();
       }
 
   
@@ -322,85 +265,52 @@
 
     $("input[id='metrics_publications']").on('change', function() {
       if( $(this).is(':checked') ) {
-          $('#publications').show();
+          $('#charts_publications').show();
       }          
       else {
-        $('#publications').hide();
+        $('#charts_publications').hide();
       }
-
-      
     });
 
     $("input[id='metrics_citations']").on('change', function() {
       if( $(this).is(':checked') ) {
-          $('#citations').show();
+          $('#charts_citations').show();
       }          
       else {
-        $('#citations').hide();
-      }
-
-    
+        $('#charts_citations').hide();
+      }    
     });
 
     $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
+      $('#charts_downloads_recent').show();
+      $('#charts_downloads_alltime').show();
+      $('#charts_publications').show();
+      $('#charts_citations').show();
 
       $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
-
-      $("input[id='metrics_downloads']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
-
-      
-    });
-
-    $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
-
-      $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
 
       $("input[id='metrics_downloads']").prop('checked', true);
       $("input[id='metrics_downloads_options_recent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
-
-      
     });
 
+
     $('#metrics_hide_all').on('click', function() {
-      $('#downloads_recent_count').hide();
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
+      $('#charts_downloads_recent').hide();
+      $('#charts_downloads_alltime').hide();
+      $('#charts_publications').hide();
+      $('#charts_citations').hide();
 
       $("#metrics_downloads_options").hide();
       $("#metrics_downloads_options_recent_types").hide();
 
       $("input[id='metrics_downloads']").prop('checked', false);
       $("input[id='metrics_downloads_options_recent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', false);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
       $("input[id='metrics_citations']").prop('checked', false);
-
     });
 
 
@@ -449,10 +359,9 @@
     }
 
 
-    $('#downloads_recent_percent').hide();
-    $('#downloads_alltime').hide();
-    $('#publications').hide();
-    $('#citations').hide();
+    $('#charts_downloads_alltime').hide();
+    $('#charts_publications').hide();
+    $('#charts_citations').hide();
     
     resetMetricColumnHeight();
 
@@ -506,7 +415,7 @@
     console.log(chartData); 
 
     var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-    // console.log(chartData[metrics[0]][disciplinesList[0]].categories);
+    console.log(chartData[metrics[1]][disciplinesList[2]].providerMap);
 
 
     var journalsAndDisciplinesMapString = "{{ journals_and_disciplines_map }}";
@@ -517,7 +426,7 @@
     // var journalTitles = ["Construction and Building Materials", "Cities", "Landscape and Urban Planning", "Land Use Policy", "Building and Environment", "International Journal of Project Management", "Energy and Buildings", "Cement and Concrete Research", "Architectural Design", "Journal of the American Planning Association", "City, Culture and Society", "Cement and Concrete Composites", "Habitat International", "Journal of Architectural Education", "Urban studies (Abingdon)", "Automation in Construction", "Buildings & Landscapes", "Journal of Planning History", "Structural and Multidisciplinary Optimization", "City and Community", "Economic Development Quarterly", "Journal of Materials in Civil Engineering", "Advanced Engineering Informatics", "Mechanism and Machine Theory", "Design Studies", "Finite Elements in Analysis and Design", "Journal of Architecture RIBA", "Journal of Planning Literature", "Urban Design International", "Computer-Aided Design", "Local Environment", "Housing Policy Debate", "Landscape Research", "Urban Affairs Review", "Building Research & Information", "Journal of Construction Engineering and Management", "Housing Studies", "International Journal of Civil Engineering (Tehran)", "Journal of Computing in Civil Engineering", "Planning Theory", "The Annals of Regional Science", "Design Issues", "Journal of Urban Affairs", "City (London)", "Journal of Mechanical Design (1990)", "Journal of Planning Education and Research", "Materials and Structures", "Engineering with Computers", "Indoor Air", "International Journal of Sustainable Built Environment", "International Journal of Urban Sustainable Development", "Planning Theory and Practice", "Regional Studies", "Studies in the History of Gardens and Designed Landscapes", "Case Studies in Construction Materials", "Environmental Impact Assessment Review", "Frontiers of Architectural Research", "Journal of Architectural Engineering", "Journal of Building Engineering", "Journal of Computing and Information Science in Engineering", "Journal of Housing and the Built Environment", "Journal of Management in Engineering", "Journal of Urban Planning and Development", "Nexus Network Journal", "Papers in Regional Science", "Urban Policy and Research", "ACM Transactions on Design Automation of Electronic Systems", "Housing, Theory and Society", "International Journal of Concrete Structures and Materials", "Journal of Urban Design", "Planning Practice and Research", "Progress in Planning", "The Design Journal", "Urban Research and Practice", "Architectural Theory Review", "Building Simulation", "Buildings (Basel)", "Environment and Urbanization", "European Planning Studies", "Growth and Change", "Journal of Environmental Planning and Management", "Journal of Mechanisms and Robotics", "Planning Perspectives", "Architectural History", "Community Development Journal", "Construction Management and Economics", "Environment and Planning. B, Urban Analytics and City Science", "International Journal of Architectural Heritage - Conservation, Analysis, and Restoration", "International Journal of Housing Policy", "International Journal of Pavement Research and Technology", "International Journal of Urban and Regional Research", "International Planning Studies", "Journal of Computational Design and Engineering", "Journal of Professional Issues in Engineering Education and Practice", "Journal of Urban Technology", "Journal of Urbanism - International Research on Placemaking and Urban Sustainability", "Local Economy", "Multibody System Dynamics", "Queensland Review", "Sustainability - Science, Practice, and Policy"]
     
     /*
-    journalsAndProvidersMap = {
+    journalsAndDisciplineMap = {
       "Construction and Building Materials": "Architecture",
       "Cities": "Architecture",
       "Landscape and Urban Planning": "Architecture",
@@ -612,7 +521,7 @@
       $("#discipline_select").change();
     }
 
-    var downloadsRecentCountGraphConfig = {
+    var downloadsRecentChartConfig = {
         chart: {
             type: 'bar'
         },
@@ -632,7 +541,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsRecentChartConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -666,65 +575,9 @@
         },
     };
 
-    var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
+    var downloadsRecentChart = Highcharts.chart('charts_downloads_recent_chart', downloadsRecentChartConfig);
 
-    var downloadsRecentPercentGraphConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - Recent (Percent)',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: chartData[metrics[0]][disciplinesList[0]].categories,
-            providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        tooltip: {
-            formatter: function() {
-                var s = '<small>'+ this.x + '</small>';
-
-                $.each(this.points, function(i, point) {
-                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                });
-
-                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
-
-                return s;
-            },
-            shared: true,
-            useHTML: false
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            }
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: chartData[metrics[0]][disciplinesList[0]].counts,
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsRecentPercentGraphChart = Highcharts.chart('downloads_recent_percent_graph', downloadsRecentPercentGraphConfig);
-
-    var downloadsAllTimeGraphConfig = {
+    var downloadsAlltimeChartConfig = {
         chart: {
             type: 'bar'
         },
@@ -754,7 +607,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + downloadsAlltimeChartConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -778,13 +631,13 @@
         },
     };
 
-    var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
+    var downloadsAlltimeChart = Highcharts.chart('charts_downloads_alltime_chart', downloadsAlltimeChartConfig);
 
     // console.log(chartData[metrics[2]][disciplinesList[0]].categories);
     // console.log(chartData[metrics[2]][disciplinesList[0]].providerMap);
     // console.log(chartData[metrics[2]][disciplinesList[0]].counts);
 
-    var publicationsConfig = {
+    var publicationsChartConfig = {
         chart: {
             type: 'bar'
         },
@@ -814,7 +667,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + publicationsChartConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -838,9 +691,9 @@
         },
     };
 
-    var publicationsChart = Highcharts.chart('publications_graph', publicationsConfig);
+    var publicationsChart = Highcharts.chart('charts_publications_chart', publicationsChartConfig);
 
-    var citationsConfig = {
+    var citationsChartConfig = {
         chart: {
             type: 'bar'
         },
@@ -870,7 +723,7 @@
                     s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
                 });
 
-                s += '<br/>' + 'Provider: ' + downloadsRecentCountGraphConfig.xAxis.providerMap[this.x];
+                s += '<br/>' + 'Provider: ' + citationsChartConfig.xAxis.providerMap[this.x];
 
                 return s;
             },
@@ -894,37 +747,32 @@
         },
     };
     
-    var citationsChart = Highcharts.chart('citations_graph', citationsConfig);
+    var citationsChart = Highcharts.chart('charts_citations_chart', citationsChartConfig);
 
 
     $("#discipline_select").on("change", function() {
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
-          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
-          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
-          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
+          downloadsRecentChartConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
+          downloadsRecentChartConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
+          downloadsRecentChartConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
+          downloadsRecentChart.update(downloadsRecentChartConfig);
 
-          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
-          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
-          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
-          downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
+          downloadsAlltimeChartConfig.xAxis.categories = chartData[metrics[1]][$("#discipline_select").val()].categories;
+          downloadsAlltimeChartConfig.xAxis.providerMap = chartData[metrics[1]][$("#discipline_select").val()].providerMap;
+          downloadsAlltimeChartConfig.series[0].data = chartData[metrics[1]][$("#discipline_select").val()].counts;
+          downloadsAlltimeChart.update(downloadsAlltimeChartConfig);
 
-          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[1]][$("#discipline_select").val()].categories;
-          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[1]][$("#discipline_select").val()].providerMap;
-          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[1]][$("#discipline_select").val()].counts;
-          downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
+          publicationsChartConfig.xAxis.categories = chartData[metrics[2]][$("#discipline_select").val()].categories;
+          publicationsChartConfig.xAxis.providerMap = chartData[metrics[2]][$("#discipline_select").val()].providerMap;
+          publicationsChartConfig.series[0].data = chartData[metrics[2]][$("#discipline_select").val()].counts;
+          publicationsChart.update(publicationsChartConfig);
 
-          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[2]][$("#discipline_select").val()].categories;
-          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[2]][$("#discipline_select").val()].providerMap;
-          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[2]][$("#discipline_select").val()].counts;
-          publicationsChart.update(publicationsConfig);
-
-          downloadsRecentCountGraphConfig.xAxis.categories = chartData[metrics[3]][$("#discipline_select").val()].categories;
-          downloadsRecentCountGraphConfig.xAxis.providerMap = chartData[metrics[3]][$("#discipline_select").val()].providerMap;
-          downloadsRecentCountGraphConfig.series[0].data = chartData[metrics[3]][$("#discipline_select").val()].counts;
-          citationsChart.update(citationsConfig);
+          citationsChartConfig.xAxis.categories = chartData[metrics[3]][$("#discipline_select").val()].categories;
+          citationsChartConfig.xAxis.providerMap = chartData[metrics[3]][$("#discipline_select").val()].providerMap;
+          citationsChartConfig.series[0].data = chartData[metrics[3]][$("#discipline_select").val()].counts;
+          citationsChart.update(citationsChartConfig);
         }
     });
     
@@ -965,8 +813,7 @@
         tableCounts.push(newArr);
       }      
 
-      console.log(tableData);
-
+      trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
       var tableData = rotate(tableCounts);
       var tableBody = document.getElementById('table_body');
       for(var i = 0; i < tableData.length; i++) {
@@ -974,6 +821,7 @@
         for(var j = 0; j < tableData[i].length; j++) {
           var dataPoint = document.createElement('td');
           dataPoint.innerHTML = tableData[i][j];
+          dataPoint.classList.add(trClasses[j]);
           row.appendChild(dataPoint);
         }
         tableBody.appendChild(row);
@@ -987,14 +835,66 @@
       $('#downloads_table').hide();
     });
 
-    $("input[id='metrics_toggle']").on('change', function() {
+    // var downloadsChecked = $("input[id='metrics_downloads']").is(':checked');
+    // console.log(downloadsChecked);
+    // var recentChecked = $("input[id='metrics_downloads_options_recent']").is(':checked');
+    // console.log(recentChecked);
+    // var alltimeChecked = $("input[id='metrics_downloads_options_alltime']").is(':checked');
+    // console.log(alltimeChecked);
+    // var publicationsChecked = $("input[id='metrics_publications']").is(':checked');
+    // console.log(publicationsChecked);
+    // var citationsChecked = $("input[id='metrics_citations']").is(':checked');
+    // console.log(citationsChecked);
+
+    $("input[id='table_toggle']").on('change', function() {
       if( $(this).is(':checked') ) {
-        $("#downloads_graphs").hide();
+        $("#charts").hide();
         $("#downloads_table").show();
+
+        $('#downloads-checked').text($("input[id='metrics_downloads']").is(':checked'));
+        $('#recent-checked').text($("input[id='metrics_downloads_options_recent']").is(':checked'));
+        $('#alltime-checked').text($("input[id='metrics_downloads_options_alltime']").is(':checked'));
+        $('#publications-checked').text($("input[id='metrics_publications']").is(':checked'));
+        $('#citations-checked').text($("input[id='metrics_citations']").is(':checked'));
+
+        $('#downloads-checked').hide();
+        $('#recent-checked').hide();
+        $('#alltime-checked').hide();
+        $('#publications-checked').hide();
+        $('#citations-checked').hide();
+
+        $("input[id='metrics_downloads']").prop('checked', true);
+        $("input[id='metrics_downloads_options_recent']").prop('checked', true);
+        $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
+        $("input[id='metrics_publications']").prop('checked', true);
+        $("input[id='metrics_citations']").prop('checked', true);
+
+        $("input[id='metrics_downloads']").prop('disabled', true);
+        $("input[id='metrics_downloads_options_recent']").prop('disabled', true);
+        $("input[id='metrics_downloads_options_alltime']").prop('disabled', true);
+        $("input[id='metrics_publications']").prop('disabled', true);
+        $("input[id='metrics_citations']").prop('disabled', true);
       }
       else {
-        $("#downloads_graphs").show();
-        $("#downloads_table").hide();  
+        $("#charts").show();
+        $("#downloads_table").hide(); 
+
+        $("input[id='metrics_downloads']").prop('checked', ($('#downloads-checked')[0].innerHTML == 'true'));
+        // console.log($('#downloads-checked')[0].innerHTML);
+        $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
+        // console.log($('#recent-checked')[0].innerHTML);
+        $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
+        // console.log($('#alltime-checked')[0].innerHTML);
+        $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
+        // console.log($('#publications-checked')[0].innerHTML);
+        $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
+        // console.log($('#citations-checked')[0].innerHTML);
+
+        $("input[id='metrics_downloads']").prop('disabled', false);
+        $("input[id='metrics_downloads_options_recent']").prop('disabled', false);
+        $("input[id='metrics_downloads_options_alltime']").prop('disabled', false);
+        $("input[id='metrics_publications']").prop('disabled', false);
+        $("input[id='metrics_citations']").prop('disabled', false); 
       }
     });
 
