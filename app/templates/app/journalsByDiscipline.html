@@ -192,7 +192,7 @@
                   <th class="recent-column">Recent (JR5)</th>
                   <th class="alltime-column">Alltime (JR1)</th>
                   <th class="publications-column">Publications</th>
-                  <th class="citations-column">charts_citations</th>                 
+                  <th class="citations-column">Citations</th>                 
                 </tr>
               </thead>
               <tbody id="table_body">
@@ -521,6 +521,17 @@
       $("#discipline_select").change();
     }
 
+    function removeZeroCountsAndAssociatedJournals(journals, counts) {
+      var index = counts.length - 1;
+      while(counts[index] == 0) {
+        journals.pop();
+        counts.pop();
+        index--;
+      }
+
+      return [journals, counts];
+    }
+
     var downloadsRecentChartConfig = {
         chart: {
             type: 'bar'
@@ -549,7 +560,7 @@
             useHTML: false
         },
         xAxis: {
-            categories: chartData[metrics[0]][disciplinesList[0]].categories,
+            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), chartData[metrics[0]][disciplinesList[0]].counts)[0],
             providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
@@ -561,14 +572,16 @@
         yAxis: {
             title: {
                 text: 'Number of Downloads'
-            }
+            },
+            min: 0,
+            max: (chartData[metrics[0]][disciplinesList[0]].counts[0] * 1.05)
         },
         legend: {
             enabled: false
         },
         series: [{
             name: 'Downloads',
-            data: chartData[metrics[0]][disciplinesList[0]].counts,
+            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), [].concat(chartData[metrics[0]][disciplinesList[0]].counts))[1],
         }],
         credits: {
             enabled: false
@@ -590,7 +603,7 @@
             }
         },
         xAxis: {
-            categories: chartData[metrics[1]][disciplinesList[0]].categories,
+            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][disciplinesList[0]].categories), [].concat(chartData[metrics[1]][disciplinesList[0]].counts))[0],
             providerMap: chartData[metrics[1]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
@@ -617,14 +630,16 @@
         yAxis: {
             title: {
                 text: 'Number of Downloads'
-            }
+            },
+            min: 0,
+            max: (chartData[metrics[1]][disciplinesList[0]].counts[0] * 1.05)
         },
         legend: {
             enabled: false
         },
         series: [{
             name: 'Downloads',
-            data: chartData[metrics[1]][disciplinesList[0]].counts,
+            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][disciplinesList[0]].categories), [].concat(chartData[metrics[1]][disciplinesList[0]].counts))[1],
         }],
         credits: {
             enabled: false
@@ -650,7 +665,7 @@
             }
         },
         xAxis: {
-            categories: chartData[metrics[2]][disciplinesList[0]].categories,
+            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][disciplinesList[0]].categories), [].concat(chartData[metrics[2]][disciplinesList[0]].counts))[0],
             providerMap: chartData[metrics[2]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
@@ -677,14 +692,16 @@
         yAxis: {
             title: {
                 text: 'Number of Publications'
-            }
+            },
+            min: 0,
+            max: (chartData[metrics[2]][disciplinesList[0]].counts[0] * 1.05)
         },
         legend: {
             enabled: false
         },
         series: [{
             name: 'Publications',
-            data: chartData[metrics[2]][disciplinesList[0]].counts,
+            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][disciplinesList[0]].categories), [].concat(chartData[metrics[2]][disciplinesList[0]].counts))[1],
         }],
         credits: {
             enabled: false
@@ -706,7 +723,7 @@
             }
         },
         xAxis: {
-            categories: chartData[metrics[3]][disciplinesList[0]].categories,
+            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][disciplinesList[0]].categories), [].concat(chartData[metrics[3]][disciplinesList[0]].counts))[0],
             providerMap: chartData[metrics[3]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
@@ -733,14 +750,16 @@
         yAxis: {
             title: {
                 text: 'Number of Citations'
-            }
+            },
+            min: 0,
+            max: (chartData[metrics[3]][disciplinesList[0]].counts[0] * 1.05)
         },
         legend: {
             enabled: false
         },
         series: [{
             name: 'Citations',
-            data: chartData[metrics[3]][disciplinesList[0]].counts,
+            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][disciplinesList[0]].categories), [].concat(chartData[metrics[3]][disciplinesList[0]].counts))[1],
         }],
         credits: {
             enabled: false
@@ -754,24 +773,29 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          downloadsRecentChartConfig.xAxis.categories = chartData[metrics[0]][$("#discipline_select").val()].categories;
+          removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[0]
+          downloadsRecentChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[0];
           downloadsRecentChartConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
-          downloadsRecentChartConfig.series[0].data = chartData[metrics[0]][$("#discipline_select").val()].counts;
+          downloadsRecentChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[1];
+          downloadsRecentChartConfig.yAxis.max = chartData[metrics[0]][$("#discipline_select").val()].counts[0] * 1.05;
           downloadsRecentChart.update(downloadsRecentChartConfig);
 
-          downloadsAlltimeChartConfig.xAxis.categories = chartData[metrics[1]][$("#discipline_select").val()].categories;
+          downloadsAlltimeChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[1]][$("#discipline_select").val()].counts))[0]
           downloadsAlltimeChartConfig.xAxis.providerMap = chartData[metrics[1]][$("#discipline_select").val()].providerMap;
-          downloadsAlltimeChartConfig.series[0].data = chartData[metrics[1]][$("#discipline_select").val()].counts;
+          downloadsAlltimeChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[1]][$("#discipline_select").val()].counts))[1];
+          downloadsAlltimeChartConfig.yAxis.max = chartData[metrics[1]][$("#discipline_select").val()].counts[0] * 1.05;
           downloadsAlltimeChart.update(downloadsAlltimeChartConfig);
 
-          publicationsChartConfig.xAxis.categories = chartData[metrics[2]][$("#discipline_select").val()].categories;
+          publicationsChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[2]][$("#discipline_select").val()].counts))[0];
           publicationsChartConfig.xAxis.providerMap = chartData[metrics[2]][$("#discipline_select").val()].providerMap;
-          publicationsChartConfig.series[0].data = chartData[metrics[2]][$("#discipline_select").val()].counts;
+          publicationsChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[2]][$("#discipline_select").val()].counts))[1];
+          publicationsChartConfig.yAxis.max = chartData[metrics[2]][$("#discipline_select").val()].counts[0] * 1.05;
           publicationsChart.update(publicationsChartConfig);
 
-          citationsChartConfig.xAxis.categories = chartData[metrics[3]][$("#discipline_select").val()].categories;
+          citationsChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[3]][$("#discipline_select").val()].counts))[0];
           citationsChartConfig.xAxis.providerMap = chartData[metrics[3]][$("#discipline_select").val()].providerMap;
-          citationsChartConfig.series[0].data = chartData[metrics[3]][$("#discipline_select").val()].counts;
+          citationsChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[3]][$("#discipline_select").val()].counts))[1];
+          citationsChartConfig.yAxis.max = chartData[metrics[3]][$("#discipline_select").val()].counts[0] * 1.05;
           citationsChart.update(citationsChartConfig);
         }
     });
