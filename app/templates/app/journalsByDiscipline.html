@@ -190,7 +190,7 @@
                 <tr>
                   <th class="journal-title-column">Title</th>
                   <th class="recent-column">Recent (JR5)</th>
-                  <th class="alltime-column">Alltime (JR1)</th>
+                  <th class="alltime-column">All Time (JR1)</th>
                   <th class="publications-column">Publications</th>
                   <th class="citations-column">Citations</th>                 
                 </tr>
@@ -560,7 +560,7 @@
             useHTML: false
         },
         xAxis: {
-            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), chartData[metrics[0]][disciplinesList[0]].counts)[0],
+            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), [].concat(chartData[metrics[0]][disciplinesList[0]].counts))[0],
             providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
             min: 0,
             max: 15,
