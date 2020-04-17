@@ -134,24 +134,32 @@
 
             <div id="metrics_downloads_options" class="ml-4">
               <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
-                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent (JR5)</label>
+                <a id="metrics_downloads_options_recent_tooltip">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
+                  <label class="custom-control-label" for="metrics_downloads_options_recent">Recent (JR5)</label>
+                </a>
               </div>             
 
               <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
-                <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
+                <a id="metrics_downloads_options_alltime_tooltip">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
+                  <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
+                </a>
               </div>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_publications">
-              <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+              <a id="metrics_publications_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_publications">
+                <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+              </a>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_citations">
-              <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
+              <a id="metrics_citations_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_citations">
+                <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
+              </a>
             </div>
 
           </div>
@@ -225,6 +233,101 @@
   <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>  
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
+
+    // Tooltips Initialization
+    $(function () {
+
+      //Recent Downloads
+      $("#metrics_downloads_options_recent_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "JR5 Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_downloads_options_recent_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_downloads_options_recent_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_downloads_options_recent_tooltip").tooltip("hide");  
+      });
+
+      // All Time Downloads
+      $("#metrics_downloads_options_alltime_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "JR1 Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_downloads_options_alltime_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_downloads_options_alltime_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_downloads_options_alltime_tooltip").tooltip("hide");  
+      });
+
+      // Publications
+      $("#metrics_publications_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "Publications Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_publications_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
+      // Citations
+      $("#metrics_citations_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "Citations Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_citations_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
+      });
+ 
+    });
+
+    
+
+
+
+    
+
+
+
+
    
     $("input[id='metrics_downloads']").on('change', function() {
       if( $(this).is(':checked') ) {
