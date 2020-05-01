@@ -1,6 +1,10 @@
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
 
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 import datetime as datetime
 from dateutil.relativedelta import relativedelta
 
@@ -24,11 +28,23 @@ def tools(request):
 def journalsByDiscipline(request):
     template_name = 'app/journalsByDiscipline.html'
     context = {
-        'disciplines_list': json.dumps(get_disciplines_list()),
-        'chart_data': json.dumps(journals_by_discipline()),
-        'journals_and_disciplines_map': json.dumps(journals_and_disciplines_map())
+        # 'disciplines_list': json.dumps(get_disciplines_list()),
+        # 'chart_data': json.dumps(journals_by_discipline()),
+        # 'journals_and_disciplines_map': json.dumps(journals_and_disciplines_map())
     }
     return render(request, template_name, context)
+
+'''
+@api_view(['GET'])
+def get_disciplines_list(request):
+    from .onefigr_analysis_2 import Data
+    
+    if request.method == 'GET':
+        data = Data()
+        return Response(json.dumps(get_disciplines_list()))
+'''
+        
+
 
 @login_required
 def journalsByProvider(request):
