@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'app',
     'storages',
     'django_cleanup.apps.CleanupConfig',
-    'rest_framework',
+    # 'rest_framework',
 
 ]
 
