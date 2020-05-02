@@ -63,23 +63,21 @@ def get_journals_and_disciplines_map(request):
         return Response(data.journals_and_disciplines_map())        
 
 
-"""
+
 @login_required
 def journalsByProvider(request):
     template_name = 'app/journalsByProvider.html'
     context = {
-        'providers_list': json.dumps(get_provider_list()),
-        'chart_data': json.dumps(journals_by_provider()),
+        'providers_list': json.dumps(data.get_provider_list()),
+        'chart_data': json.dumps(data.journals_by_provider()),
     }
-    return render(request, template_name, context)
+    return render(request, template_name, context)  
 
 @login_required
 def providersByMetric(request):
     template_name = 'app/providersByMetric.html'
     context = {
-        'providers_list': json.dumps(get_provider_list()),
-        'chart_data': json.dumps(providers_by_metric()),
+        'providers_list': json.dumps(data.get_provider_list()),
+        'chart_data': json.dumps(data.providers_by_metric()),
     }
     return render(request, template_name, context)
-
-"""

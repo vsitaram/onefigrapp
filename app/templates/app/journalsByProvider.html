@@ -223,14 +223,12 @@
     var chartData = processViewData(chartDataString);
     console.log(chartData); 
 
-    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-
     var downloadsRecentCountGraphConfig = {
         chart: {
             type: 'bar'
         },
         title: {
-            text: 'Journals by Downloads - Recent (Counts)',
+            text: 'Journals by Provider',
             fontFamily: 'Segoe UI',
             style: {
               fontWeight: 10,
@@ -243,14 +241,14 @@
         },
         yAxis: {
             title: {
-                text: 'Number of Downloads'
+                text: 'Counts'
             }
         },
         legend: {
             enabled: false
         },
         series: [{
-            name: 'Downloads',
+            name: 'Counts',
             data: Object.values(chartData[providersList[0]]),
         }],
         credits: {

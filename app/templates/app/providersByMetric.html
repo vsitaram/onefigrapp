@@ -438,7 +438,9 @@
         yAxis: {
             title: {
                 text: 'Number of Downloads'
-            }
+            },
+            min: 0,
+            max: Object.values(chartData[metrics[0]])[0] * 1.05,
         },
         legend: {
             enabled: false
@@ -478,7 +480,10 @@
         yAxis: {
             title: {
                 text: 'Number of Downloads'
-            }
+            },
+            min: 0,
+            max: Object.values(chartData[metrics[0]])[0] * 1.05,
+
         },
         legend: {
             enabled: false
@@ -518,7 +523,9 @@
         yAxis: {
             title: {
                 text: 'Number of Downloads'
-            }
+            },
+            min: 0,
+            max: Object.values(chartData[metrics[1]])[0] * 1.05,
         },
         legend: {
             enabled: false
@@ -558,7 +565,9 @@
         yAxis: {
             title: {
                 text: 'Number of Publications'
-            }
+            },
+            min: 0,
+            max: Object.values(chartData[metrics[2]])[0] * 1.05,
         },
         legend: {
             enabled: false
@@ -598,7 +607,9 @@
         yAxis: {
             title: {
                 text: 'Number of Citations'
-            }
+            },
+            min: 0,
+            max: Object.values(chartData[metrics[3]])[0] * 1.05,
         },
         legend: {
             enabled: false
@@ -621,22 +632,27 @@
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
           downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]) * 1.05;
           downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
 
           downloadsRecentPercentGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
           downloadsRecentPercentGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]) * 1.05;
           downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
 
           downloadsAllTimeGraphConfig.xAxis.categories = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]);
           downloadsAllTimeGraphConfig.series[0].data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]) * 1.05;
           downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
 
           publicationsConfig.xAxis.categories = Object.keys(chartData[metrics[2]][$("#discipline_select").val()]);
           publicationsConfig.series[0].data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]) * 1.05;
           publicationsChart.update(publicationsConfig);
 
           citationsConfig.xAxis.categories = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]);
           citationsConfig.series[0].data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
+          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]) * 1.05;
           citationsChart.update(citationsConfig);
         }
     });
