@@ -261,7 +261,17 @@ class Data():
 
         return disciplines_list
 
-    def journals_by_discipline(self):
+    def journals_and_disciplines_map(self):
+        necessary_columns = ['Journal', 'Discipline','Domain']
+        figr_data = self.onefigr_dataset_with_disciplines[necessary_columns].dropna()
+        # figr_data = figr_data.loc[figr_data['Domain'] != "N/A"]
+        journals = figr_data['Journal'].values.tolist()
+        disciplines = figr_data['Discipline'].values.tolist()
+        journals_and_disciplines_dict = dict(zip(journals, disciplines))
+
+        return journals_and_disciplines_dict
+
+    def journals_by_discipline(self, discipline):
         """Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
         'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
         Disciplines has mapped those field categories into more UVA specific language
@@ -274,33 +284,44 @@ class Data():
         X-Axis Data Source: Original 1Figr Dataset, reusable_functions.py
         """
 
-        journals_by_discipline_df = self.onefigr_dataset_with_disciplines.groupby(['Discipline'], as_index=False)
-        metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+        necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
+        original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
+        # print(original_1figr_data_with_disciplines.columns)
 
+        journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
+        # print(journalsByDisciplineData.sort_values(by='References', ascending=False)[['References', 'Journal']].values.tolist())
+        
+
+        # group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal', metric])['Provider'].agg({'Provider': ' '.join}).reset_index()
+        # group = group[['Journal','Provider', metric]].sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
+
+        metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         ret = {}
 
         for metric in metrics:
-        	journals_by_discipline_by_metric_dict = {}
 
-        	for key, item in journals_by_discipline_df:
-        		group = journals_by_discipline_df.get_group(key).sort_values(by=[metric], ascending=False).fillna(0)
-        		journals = group['Journal'].values.tolist()
-        		providers = group['Provider'].values.tolist()
-        		counts = group[metric].values.tolist()
-        		journals_and_provider_dict = dict(zip(journals, providers))
-        		journals_by_discipline_dict = {}
+            # sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
+            group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal', metric])['Provider'].apply(', '.join).reset_index()
+            group = group[['Journal','Provider', metric]].sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
+            # group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
+            # print(group)
+            journals = group['Journal'].values.tolist()
+            providers = group['Provider'].values.tolist()
+            counts = group[metric].values.tolist()
+            journals_and_provider_dict = dict(zip(journals, providers))
+            # if metric == 'References':
+            #   print(journals)
 
-        		for index in range(0, len(journals)):
-        			journals_by_discipline_dict = {
-        				'categories': journals,
-        				'providerMap': journals_and_provider_dict,
-        				'counts': counts
-        			}
-        		
-        		journals_by_discipline_by_metric_dict[key] = journals_by_discipline_dict
-
-        	ret[metric] = journals_by_discipline_by_metric_dict
+            journals_by_discipline_dict = {
+                'categories': journals,
+                'providerMap': journals_and_provider_dict,
+                'counts': counts
+            }
             
+            ret[metric] = journals_by_discipline_dict
+            
+        
+
         # print(ret)
         # with open('file.txt', 'w') as file:
         #     file.write(json.dumps(ret))

@@ -464,95 +464,36 @@
     //   resetMetricColumnHeight();
     // });
 
-    function processViewData(dataString) {
-      dataString = dataString.replace(/&amp;/g, "&");
-      dataString = dataString.replace(/&quot;/g, "\"");
-      // console.log(dataString);
-      // Get rid of random special characters
-      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
-      dataString = dataString.replace(/NaN/g, "0.0");
-      // console.log(dataString);
-      // var num = 5182;
-      // if (dataString.length > num + 20) {
-      //   console.log(dataString.slice(num - 20, num + 20));
-      // }
-      
-      var dataJSON = JSON.parse(dataString);
-      // console.log(dataJSON);
+     
 
-      return dataJSON;
-    }
-
-    var disciplinesListString = "{{ disciplines_list }}";
-    // console.log(disciplinesListString);
-    var disciplinesList = processViewData(disciplinesListString);
-    console.log(disciplinesList); 
-
-    function loadDisciplinesList() {
+    function loadDisciplinesList(disciplinesList) {
       for(var i = 0; i < disciplinesList.length; i++) {
         var newOption = document.createElement('option');
         newOption.setAttribute('value', disciplinesList[i]);
         if(i == 0) newOption.selected = true;
         newOption.innerHTML = disciplinesList[i];
         $( "#discipline_select" ).append(newOption);
-        console.log(disciplinesList[i]);
+        // console.log(disciplinesList[i]);
       }
     }
 
-    loadDisciplinesList();
-    // $(document).on('load', function() {
-    //   loadDisciplinesList();
-    // });
+    $.ajax({
+      url : "http://localhost:8000/app/disciplines_list",
+      dataType: "json",
+      success : function (data) {
+        var disciplinesList = data;
+        console.log("AJAX disciplinesList");
+        console.log(disciplinesList);
+        loadDisciplinesList(disciplinesList); 
+      }
+    });
 
-    var chartDataString = "{{ chart_data }}";
-    var chartData = processViewData(chartDataString);
-    console.log(chartData); 
-
-    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-    console.log(chartData[metrics[1]][disciplinesList[2]].providerMap);
-
-
-    var journalsAndDisciplinesMapString = "{{ journals_and_disciplines_map }}";
-    var journalsAndDisciplinesMap = processViewData(journalsAndDisciplinesMapString);
-    console.log(journalsAndDisciplinesMap);
+  
     
-    var journalTitles = Object.keys(journalsAndDisciplinesMap);
-    // var journalTitles = ["Construction and Building Materials", "Cities", "Landscape and Urban Planning", "Land Use Policy", "Building and Environment", "International Journal of Project Management", "Energy and Buildings", "Cement and Concrete Research", "Architectural Design", "Journal of the American Planning Association", "City, Culture and Society", "Cement and Concrete Composites", "Habitat International", "Journal of Architectural Education", "Urban studies (Abingdon)", "Automation in Construction", "Buildings & Landscapes", "Journal of Planning History", "Structural and Multidisciplinary Optimization", "City and Community", "Economic Development Quarterly", "Journal of Materials in Civil Engineering", "Advanced Engineering Informatics", "Mechanism and Machine Theory", "Design Studies", "Finite Elements in Analysis and Design", "Journal of Architecture RIBA", "Journal of Planning Literature", "Urban Design International", "Computer-Aided Design", "Local Environment", "Housing Policy Debate", "Landscape Research", "Urban Affairs Review", "Building Research & Information", "Journal of Construction Engineering and Management", "Housing Studies", "International Journal of Civil Engineering (Tehran)", "Journal of Computing in Civil Engineering", "Planning Theory", "The Annals of Regional Science", "Design Issues", "Journal of Urban Affairs", "City (London)", "Journal of Mechanical Design (1990)", "Journal of Planning Education and Research", "Materials and Structures", "Engineering with Computers", "Indoor Air", "International Journal of Sustainable Built Environment", "International Journal of Urban Sustainable Development", "Planning Theory and Practice", "Regional Studies", "Studies in the History of Gardens and Designed Landscapes", "Case Studies in Construction Materials", "Environmental Impact Assessment Review", "Frontiers of Architectural Research", "Journal of Architectural Engineering", "Journal of Building Engineering", "Journal of Computing and Information Science in Engineering", "Journal of Housing and the Built Environment", "Journal of Management in Engineering", "Journal of Urban Planning and Development", "Nexus Network Journal", "Papers in Regional Science", "Urban Policy and Research", "ACM Transactions on Design Automation of Electronic Systems", "Housing, Theory and Society", "International Journal of Concrete Structures and Materials", "Journal of Urban Design", "Planning Practice and Research", "Progress in Planning", "The Design Journal", "Urban Research and Practice", "Architectural Theory Review", "Building Simulation", "Buildings (Basel)", "Environment and Urbanization", "European Planning Studies", "Growth and Change", "Journal of Environmental Planning and Management", "Journal of Mechanisms and Robotics", "Planning Perspectives", "Architectural History", "Community Development Journal", "Construction Management and Economics", "Environment and Planning. B, Urban Analytics and City Science", "International Journal of Architectural Heritage - Conservation, Analysis, and Restoration", "International Journal of Housing Policy", "International Journal of Pavement Research and Technology", "International Journal of Urban and Regional Research", "International Planning Studies", "Journal of Computational Design and Engineering", "Journal of Professional Issues in Engineering Education and Practice", "Journal of Urban Technology", "Journal of Urbanism - International Research on Placemaking and Urban Sustainability", "Local Economy", "Multibody System Dynamics", "Queensland Review", "Sustainability - Science, Practice, and Policy"]
-    
-    /*
-    journalsAndDisciplineMap = {
-      "Construction and Building Materials": "Architecture",
-      "Cities": "Architecture",
-      "Landscape and Urban Planning": "Architecture",
-      "Land Use Policy": "Architecture",
-      "Building and Environment": "Architecture",
-      "International Journal of Project Management": "Architecture",
-      "Energy and Buildings": "Architecture",
-      "Cement and Concrete Research": "Architecture",
-      "Architectural Design": "Architecture",
-      "Journal of the American Planning Association": "Architecture",
-      "City, Culture and Society": "Architecture",
-      "Cement and Concrete Composites": "Architecture",
-      "Habitat International": "Elsevier",
-      "Journal of Architectural Education": "Architecture",
-      "Urban studies (Abingdon)": "Architecture",
-      "Automation in Construction": "Architecture",
-      "Buildings & Landscapes": "Architecture",
-      "Journal of Planning History": "Architecture",
-      "Structural and Multidisciplinary Optimization": "Architecture",
-      "City and Community": "Architecture",
-      "Economic Development Quarterly": "Architecture",
-      "Journal of Materials in Civil Engineering": "Architecture",
-      "Advanced Engineering Informatics": "Architecture",
-      "Mechanism and Machine Theory": "Architecture",
-      "Design Studies": "Architecture",
-      "Finite Elements in Analysis and Design": "Architecture",
-      "Journal of Architecture RIBA": "Architecture",
-      "Journal of Planning Literature": "Architecture"
-    };
-    */
 
-    $.typeahead({
+    function createDisciplineSearch(journalsAndDisciplinesMap) {
+      var journalTitles = Object.keys(journalsAndDisciplinesMap);
+      $.typeahead({
         input: '#modal_journal_input',
         order: "desc",
         source: {
@@ -583,8 +524,31 @@
           }
         }
     
-    });
+      });
+    }
 
+    function processViewData(dataString) {
+      dataString = dataString.replace(/&amp;/g, "&");
+      dataString = dataString.replace(/&quot;/g, "\"");
+      // console.log(dataString);
+      // Get rid of random special characters
+      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
+      dataString = dataString.replace(/NaN/g, "0.0");
+      // console.log(dataString);
+      // var num = 5182;
+      // if (dataString.length > num + 20) {
+      //   console.log(dataString.slice(num - 20, num + 20));
+      // }
+      
+      var dataJSON = JSON.parse(dataString);
+      // console.log(dataJSON);
+
+      return dataJSON;
+    }
+
+    var journalsAndDisciplinesMapString = "{{ journals_and_disciplines_map }}";
+    var journalsAndDisciplinesMap = processViewData(journalsAndDisciplinesMapString);
+    console.log(journalsAndDisciplinesMap);
 
     function clearModalText() {
       var title = $("#modal_journal_input").val("");
@@ -620,290 +584,117 @@
       while(counts[index] == 0) {
         journals.pop();
         counts.pop();
-        index--;
+        index++;
       }
 
       return [journals, counts];
     }
 
-    var downloadsRecentChartConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - Recent (Counts)',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        tooltip: {
-            formatter: function() {
-                var s = '<small>'+ this.x + '</small>';
-
-                $.each(this.points, function(i, point) {
-                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                });
-
-                s += '<br/>' + 'Provider: ' + downloadsRecentChartConfig.xAxis.providerMap[this.x];
-
-                return s;
-            },
-            shared: true,
-            useHTML: false
-        },
-        xAxis: {
-            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), [].concat(chartData[metrics[0]][disciplinesList[0]].counts))[0],
-            providerMap: chartData[metrics[0]][disciplinesList[0]].providerMap,
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            },
-            min: 0,
-            max: (chartData[metrics[0]][disciplinesList[0]].counts[0] * 1.05)
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][disciplinesList[0]].categories), [].concat(chartData[metrics[0]][disciplinesList[0]].counts))[1],
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsRecentChart = Highcharts.chart('charts_downloads_recent_chart', downloadsRecentChartConfig);
-
-    var downloadsAlltimeChartConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - Alltime',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][disciplinesList[0]].categories), [].concat(chartData[metrics[1]][disciplinesList[0]].counts))[0],
-            providerMap: chartData[metrics[1]][disciplinesList[0]].providerMap,
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        tooltip: {
-            formatter: function() {
-                var s = '<small>'+ this.x + '</small>';
-
-                $.each(this.points, function(i, point) {
-                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                });
-
-                s += '<br/>' + 'Provider: ' + downloadsAlltimeChartConfig.xAxis.providerMap[this.x];
-
-                return s;
-            },
-            shared: true,
-            useHTML: false
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            },
-            min: 0,
-            max: (chartData[metrics[1]][disciplinesList[0]].counts[0] * 1.05)
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][disciplinesList[0]].categories), [].concat(chartData[metrics[1]][disciplinesList[0]].counts))[1],
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsAlltimeChart = Highcharts.chart('charts_downloads_alltime_chart', downloadsAlltimeChartConfig);
-
-    // console.log(chartData[metrics[2]][disciplinesList[0]].categories);
-    // console.log(chartData[metrics[2]][disciplinesList[0]].providerMap);
-    // console.log(chartData[metrics[2]][disciplinesList[0]].counts);
-
-    var publicationsChartConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Publications',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][disciplinesList[0]].categories), [].concat(chartData[metrics[2]][disciplinesList[0]].counts))[0],
-            providerMap: chartData[metrics[2]][disciplinesList[0]].providerMap,
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        tooltip: {
-            formatter: function() {
-                var s = '<small>'+ this.x + '</small>';
-
-                $.each(this.points, function(i, point) {
-                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                });
-
-                s += '<br/>' + 'Provider: ' + publicationsChartConfig.xAxis.providerMap[this.x];
-
-                return s;
-            },
-            shared: true,
-            useHTML: false
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Publications'
-            },
-            min: 0,
-            max: (chartData[metrics[2]][disciplinesList[0]].counts[0] * 1.05)
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Publications',
-            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][disciplinesList[0]].categories), [].concat(chartData[metrics[2]][disciplinesList[0]].counts))[1],
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var publicationsChart = Highcharts.chart('charts_publications_chart', publicationsChartConfig);
-
-    var citationsChartConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Citations',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][disciplinesList[0]].categories), [].concat(chartData[metrics[3]][disciplinesList[0]].counts))[0],
-            providerMap: chartData[metrics[3]][disciplinesList[0]].providerMap,
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        tooltip: {
-            formatter: function() {
-                var s = '<small>'+ this.x + '</small>';
-
-                $.each(this.points, function(i, point) {
-                    s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                });
-
-                s += '<br/>' + 'Provider: ' + citationsChartConfig.xAxis.providerMap[this.x];
-
-                return s;
-            },
-            shared: true,
-            useHTML: false
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Citations'
-            },
-            min: 0,
-            max: (chartData[metrics[3]][disciplinesList[0]].counts[0] * 1.05)
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Citations',
-            data: removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][disciplinesList[0]].categories), [].concat(chartData[metrics[3]][disciplinesList[0]].counts))[1],
-        }],
-        credits: {
-            enabled: false
-        },
-    };
     
-    var citationsChart = Highcharts.chart('charts_citations_chart', citationsChartConfig);
+    function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
+      var rawCategories = chartData[metric].categories;
+      console.log(rawCategories);
+      var rawCounts = chartData[metric].counts;
+      console.log(rawCounts);
+
+      var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
+      // console.log(categoriesAndCounts);
+
+      config.title.text = chartTitle;
+      config.xAxis.categories = categoriesAndCounts[0];
+      config.xAxis.providerMap = chartData[metric].providerMap;
+      config.series[0].name = seriesName;
+      config.series[0].data = categoriesAndCounts[1];
+      config.yAxis.title.text = yAxisTitle;
+      config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
+
+      return config;
+    }
 
 
-    $("#discipline_select").on("change", function() {
-        // console.log($("#discipline_select").val());
-        // console.log(typeof($("#discipline_select").val()));
-        if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[0]
-          downloadsRecentChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[0];
-          downloadsRecentChartConfig.xAxis.providerMap = chartData[metrics[0]][$("#discipline_select").val()].providerMap;
-          downloadsRecentChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[0]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[0]][$("#discipline_select").val()].counts))[1];
-          downloadsRecentChartConfig.yAxis.max = chartData[metrics[0]][$("#discipline_select").val()].counts[0] * 1.05;
-          downloadsRecentChart.update(downloadsRecentChartConfig);
+    function setCharts(chartData, metrics) {
+      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - Alltime', 'Journals by Publications', 'Journals by Citations'];
+      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
+      seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
+      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
 
-          downloadsAlltimeChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[1]][$("#discipline_select").val()].counts))[0]
-          downloadsAlltimeChartConfig.xAxis.providerMap = chartData[metrics[1]][$("#discipline_select").val()].providerMap;
-          downloadsAlltimeChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[1]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[1]][$("#discipline_select").val()].counts))[1];
-          downloadsAlltimeChartConfig.yAxis.max = chartData[metrics[1]][$("#discipline_select").val()].counts[0] * 1.05;
-          downloadsAlltimeChart.update(downloadsAlltimeChartConfig);
+      var chartConfig = {
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              fontFamily: 'Segoe UI',
+              style: {
+                fontWeight: 10,
+                fontSize: 20,
+              }
+          },
+          tooltip: {
+              formatter: function() {
+                  var s = '<small>'+ this.x + '</small>';
 
-          publicationsChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[2]][$("#discipline_select").val()].counts))[0];
-          publicationsChartConfig.xAxis.providerMap = chartData[metrics[2]][$("#discipline_select").val()].providerMap;
-          publicationsChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[2]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[2]][$("#discipline_select").val()].counts))[1];
-          publicationsChartConfig.yAxis.max = chartData[metrics[2]][$("#discipline_select").val()].counts[0] * 1.05;
-          publicationsChart.update(publicationsChartConfig);
+                  $.each(this.points, function(i, point) {
+                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                  });
 
-          citationsChartConfig.xAxis.categories = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[3]][$("#discipline_select").val()].counts))[0];
-          citationsChartConfig.xAxis.providerMap = chartData[metrics[3]][$("#discipline_select").val()].providerMap;
-          citationsChartConfig.series[0].data = removeZeroCountsAndAssociatedJournals([].concat(chartData[metrics[3]][$("#discipline_select").val()].categories), [].concat(chartData[metrics[3]][$("#discipline_select").val()].counts))[1];
-          citationsChartConfig.yAxis.max = chartData[metrics[3]][$("#discipline_select").val()].counts[0] * 1.05;
-          citationsChart.update(citationsChartConfig);
-        }
-    });
-    
+                  s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
+
+                  return s;
+              },
+              shared: true,
+              useHTML: false
+          },
+          xAxis: {
+              providerMap: {},
+              min: 0,
+              max: 15,
+              scrollbar: {
+                  enabled: true
+              },
+              tickLength: 0
+          },
+          yAxis: {
+              title: {
+                  
+              },
+              min: 0,
+          },
+          legend: {
+              enabled: false
+          },
+          series: [{
+              
+          }],
+          credits: {
+              enabled: false
+          },
+      };
+
+      
+      $.each(chartTitles, function (i, item) {
+
+        
+
+        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i])
+
+        Highcharts.chart(chartIDs[i], config);
+      }); 
+        
+
+    }
+    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers'];
+
     function rotate(matrix) {          // function statement        
         var output = [];
 
         for(var col = 0; col < matrix[0].length; col++){
           var newArr = [];
-          for(var row = 0; row < matrix.length; row++){
-            newArr.push(matrix[row][col]);
+          for(var rowIndex = 0; rowIndex < matrix.length; rowIndex++){
+            newArr.push(matrix[rowIndex][col]);  
           }
 
           output.push(newArr); 
+          
         }
           
         return output;
@@ -915,25 +706,40 @@
 
     }
 
-    $(document).ready(function () {
-      var categories = chartData[metrics[0]][disciplinesList[0]].categories;
+    function setTable(chartData, metrics) {
+      var categories = chartData[metrics[0]].categories;
+      /*
+      console.log(categories);
+      console.log(categories.length);
+      console.log(chartData[metrics[0]].counts.length);
+      console.log(chartData[metrics[1]].categories.length);
+      console.log(chartData[metrics[1]].counts.length);
+      console.log(chartData[metrics[2]].categories.length);
+      console.log(chartData[metrics[2]].counts.length);
+      console.log(chartData[metrics[3]].categories.length);
+      console.log(chartData[metrics[3]].counts.length);
+      */
       var tableCounts = [];
       tableCounts.push(categories);
       
       for(var i = 0; i < metrics.length; i++){
         var newArr = []
         for(var j = 0; j < categories.length; j++) {
-          var index = chartData[metrics[i]][disciplinesList[0]].categories.indexOf(categories[j]);
-          var count = chartData[metrics[i]][disciplinesList[0]].counts[index];
-          if(index == -1) count = 0;
+          var index = chartData[metrics[i]].categories.indexOf(categories[j]);
+          var count = 0; 
+          if(index != -1) {
+            count = chartData[metrics[i]].counts[index];
+          }
           newArr.push(count);
         }
         tableCounts.push(newArr);
-      }      
+      }  
+      // console.log(tableCounts);    
 
       trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
       var tableData = rotate(tableCounts);
       var tableBody = document.getElementById('table_body');
+      tableBody.innerHTML = "";
       for(var i = 0; i < tableData.length; i++) {
         var row = document.createElement('tr');
         for(var j = 0; j < tableData[i].length; j++) {
@@ -945,12 +751,62 @@
         tableBody.appendChild(row);
       }
 
+      $('table').DataTable();
+      $('table').addClass('bs-select');
+      
+    }
+
     
 
-      $('table').DataTable();
-      
-      $('table').addClass('bs-select');
+    $(document).ready(function () {
+      $.ajax({
+        url : "http://localhost:8000/app/chart_data/Architecture/",
+        dataType: "json",
+        success : function (data) {
+          chartData = data;
+          console.log(chartData);
+          setCharts(chartData, metrics);
+          setTable(chartData, metrics);
+          
+        }
+      });
+
       $('#downloads_table').hide();
+
+      $.ajax({
+        url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        dataType: "json",
+        success : function (data) {
+          createDisciplineSearch(data);
+          
+        }
+      });
+    });
+
+
+
+    $("#discipline_select").on("change", function() {
+        // console.log($("#discipline_select").val());
+        // console.log(typeof($("#discipline_select").val()));
+        if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
+          queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          console.log(queryURL);
+          $.ajax({
+            url : "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/",
+            dataType: "json",
+            success : function (data) {
+              chartData = data;
+              console.log(chartData);
+              setCharts(chartData, metrics);
+              setTable(chartData, metrics);
+              
+            }
+          });
+
+          
+
+          
+        }
     });
 
     // var downloadsChecked = $("input[id='metrics_downloads']").is(':checked');

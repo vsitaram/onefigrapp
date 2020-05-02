@@ -24,5 +24,5 @@ urlpatterns = [
     path('app/', include('app.urls')),
     path('admin/', admin.site.urls),
 
-    url(r'^.*', RedirectView.as_view(url='/')),
+    # url(r'^.*', RedirectView.as_view(url='/')),
 ]
