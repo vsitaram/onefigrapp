@@ -329,81 +329,72 @@ class Data():
 
     # figure8('Downloads JR1 2017')
 
-    def get_provider_list(self):
+    def get_providers_list(self):
         journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False)
-        provider_list = []
+        providers_list = []
         for key, item in journals_by_provider_df:
-            provider_list.append(key)
+            providers_list.append(key)
 
-        return provider_list
+        return providers_list
 
-    def journals_by_provider(self):
-    	""" 
-    	Creates bar graph of the number of references in each field for input provider. 
-    	Chart Type: Bar Graph 
-    	Y-Axis: Field 
-    	Y-Axis Data Source: Journals Per Provider, Domain
-    	X-Axis: Number of References
-    	X-Axis Data Source: Journals Per Provider, References
+    def journals_by_provider(self, provider):
+        """ 
+        Creates bar graph of the number of references in each field for input provider. 
+        Chart Type: Bar Graph 
+        Y-Axis: Field 
+        Y-Axis Data Source: Journals Per Provider, Domain
+        X-Axis: Number of References
+        X-Axis Data Source: Journals Per Provider, References
         References are defined as the number of references made by researchers of your institution to an article from a given journal.'
          """
 
-    	metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-    	journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False).sum()
-    	# print(journals_by_provider_df)
-    	# print(journals_by_provider_df.columns)
-    	
-    	provider_list = self.get_provider_list()
-
-    	journals_by_provider_dict = { provider: {} for provider in  provider_list}
-    	
-    	for index, row in journals_by_provider_df.iterrows():
-    		for metric in metrics:
-    			journals_by_provider_dict[row['Provider']][metric] = row[metric] / 2
+        metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+        journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()
+        journals_by_provider_df = journals_by_provider_sums[metrics]
+        # print(journals_by_provider_df)
+        # print(journals_by_provider_df[metrics])
         
-    	# print(journals_by_provider_dict)
 
-    	ret = { provider: {} for provider in provider_list }
-    	
-    	for provider in provider_list:
-    		for k, v in sorted(journals_by_provider_dict[provider].items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
-    		    ret[provider][k] = 0.0 if math.isnan(v) else v
+        journals_by_provider_dict = {}
+        for metric in metrics:
+            journals_by_provider_dict[metric] = journals_by_provider_df.loc[provider][metric] / 2
 
-    	return ret
+        ret = {}
+        for k, v in sorted(journals_by_provider_dict.items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
+            ret[k] = 0.0 if math.isnan(v) else v
 
-    # journals_by_provider()
+        return ret
 
 
     def providers_by_metric(self):
-    	""" 
-    	Creates bar graph of the number of references in each field for input provider. 
-    	Chart Type: Bar Graph 
-    	Y-Axis: Field 
-    	Y-Axis Data Source: Journals Per Provider, Domain
-    	X-Axis: Number of References
-    	X-Axis Data Source: Journals Per Provider, References
+        """ 
+        Creates bar graph of the number of references in each field for input provider. 
+        Chart Type: Bar Graph 
+        Y-Axis: Field 
+        Y-Axis Data Source: Journals Per Provider, Domain
+        X-Axis: Number of References
+        X-Axis Data Source: Journals Per Provider, References
         References are defined as the number of references made by researchers of your institution to an article from a given journal.'
          """
 
-    	metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-    	journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False).sum()
-    	# print(journals_by_provider_df)
-    	# print(journals_by_provider_df.columns)
-    	
-    	journals_by_provider_dict = { metric: {} for metric in metrics }
-    	
-    	for index, row in journals_by_provider_df.iterrows():
-    		for metric in metrics:
-    			journals_by_provider_dict[metric][row['Provider']] = row[metric] / 2
+        metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+        journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False).sum()
+        # print(journals_by_provider_df)
+        # print(journals_by_provider_df.columns)
         
-    	# print(journals_by_provider_dict)
+        journals_by_provider_dict = { metric: {} for metric in metrics }
+        
+        for index, row in journals_by_provider_df.iterrows():
+            for metric in metrics:
+                journals_by_provider_dict[metric][row['Provider']] = row[metric] / 2
+        
+        # print(journals_by_provider_dict)
 
-    	ret = { metric: {} for metric in metrics }
-    	
-    	for metric in metrics:
-    		for k, v in sorted(journals_by_provider_dict[metric].items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
-    		    ret[metric][k] = 0.0 if math.isnan(v) else v
+        ret = { metric: {} for metric in metrics }
+        
+        for metric in metrics:
+            for k, v in sorted(journals_by_provider_dict[metric].items(), key=lambda item: float('-inf') if math.isnan(item[1]) else item[1], reverse=True):
+                ret[metric][k] = 0.0 if math.isnan(v) else v
 
-    	return ret
+        return ret
 
-    # providers_by_metric()

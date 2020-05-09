@@ -80,34 +80,7 @@
           </div>
         </div>
         <div class="col-md-8" style="">
-          <!-- Downloads -->
-          <div id="downloads mt-0">
-            <!-- Recent Downloads -->
-            <div id="downloads_recent">
-              <!-- Recent Downloads Count -->
-              <div class="mt-3" id="downloads_recent_count">
-                <div id="downloads_recent_count_graph" style="width:100%; height:475px;"></div>
-              </div>
-              <!-- Recent Downloads Percent -->
-              <div class="mt-5" id="downloads_recent_percent">
-                <div id="downloads_recent_percent_graph" style="width:100%; height:475px;"></div>
-              </div>
-            </div>
-            <div class="mt-5" id="downloads_alltime">
-              <div id="downloads_alltime_graph" style="width:100%; height:475px;"></div>
-            </div>
-          </div>
-
-          <div class="mt-5" id="publications">
-            <div id="publications_graph" style="width:100%; height:475px;"></div>
-          </div>
-
-          <div class="mt-5" id="citations">
-            <div id="citations_graph" style="width:100%; height:475px;"></div>
-          </div>
-          
-          
-
+          <div id="downloads_recent_count_graph" class="mt-3" style="width:100%; height:475px;"></div>
         </div>
       </div>
     </div>
@@ -175,35 +148,8 @@
     $('#downloads_alltime').hide();
     $('#publications').hide();
     $('#citations').hide();
-    
-    resetMetricColumnHeight();
 
-    function processViewData(dataString) {
-      dataString = dataString.replace(/&amp;/g, "&");
-      dataString = dataString.replace(/&quot;/g, "\"");
-      // console.log(dataString);
-      // Get rid of random special characters
-      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
-      dataString = dataString.replace(/NaN/g, "0.0");
-      // console.log(dataString);
-      // var num = 5182;
-      // if (dataString.length > num + 20) {
-      //   console.log(dataString.slice(num - 20, num + 20));
-      // }
-      
-      var dataJSON = JSON.parse(dataString);
-      // console.log(dataJSON);
-
-      return dataJSON;
-    }
-
-
-    var providersListString = "{{ providers_list }}";
-    // console.log(providersListString);
-    var providersList = processViewData(providersListString);
-    // console.log(providersList); 
-
-    function loadProvidersListIntoColumn() {
+    function loadProvidersListIntoColumn(providersList) {
       for(var i = 0; i < providersList.length; i++) {
         var newOption = document.createElement('option');
         newOption.setAttribute('value', providersList[i]);
@@ -214,16 +160,8 @@
       }
     }
 
-    $(document).ready( function() {
-      loadProvidersListIntoColumn();
-    });
-   
-
-    var chartDataString = "{{ chart_data }}";
-    var chartData = processViewData(chartDataString);
-    console.log(chartData); 
-
-    var downloadsRecentCountGraphConfig = {
+    function setChart(chartData) {
+      var chartConfig = {
         chart: {
             type: 'bar'
         },
@@ -236,40 +174,81 @@
             }
         },
         xAxis: {
-            categories: Object.keys(chartData[providersList[0]]),
+            categories: Object.keys(chartData),
             tickLength: 0
         },
         yAxis: {
             title: {
-                text: 'Counts'
+                text: 'Number of Journals'
             }
         },
         legend: {
             enabled: false
         },
         series: [{
-            name: 'Counts',
-            data: Object.values(chartData[providersList[0]]),
+            name: 'Journals',
+            data: Object.values(chartData),
         }],
         credits: {
             enabled: false
         },
-    };
+      };
 
-    var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
+      Highcharts.chart('downloads_recent_count_graph', chartConfig); 
+        
+    }
 
+    $(document).ready( function () {
+
+      resetMetricColumnHeight();
+      
+      $.ajax({
+        // url : "https://onefigrapp.herokuapp.com/app/providers_list",
+        url : "http://localhost:8000/app/providers_list",
+        dataType: "json",
+        success : function (data) {
+          var providersList = data;
+          console.log("AJAX providersList");
+          console.log(providersList);
+          loadProvidersListIntoColumn(providersList);
+        }
+      });
+
+      $.ajax({
+        // url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
+        url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
+        dataType: "json",
+        success : function (data) {
+          var chartData = data;
+          console.log("Chart Data");
+          console.log(chartData);
+          setChart(chartData);
+          // setTable(chartData, metrics);
+          
+        }
+      });
+    });
+    
     $("#provider_select").on("change", function() {
-        // console.log($("#provider_select").val());
-        // console.log(typeof($("#provider_select").val()));
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
-          downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[$("#provider_select").val()]);
-          console.log(downloadsRecentCountGraphConfig.xAxis.categories);
-          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[$("#provider_select").val()]);
-          console.log(downloadsRecentCountGraphConfig.series[0].data);
-          // downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
-          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
+          var queryURL = "http://localhost:8000/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/";
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/"
+          console.log(queryURL);
+          $.ajax({
+            url : queryURL,
+            dataType: "json",
+            success : function (data) {
+              chartData = data;
+              console.log(chartData);
+              setChart(chartData);
+              // setTable(chartData, metrics);
+              
+            }
+          });
+          
         }
     });
+    
 
 
 

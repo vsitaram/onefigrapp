@@ -68,16 +68,29 @@ def get_journals_and_disciplines_map(request):
 def journalsByProvider(request):
     template_name = 'app/journalsByProvider.html'
     context = {
-        'providers_list': json.dumps(data.get_provider_list()),
-        'chart_data': json.dumps(data.journals_by_provider()),
+        # 'providers_list': json.dumps(data.get_provider_list()),
+        # 'chart_data': json.dumps(data.journals_by_provider()),
     }
     return render(request, template_name, context)  
+
+@api_view(['GET'])
+def providers_list(request):
+    
+    if request.method == 'GET':
+        return Response(data.get_providers_list())
+
+@api_view(['GET'])
+def journals_by_provider_chart_data(request, provider):
+    
+    if request.method == 'GET':
+        query_provider = unquote(provider)
+        return Response(data.journals_by_provider(query_provider))
 
 @login_required
 def providersByMetric(request):
     template_name = 'app/providersByMetric.html'
     context = {
-        'providers_list': json.dumps(data.get_provider_list()),
+        'providers_list': json.dumps(data.get_providers_list()),
         'chart_data': json.dumps(data.providers_by_metric()),
     }
     return render(request, template_name, context)
