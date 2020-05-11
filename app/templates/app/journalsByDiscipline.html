@@ -781,8 +781,8 @@
 
     $(document).ready(function () {
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        url : "http://localhost:8000/app/chart_data/Architecture/",
+        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
+        // url : "http://localhost:8000/app/chart_data/Architecture/",
         dataType: "json",
         success : function (data) {
           chartData = data;
@@ -796,8 +796,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
+        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -812,8 +812,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          // var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,
