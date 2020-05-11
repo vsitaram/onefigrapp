@@ -309,12 +309,20 @@ class Data():
             providers = group['Provider'].values.tolist()
             counts = group[metric].values.tolist()
             journals_and_provider_dict = dict(zip(journals, providers))
+            percentages = (group[metric] / group[metric].sum()) * 100
+            percentages = percentages.values.tolist() 
+            journals_and_percentages = {}   
+            for index in range(0, len(journals)):
+                journals_and_percentages[journals[index]] = '{0:.2f}'.format(percentages[index])
+                
+            
             # if metric == 'References':
             #   print(journals)
 
             journals_by_discipline_dict = {
                 'categories': journals,
                 'providerMap': journals_and_provider_dict,
+                'percentagesMap': journals_and_percentages,
                 'counts': counts
             }
             

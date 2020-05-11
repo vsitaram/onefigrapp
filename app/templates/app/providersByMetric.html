@@ -63,14 +63,25 @@
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Providers by Metric Tool</h3>
       <p>Descriptions and important notes</p>
+      <p style="display: hidden;" id="downloads-checked"></p>
+      <p style="display: hidden;" id="recent-checked"></p>
+      <p style="display: hidden;" id="alltime-checked"></p>
+      <p style="display: hidden;" id="publications-checked"></p>
+      <p style="display: hidden;" id="citations-checked"></p>
     </div>
-
+<!-- Object.values(chartData[metrics[0]])[0] * 1.05, -->
     <hr class="orange lighten-4">
 
     <div class="container-fluid" id="metrics_data">
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
+
+            <!-- Default checked -->
+            <div class="custom-control custom-switch mb-4">
+              <input type="checkbox" class="custom-control-input pl-4" id="table_toggle" unchecked>
+              <label class="custom-control-label" for="table_toggle">Show Data in Table</label>
+            </div>
 
             <h4 class="mb-3">Metrics</h4>
 
@@ -81,40 +92,36 @@
 
             <div id="metrics_downloads_options" class="ml-4">
               <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
-                <label class="custom-control-label" for="metrics_downloads_options_recent">Recent</label>
-              </div>
-
-              <div id="metrics_downloads_options_recent_types" class="ml-4">
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_count" checked>
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_count">Count</label>
-                </div>
-
-                <div class="custom-control custom-checkbox mb-2">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent_types_percent">
-                  <label class="custom-control-label" for="metrics_downloads_options_recent_types_percent">Percent</label>
-                </div>
-              </div>
-              
+                <a id="metrics_downloads_options_recent_tooltip">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
+                  <label class="custom-control-label" for="metrics_downloads_options_recent">Recent (JR5)</label>
+                </a>
+              </div>             
 
               <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
-                <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
+                <a id="metrics_downloads_options_alltime_tooltip">
+                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
+                  <label class="custom-control-label" for="metrics_downloads_options_alltime">All Time (JR1)</label>
+                </a>
               </div>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_publications">
-              <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+              <a id="metrics_publications_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_publications">
+                <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+              </a>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
-              <input type="checkbox" class="custom-control-input" id="metrics_citations">
-              <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
+              <a id="metrics_citations_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_citations">
+                <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
+              </a>
             </div>
+
           </div>
-          <div class="row align-items-center">
+          <div class="row align-items-center mb-4">
             <div class="ml-xl-3 text-center pt-3 col-xl-6">
               <button type="button" class="btn btn-sm text-white" id="metrics_show_all" style="background-color: #E57200;">Show All</button>
             </div>
@@ -124,34 +131,28 @@
           </div>
           
         </div>
-        <div class="col-md-8" style="">
+        <div class="col-md-8">
           <!-- Downloads -->
-          <div id="downloads mt-0">
+          <div id="charts">
             <!-- Recent Downloads -->
-            <div id="downloads_recent">
-              <!-- Recent Downloads Count -->
-              <div class="mt-3" id="downloads_recent_count">
-                <div id="downloads_recent_count_graph" style="width:100%; height:475px;"></div>
-              </div>
-              <!-- Recent Downloads Percent -->
-              <div class="mt-5" id="downloads_recent_percent">
-                <div id="downloads_recent_percent_graph" style="width:100%; height:475px;"></div>
-              </div>
+            <div class="mt-3" id="charts_downloads_recent">
+              <div id="charts_downloads_recent_chart" style="width:100%; height:475px;"></div>
             </div>
-            <div class="mt-5" id="downloads_alltime">
-              <div id="downloads_alltime_graph" style="width:100%; height:475px;"></div>
+            <div class="mt-5" id="charts_downloads_alltime">
+              <div id="charts_downloads_alltime_chart" style="width:100%; height:475px;"></div>
             </div>
-          </div>
+            <div class="mt-5" id="charts_publications">
+              <div id="charts_publications_chart" style="width:100%; height:475px;"></div>
+            </div>
 
-          <div class="mt-5" id="publications">
-            <div id="publications_graph" style="width:100%; height:475px;"></div>
-          </div>
+            <div class="mt-5" id="charts_citations">
+              <div id="charts_citations_chart" style="width:100%; height:475px;"></div>
+            </div>
 
-          <div class="mt-5" id="citations">
-            <div id="citations_graph" style="width:100%; height:475px;"></div>
           </div>
-          
-          
+          <div id="downloads_table" class="mt-3 ml-4">
+            <table id="dt-select" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
+          </div>
 
         </div>
       </div>
@@ -165,93 +166,135 @@
   <script type="text/javascript" src="{% static 'app/js/popper.min.js' %}"></script>
   <!-- Bootstrap core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/bootstrap.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'app/js/jquery.typeahead.min.js' %}"></script>
+  
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{% static 'app/js/mdb.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'app/js/addons/datatables.min.js' %}"></script>
+
   <script src="https://code.highcharts.com/stock/highstock.js"></script>
   <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>  
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript">
 
-    $(document).ready(function() {
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
+    // Tooltips Initialization
+    $(function () {
+
+      //Recent Downloads
+      $("#metrics_downloads_options_recent_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "JR5 Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_downloads_options_recent_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_downloads_options_recent_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_downloads_options_recent_tooltip").tooltip("hide");  
+      });
+
+      // All Time Downloads
+      $("#metrics_downloads_options_alltime_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "JR1 Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_downloads_options_alltime_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_downloads_options_alltime_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_downloads_options_alltime_tooltip").tooltip("hide");  
+      });
+
+      // Publications
+      $("#metrics_publications_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "Publications Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_publications_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
+      // Citations
+      $("#metrics_citations_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "Citations Description. <a href='#'><em>Learn More</em></a>",
+        trigger: "manual" 
+      });
+
+      $("#metrics_citations_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
+      });
+ 
     });
 
+       
     $("input[id='metrics_downloads']").on('change', function() {
       if( $(this).is(':checked') ) {
         $('#metrics_downloads_options').show();
         if( $("input[id='metrics_downloads_options_recent']").is(':checked')) {
-          $("input[id='metrics_downloads_options_recent_types']").show();
-        }
-        else {
-          $("input[id='metrics_downloads_options_recent_types']").hide(); 
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-          $('#downloads_recent_count').show();
-        }
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-          $('#downloads_recent_percent').show();
+          $('#charts_downloads_recent').show();
         }
         if( $("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $('#downloads_alltime').show();
+          $('#charts_downloads_alltime').show();
         }
       } else {
         $('#metrics_downloads_options').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-        $('#downloads_alltime').hide();
+        $('#charts_downloads_recent').hide();
+        $('#charts_downloads_alltime').hide();
       }
-
-      
     });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
       if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#metrics_downloads_options_recent_types').show();
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_count']").is(':checked') ) {
-            $('#downloads_recent_count').show();
-          }
-          if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $("input[id='metrics_downloads_options_recent_types_percent']").is(':checked') ) {
-            $('#downloads_recent_percent').show();
-          }
+          $('#charts_downloads_recent').show();
       }          
       else {
-        $('#metrics_downloads_options_recent_types').hide();
-        $('#downloads_recent_count').hide();
-        $('#downloads_recent_percent').hide();
-      }
-
-      
+        $('#charts_downloads_recent').hide();
+      }    
     });
-
-    $("input[id='metrics_downloads_options_recent_types_count']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_count').show();
-      }          
-      else {
-        $('#downloads_recent_count').hide();
-      }
-    });
-
-    $("input[id='metrics_downloads_options_recent_types_percent']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $("input[id='metrics_downloads_options_recent']").is(':checked') && $(this).is(':checked') ) {
-        $('#downloads_recent_percent').show();
-      }          
-      else {
-        $('#downloads_recent_percent').hide();
-      }
-
-      
-    });
+    
 
     $("input[id='metrics_downloads_options_alltime']").on('change', function() {
       if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#downloads_alltime').show();
+          $('#charts_downloads_alltime').show();
       }          
       else {
-        $('#downloads_alltime').hide();
+        $('#charts_downloads_alltime').hide();
       }
 
   
@@ -259,90 +302,58 @@
 
     $("input[id='metrics_publications']").on('change', function() {
       if( $(this).is(':checked') ) {
-          $('#publications').show();
+          $('#charts_publications').show();
       }          
       else {
-        $('#publications').hide();
+        $('#charts_publications').hide();
       }
-
-      
     });
 
     $("input[id='metrics_citations']").on('change', function() {
       if( $(this).is(':checked') ) {
-          $('#citations').show();
+          $('#charts_citations').show();
       }          
       else {
-        $('#citations').hide();
-      }
-
-    
+        $('#charts_citations').hide();
+      }    
     });
 
     $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
+      $('#charts_downloads_recent').show();
+      $('#charts_downloads_alltime').show();
+      $('#charts_publications').show();
+      $('#charts_citations').show();
 
       $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
-
-      $("input[id='metrics_downloads']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
-
-      
-    });
-
-    $('#metrics_show_all').on('click', function() {
-      $('#downloads_recent_count').show();
-      $('#downloads_recent_percent').show();
-      $('#downloads_alltime').show();
-      $('#publications').show();
-      $('#citations').show();
-
-      $("#metrics_downloads_options").show();
-      $("#metrics_downloads_options_recent_types").show();
 
       $("input[id='metrics_downloads']").prop('checked', true);
       $("input[id='metrics_downloads_options_recent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', true);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
-
-      
     });
 
+
     $('#metrics_hide_all').on('click', function() {
-      $('#downloads_recent_count').hide();
-      $('#downloads_recent_percent').hide();
-      $('#downloads_alltime').hide();
-      $('#publications').hide();
-      $('#citations').hide();
+      $('#charts_downloads_recent').hide();
+      $('#charts_downloads_alltime').hide();
+      $('#charts_publications').hide();
+      $('#charts_citations').hide();
 
       $("#metrics_downloads_options").hide();
       $("#metrics_downloads_options_recent_types").hide();
 
       $("input[id='metrics_downloads']").prop('checked', false);
       $("input[id='metrics_downloads_options_recent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_count']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent_types_percent']").prop('checked', false);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
       $("input[id='metrics_citations']").prop('checked', false);
-
     });
 
 
     function resetMetricColumnHeight() {
       $('#metrics_column').height( function() {
+        var ret = 0;
         if( $(document).width() < 768) {
           heights = 0;
           $('#metrics_column').children().each( function() {
@@ -358,7 +369,7 @@
           // console.log("Window height: " + $(window).height());
           // console.log("Result: " + heights);
 
-          return heights + 64;
+          ret =  heights + 64;
         }
         else {
           elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
@@ -376,286 +387,289 @@
           // console.log("Document height: " + $(document).height());
           // console.log("Result: " + ($(document).height() - heights));
 
-          return $(document).height() - heights - 3 - 1;
+          ret = $(document).height() - heights - 3 - 1;
         }
-        
+
+        return ret;
+
       });
     }
 
-    $('#downloads_recent_percent').hide();
-    $('#downloads_alltime').hide();
-    $('#publications').hide();
-    $('#citations').hide();
+
+    $('#charts_downloads_alltime').hide();
+    $('#charts_publications').hide();
+    $('#charts_citations').hide();
     
     resetMetricColumnHeight();
 
-    function processViewData(dataString) {
-      dataString = dataString.replace(/&amp;/g, "&");
-      dataString = dataString.replace(/&quot;/g, "\"");
-      // console.log(dataString);
-      // Get rid of random special characters
-      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
-      dataString = dataString.replace(/NaN/g, "0.0");
-      // console.log(dataString);
-      // var num = 5182;
-      // if (dataString.length > num + 20) {
-      //   console.log(dataString.slice(num - 20, num + 20));
-      // }
-      
-      var dataJSON = JSON.parse(dataString);
-      // console.log(dataJSON);
 
-      return dataJSON;
+    
+
+    function removeZeroCountsAndAssociatedJournals(journals, counts) {
+      var index = counts.length - 1;
+      while(counts[index] == 0) {
+        journals.pop();
+        counts.pop();
+        index++;
+      }
+
+      return [journals, counts];
     }
 
-    var chartDataString = "{{ chart_data }}";
-    var chartData = processViewData(chartDataString);
-    console.log(chartData); 
-
-    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-
-    var downloadsRecentCountGraphConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - Recent (Counts)',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: Object.keys(chartData[metrics[0]]),
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            },
-            min: 0,
-            max: Object.values(chartData[metrics[0]])[0] * 1.05,
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: Object.values(chartData[metrics[0]]),
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsRecentCountGraphChart = Highcharts.chart('downloads_recent_count_graph', downloadsRecentCountGraphConfig);
-
-    var downloadsRecentPercentGraphConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - Recent (Percent)',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: Object.keys(chartData[metrics[0]]),
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            },
-            min: 0,
-            max: Object.values(chartData[metrics[0]])[0] * 1.05,
-
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: Object.values(chartData[metrics[0]]),
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsRecentPercentGraphChart = Highcharts.chart('downloads_recent_percent_graph', downloadsRecentPercentGraphConfig);
-
-    var downloadsAllTimeGraphConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Downloads - All Time',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: Object.keys(chartData[metrics[1]]),
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Downloads'
-            },
-            min: 0,
-            max: Object.values(chartData[metrics[1]])[0] * 1.05,
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Downloads',
-            data: Object.values(chartData[metrics[1]]),
-        }],
-        credits: {
-            enabled: false
-        },
-    };
-
-    var downloadsAllTimeGraphChart = Highcharts.chart('downloads_alltime_graph', downloadsAllTimeGraphConfig);
-
-    var publicationsConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Publications by UVA Authors',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: Object.keys(chartData[metrics[2]]),
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Publications'
-            },
-            min: 0,
-            max: Object.values(chartData[metrics[2]])[0] * 1.05,
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            data: Object.values(chartData[metrics[2]]),
-        }],
-        credits: {
-            name: 'Publications',
-            enabled: false
-        },
-    };
-
-    var publicationsChart = Highcharts.chart('publications_graph', publicationsConfig);
-
-    var citationsConfig = {
-        chart: {
-            type: 'bar'
-        },
-        title: {
-            text: 'Journals by Citations by UVA Authors',
-            fontFamily: 'Segoe UI',
-            style: {
-              fontWeight: 10,
-              fontSize: 20,
-            }
-        },
-        xAxis: {
-            categories: Object.keys(chartData[metrics[3]]),
-            min: 0,
-            max: 15,
-            scrollbar: {
-                enabled: true
-            },
-            tickLength: 0
-        },
-        yAxis: {
-            title: {
-                text: 'Number of Citations'
-            },
-            min: 0,
-            max: Object.values(chartData[metrics[3]])[0] * 1.05,
-        },
-        legend: {
-            enabled: false
-        },
-        series: [{
-            name: 'Citations',
-            data: Object.values(chartData[metrics[3]]),
-        }],
-        credits: {
-            enabled: false
-        },
-    };
     
-    var citationsChart = Highcharts.chart('citations_graph', citationsConfig);
+    function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
+      var rawCategories = Object.keys(chartData[metric])
+      // console.log(rawCategories);
+      var rawCounts = Object.values(chartData[metric]);
+      // console.log(rawCounts);
+
+      var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
+      // console.log(categoriesAndCounts);
+
+      config.title.text = chartTitle;
+      config.xAxis.categories = categoriesAndCounts[0];
+      config.xAxis.providerMap = chartData[metric].journalMap;
+      config.series[0].name = seriesName;
+      config.series[0].data = categoriesAndCounts[1];
+      config.yAxis.title.text = yAxisTitle;
+      config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
+
+      return config;
+    }
 
 
-    $("#discipline_select").on("change", function() {
-        // console.log($("#discipline_select").val());
-        // console.log(typeof($("#discipline_select").val()));
-        if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          downloadsRecentCountGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]) * 1.05;
-          downloadsRecentCountGraphChart.update(downloadsRecentCountGraphConfig);
+    function setCharts(chartData, metrics) {
+      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - Alltime', 'Journals by Publications', 'Journals by Citations'];
+      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
+      seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
+      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
 
-          downloadsRecentPercentGraphConfig.xAxis.categories = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentPercentGraphConfig.series[0].data = Object.values(chartData[metrics[0]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[0]][$("#discipline_select").val()]) * 1.05;
-          downloadsRecentPercentGraphChart.update(downloadsRecentPercentGraphConfig);
+      var chartConfig = {
+          chart: {
+              type: 'bar'
+          },
+          title: {
+              fontFamily: 'Segoe UI',
+              style: {
+                fontWeight: 10,
+                fontSize: 20,
+              }
+          },
+          tooltip: {
+              formatter: function() {
+                  var s = '<small>'+ this.x + '</small>';
 
-          downloadsAllTimeGraphConfig.xAxis.categories = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]);
-          downloadsAllTimeGraphConfig.series[0].data = Object.values(chartData[metrics[1]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[1]][$("#discipline_select").val()]) * 1.05;
-          downloadsAllTimeGraphChart.update(downloadsAllTimeGraphConfig);
+                  $.each(this.points, function(i, point) {
+                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                  });
 
-          publicationsConfig.xAxis.categories = Object.keys(chartData[metrics[2]][$("#discipline_select").val()]);
-          publicationsConfig.series[0].data = Object.values(chartData[metrics[2]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]) * 1.05;
-          publicationsChart.update(publicationsConfig);
+                  s += '<br/>' + 'Journals: ';
 
-          citationsConfig.xAxis.categories = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]);
-          citationsConfig.series[0].data = Object.values(chartData[metrics[3]][$("#discipline_select").val()]);
-          downloadsRecentCountGraphConfig.yAxis.max = Object.keys(chartData[metrics[3]][$("#discipline_select").val()]) * 1.05;
-          citationsChart.update(citationsConfig);
+                  return s;
+              },
+              shared: true,
+              useHTML: false
+          },
+          xAxis: {
+              min: 0,
+              max: 15,
+              scrollbar: {
+                  enabled: true
+              },
+              tickLength: 0
+          },
+          yAxis: {
+              title: {
+                  
+              },
+              min: 0,
+          },
+          legend: {
+              enabled: false
+          },
+          series: [{
+              
+          }],
+          credits: {
+              enabled: false
+          },
+      };
+
+      
+      $.each(chartTitles, function (i, item) {
+
+        
+
+        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i])
+
+        Highcharts.chart(chartIDs[i], config);
+      }); 
+        
+
+    }
+    var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers'];
+
+    function rotate(matrix) {          // function statement        
+        var output = [];
+
+        for(var col = 0; col < matrix[0].length; col++){
+          var newArr = [];
+          for(var rowIndex = 0; rowIndex < matrix.length; rowIndex++){
+            newArr.push(matrix[rowIndex][col]);  
+          }
+
+          output.push(newArr); 
+          
         }
+          
+        return output;
+
+        // [1, 3, 7],           [1, 5],
+        // [5, 9, 4] turns into [3, 9],
+        //                      [7, 4]
+
+
+    }
+
+    function setTable(chartData, metrics) {
+      var categories = Object.keys(chartData[metrics[0]]);
+      /*
+      console.log(categories);
+      console.log(categories.length);
+      console.log(chartData[metrics[0]].counts.length);
+      console.log(chartData[metrics[1]].categories.length);
+      console.log(chartData[metrics[1]].counts.length);
+      console.log(chartData[metrics[2]].categories.length);
+      console.log(chartData[metrics[2]].counts.length);
+      console.log(chartData[metrics[3]].categories.length);
+      console.log(chartData[metrics[3]].counts.length);
+      */
+      var tableCounts = [];
+      tableCounts.push(categories);
+      
+      for(var i = 0; i < metrics.length; i++){
+        var newArr = [];
+        for(var j = 0; j < categories.length; j++) {
+          var count = chartData[metrics[i]][categories[j]];
+          newArr.push(count);
+        }
+        tableCounts.push(newArr);
+      }  
+      console.log(tableCounts);    
+
+      // trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
+      var tableData = rotate(tableCounts);
+      console.log("TABLE DATA");
+      // console.log(tableData)
+      if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
+        // alert("Already Created");
+          var table = $('#dt-select').DataTable();
+          table.clear();
+          table.rows.add( tableData ).draw();
+      }
+      else {
+        // alert("New Table");
+        var table = $('#dt-select').DataTable( {
+            data: tableData,
+            columns: [
+                { title: "Title" },
+                { title: "Recent (JR5)" },
+                { title: "All Time (JR1)" },
+                { title: "Publications" },
+                { title: "Citations" },
+            ]
+        } );
+      }
+      
+    }
+
+    
+
+    $(document).ready(function () {
+      $.ajax({
+        // url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
+        url : "http://localhost:8000/app/providersByMetric_chart_data/",
+        dataType: "json",
+        success : function (data) {
+          chartData = data;
+          console.log(chartData);
+          setCharts(chartData, metrics);
+          setTable(chartData, metrics);
+          
+        }
+      });
+
+      $('#downloads_table').hide();
+
     });
+
+
+
+
+    // var downloadsChecked = $("input[id='metrics_downloads']").is(':checked');
+    // console.log(downloadsChecked);
+    // var recentChecked = $("input[id='metrics_downloads_options_recent']").is(':checked');
+    // console.log(recentChecked);
+    // var alltimeChecked = $("input[id='metrics_downloads_options_alltime']").is(':checked');
+    // console.log(alltimeChecked);
+    // var publicationsChecked = $("input[id='metrics_publications']").is(':checked');
+    // console.log(publicationsChecked);
+    // var citationsChecked = $("input[id='metrics_citations']").is(':checked');
+    // console.log(citationsChecked);
+
+    $("input[id='table_toggle']").on('change', function() {
+      if( $(this).is(':checked') ) {
+        $("#charts").hide();
+        $("#downloads_table").show();
+
+        $('#downloads-checked').text($("input[id='metrics_downloads']").is(':checked'));
+        $('#recent-checked').text($("input[id='metrics_downloads_options_recent']").is(':checked'));
+        $('#alltime-checked').text($("input[id='metrics_downloads_options_alltime']").is(':checked'));
+        $('#publications-checked').text($("input[id='metrics_publications']").is(':checked'));
+        $('#citations-checked').text($("input[id='metrics_citations']").is(':checked'));
+
+        $('#downloads-checked').hide();
+        $('#recent-checked').hide();
+        $('#alltime-checked').hide();
+        $('#publications-checked').hide();
+        $('#citations-checked').hide();
+
+        $("input[id='metrics_downloads']").prop('checked', true);
+        $("input[id='metrics_downloads_options_recent']").prop('checked', true);
+        $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
+        $("input[id='metrics_publications']").prop('checked', true);
+        $("input[id='metrics_citations']").prop('checked', true);
+
+        $("input[id='metrics_downloads']").prop('disabled', true);
+        $("input[id='metrics_downloads_options_recent']").prop('disabled', true);
+        $("input[id='metrics_downloads_options_alltime']").prop('disabled', true);
+        $("input[id='metrics_publications']").prop('disabled', true);
+        $("input[id='metrics_citations']").prop('disabled', true);
+      }
+      else {
+        $("#charts").show();
+        $("#downloads_table").hide(); 
+
+        $("input[id='metrics_downloads']").prop('checked', ($('#downloads-checked')[0].innerHTML == 'true'));
+        // console.log($('#downloads-checked')[0].innerHTML);
+        $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
+        // console.log($('#recent-checked')[0].innerHTML);
+        $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
+        // console.log($('#alltime-checked')[0].innerHTML);
+        $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
+        // console.log($('#publications-checked')[0].innerHTML);
+        $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
+        // console.log($('#citations-checked')[0].innerHTML);
+
+        $("input[id='metrics_downloads']").prop('disabled', false);
+        $("input[id='metrics_downloads_options_recent']").prop('disabled', false);
+        $("input[id='metrics_downloads_options_alltime']").prop('disabled', false);
+        $("input[id='metrics_publications']").prop('disabled', false);
+        $("input[id='metrics_citations']").prop('disabled', false); 
+      }
+    });
+
+
 
 
 

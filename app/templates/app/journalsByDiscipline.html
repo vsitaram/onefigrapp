@@ -193,21 +193,6 @@
 
           </div>
           <div id="downloads_table" class="mt-3 ml-4">
-            <!-- <table id="dt-select" class="table table-striped table-bordered" cellspacing="0" width="100%">
-              <thead>
-                <tr>
-                  <th class="journal-title-column">Title</th>
-                  <th class="recent-column">Recent (JR5)</th>
-                  <th class="alltime-column">All Time (JR1)</th>
-                  <th class="publications-column">Publications</th>
-                  <th class="citations-column">Citations</th>                 
-                </tr>
-              </thead>
-              <tbody id="table_body">
-                
-              </tbody>
-              
-            </table> -->
             <table id="dt-select" class="table table-striped table-bordered" cellspacing="0" width="100%"></table>
             
           </div>
@@ -605,6 +590,7 @@
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
+      config.xAxis.percentagesMap = chartData[metric].percentagesMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
       config.yAxis.title.text = yAxisTitle;
@@ -636,7 +622,7 @@
                   var s = '<small>'+ this.x + '</small>';
 
                   $.each(this.points, function(i, point) {
-                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentagesMap[this.x] + '% of All ' + point.series.name + ')';
                   });
 
                   s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
@@ -648,6 +634,7 @@
           },
           xAxis: {
               providerMap: {},
+              percentagesMap: {},
               min: 0,
               max: 15,
               scrollbar: {
@@ -724,8 +711,15 @@
       var tableCounts = [];
       tableCounts.push(categories);
       
+      var numDownloadsPasses = 0;
       for(var i = 0; i < metrics.length; i++){
-        var newArr = []
+        var newArr = [];
+        if( i == 0 && numDownloadsPasses == 1 ) {
+          for(var j = 0; j < categories.length; j++) {
+            count = chartData[metrics[i]].percentagesMap[categories[j]];
+            newArr.push(count);
+          }
+        }
         for(var j = 0; j < categories.length; j++) {
           var index = chartData[metrics[i]].categories.indexOf(categories[j]);
           var count = 0; 
@@ -735,10 +729,14 @@
           newArr.push(count);
         }
         tableCounts.push(newArr);
+        if( i == 0 && numDownloadsPasses == 0 ) {
+          i--;
+          numDownloadsPasses++;
+        }
       }  
-      // console.log(tableCounts);    
+      console.log(tableCounts);    
 
-      trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
+      // trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
       var tableData = rotate(tableCounts);
       console.log("TABLE DATA");
       // console.log(tableData)
@@ -757,18 +755,19 @@
       }
       */
       if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
-        alert("Already Created");
+        // alert("Already Created");
           var table = $('#dt-select').DataTable();
           table.clear();
           table.rows.add( tableData ).draw();
       }
       else {
-        alert("New Table");
+        // alert("New Table");
         var table = $('#dt-select').DataTable( {
             data: tableData,
             columns: [
                 { title: "Title" },
-                { title: "Recent (JR5)" },
+                { title: "Recent (JR5) (Count)" },
+                { title: "Recent (JR5) (Percent)" },
                 { title: "All Time (JR1)" },
                 { title: "Publications" },
                 { title: "Citations" },
@@ -782,8 +781,8 @@
 
     $(document).ready(function () {
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        // url : "http://localhost:8000/app/chart_data/Architecture/",
+        // url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
+        url : "http://localhost:8000/app/chart_data/Architecture/",
         dataType: "json",
         success : function (data) {
           chartData = data;
@@ -797,8 +796,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        // url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
+        url : "http://localhost:8000/app/journals_and_disciplines_map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -813,8 +812,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,

@@ -90,7 +90,15 @@ def journals_by_provider_chart_data(request, provider):
 def providersByMetric(request):
     template_name = 'app/providersByMetric.html'
     context = {
-        'providers_list': json.dumps(data.get_providers_list()),
-        'chart_data': json.dumps(data.providers_by_metric()),
+        # 'providers_list': json.dumps(data.get_providers_list()),
+        # 'chart_data': json.dumps(data.providers_by_metric()),
     }
     return render(request, template_name, context)
+
+@api_view(['GET'])
+def providers_by_metric_chart_data(request):
+    
+    if request.method == 'GET':
+        return Response(data.providers_by_metric())
+
+    

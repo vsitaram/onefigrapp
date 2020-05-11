@@ -16,6 +16,7 @@ urlpatterns = [
 	path('journals_and_disciplines_map/', views.get_journals_and_disciplines_map, name='journals_and_disciplines_map'),
 	path('providers_list/', views.providers_list, name='providers_list'),
 	path('journalsByProvider_chart_data/<str:provider>/', views.journals_by_provider_chart_data),
+	path('providersByMetric_chart_data/', views.providers_by_metric_chart_data),
 
     path('login/', auth_views.LoginView.as_view(template_name="app/login.html"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
