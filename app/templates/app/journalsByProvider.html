@@ -136,7 +136,7 @@
           // console.log("Document height: " + $(document).height());
           // console.log("Result: " + ($(document).height() - heights));
 
-          ret = $(window).height() - heights - 3 - 1;
+          ret = $(window).height() - heights - 3 - 2;
         }
 
         return ret;
@@ -215,8 +215,8 @@
       });
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
-        // url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
+        // url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
+        url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
         dataType: "json",
         success : function (data) {
           var chartData = data;
@@ -231,8 +231,8 @@
     
     $("#provider_select").on("change", function() {
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
-          // var queryURL = "http://localhost:8000/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/"
+          var queryURL = "http://localhost:8000/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/";
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,

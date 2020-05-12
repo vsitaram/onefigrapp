@@ -439,7 +439,7 @@
 
 
     function setCharts(chartData, metrics) {
-      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - Alltime', 'Journals by Publications', 'Journals by Citations'];
+      chartTitles = ['Providers by Downloads - Recent', 'Providers by Downloads - Alltime', 'Providers by Publications', 'Providers by Citations'];
       yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
       seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
       chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
@@ -572,7 +572,7 @@
         var table = $('#dt-select').DataTable( {
             data: tableData,
             columns: [
-                { title: "Title" },
+                { title: "Provider" },
                 { title: "Recent (JR5)" },
                 { title: "All Time (JR1)" },
                 { title: "Publications" },
@@ -587,8 +587,8 @@
 
     $(document).ready(function () {
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
-        // url : "http://localhost:8000/app/providersByMetric_chart_data/",
+        // url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
+        url : "http://localhost:8000/app/providersByMetric_chart_data/",
         dataType: "json",
         success : function (data) {
           chartData = data;

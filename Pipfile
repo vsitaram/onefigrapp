@@ -52,6 +52,7 @@ Cycler = "*"
 Django = "*"
 PyMeeus = "*"
 django-cors-headers = "*"
+django-sslserver = "*"
 
 [requires]
 python_version = "3.6"

@@ -68,11 +68,6 @@
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Journals by Discipline Tool</h3>
       <p>Descriptions and important notes</p>
-      <p style="display: hidden;" id="downloads-checked"></p>
-      <p style="display: hidden;" id="recent-checked"></p>
-      <p style="display: hidden;" id="alltime-checked"></p>
-      <p style="display: hidden;" id="publications-checked"></p>
-      <p style="display: hidden;" id="citations-checked"></p>
     </div>
 
     <hr class="orange lighten-4">
@@ -81,6 +76,11 @@
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
+            <p style="display: hidden;" id="downloads-checked"></p>
+            <p style="display: hidden;" id="recent-checked"></p>
+            <p style="display: hidden;" id="alltime-checked"></p>
+            <p style="display: hidden;" id="publications-checked"></p>
+            <p style="display: hidden;" id="citations-checked"></p>
             <h4 class="mb-4">Disciplines</h4>
 
             <select class="browser-default custom-select mb-2" id="discipline_select">
@@ -108,6 +108,7 @@
                        </div>
 
                        <p id="result_message_container"></p>
+                       <p style="display: hidden;" id="result_discipline"></p>
 
                   </div>
                   <div class="modal-footer d-flex justify-content-center">
@@ -494,6 +495,7 @@
               console.log(item);
               console.log(text);
               $('#result_message_container').html(text);
+              $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
     
           },
           onResult: function (node, query, result, resultCount) {
@@ -514,39 +516,14 @@
       });
     }
 
-    function processViewData(dataString) {
-      dataString = dataString.replace(/&amp;/g, "&");
-      dataString = dataString.replace(/&quot;/g, "\"");
-      // console.log(dataString);
-      // Get rid of random special characters
-      dataString = dataString.replace(/[^!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\[\]^`abcdefghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿıŁłŒœŠšŸŽžƒˆˇˉ˘˙˚˛˜˝ΔΩμπ‐–—‘’‚“”„†‡•…‰‹›⁄€™Ω∂∆∏∑]/g, ''); 
-      dataString = dataString.replace(/NaN/g, "0.0");
-      // console.log(dataString);
-      // var num = 5182;
-      // if (dataString.length > num + 20) {
-      //   console.log(dataString.slice(num - 20, num + 20));
-      // }
-      
-      var dataJSON = JSON.parse(dataString);
-      // console.log(dataJSON);
-
-      return dataJSON;
-    }
-
-    var journalsAndDisciplinesMapString = "{{ journals_and_disciplines_map }}";
-    var journalsAndDisciplinesMap = processViewData(journalsAndDisciplinesMapString);
-    console.log(journalsAndDisciplinesMap);
-
     function clearModalText() {
       var title = $("#modal_journal_input").val("");
       var title = $("#result_message_container").text("");
     }
 
     function findAndSetDisciplineForJournal() {
-      var title = $("#modal_journal_input").val();
-      console.log(title);
       clearModalText();
-      var discipline = journalsAndDisciplinesMap[title];
+      var discipline = $('#result_discipline').text();
       console.log(discipline);
 
       var options = $('#discipline_select').children();
@@ -571,7 +548,7 @@
       while(counts[index] == 0) {
         journals.pop();
         counts.pop();
-        index++;
+        index--;
       }
 
       return [journals, counts];
@@ -585,7 +562,8 @@
       // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
-      // console.log(categoriesAndCounts);
+      console.log("CATEGORIES AND COUNTS");
+      console.log(categoriesAndCounts);
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
@@ -664,7 +642,7 @@
 
         
 
-        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i])
+        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i]);
 
         Highcharts.chart(chartIDs[i], config);
       }); 
@@ -765,7 +743,7 @@
         var table = $('#dt-select').DataTable( {
             data: tableData,
             columns: [
-                { title: "Title" },
+                { title: "Journal Title" },
                 { title: "Recent (JR5) (Count)" },
                 { title: "Recent (JR5) (Percent)" },
                 { title: "All Time (JR1)" },
@@ -781,8 +759,8 @@
 
     $(document).ready(function () {
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        // url : "http://localhost:8000/app/chart_data/Architecture/",
+        // url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
+        url : "http://localhost:8000/app/chart_data/Architecture/",
         dataType: "json",
         success : function (data) {
           chartData = data;
@@ -796,8 +774,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        // url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
+        url : "http://localhost:8000/app/journals_and_disciplines_map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -812,8 +790,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,

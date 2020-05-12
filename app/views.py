@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from urllib.parse import unquote
 
 import json
-from .onefigr_analysis_2 import Data
+from .onefigr_analysis import Data
 
 data = Data()
 
