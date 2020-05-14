@@ -587,8 +587,8 @@
 
     $(document).ready(function () {
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
-        url : "http://localhost:8000/app/providersByMetric_chart_data/",
+        url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
+        // url : "http://localhost:8000/app/providersByMetric_chart_data/",
         dataType: "json",
         success : function (data) {
           chartData = data;
