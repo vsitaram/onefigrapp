@@ -231,8 +231,8 @@
     
     $("#provider_select").on("change", function() {
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
-          var queryURL = "http://localhost:8000/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/";
-          // var queryURL = "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/"
+          // var queryURL = "http://localhost:8000/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/";
+          var queryURL = "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/" + encodeURI($("#provider_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,

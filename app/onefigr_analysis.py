@@ -286,46 +286,29 @@ class Data():
 
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
-        # print(original_1figr_data_with_disciplines.columns)
 
         journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
-        # print(journalsByDisciplineData.sort_values(by='References', ascending=False)[['References', 'Journal']].values.tolist())
-        
-
-        # group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal', metric])['Provider'].agg({'Provider': ' '.join}).reset_index()
-        # group = group[['Journal','Provider', metric]].sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         ret = {}
 
         for metric in metrics:
 
-            # sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
-            group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal', metric])['Provider'].apply(', '.join).reset_index()
+            group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal']).agg({metric: 'sum', 'Provider': lambda x: ', '.join(x)})
             group_sorted = group.sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
-            # group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
-            # print(group)
-            journals = group_sorted['Journal'].values.tolist()
-            providers = group_sorted['Provider'].values.tolist()
-            counts = group_sorted[metric].values.tolist()
-            journals_and_provider_dict = dict(zip(journals, providers))
-            percentages = (group_sorted[metric] / group_sorted[metric].sum()) * 100
-            percentages = percentages.values.tolist() 
-            journals_and_percentages = {}   
-            for index in range(0, len(journals)):
-                journals_and_percentages[journals[index]] = '{0:.2f}'.format(percentages[index])
-                
-            
-            # if metric == 'References':
-            #   print(journals)
-
-
+            # print(group_sorted.to_string())
+            # print(group_sorted.columns)
+            metric_map = group_sorted[metric].to_dict()
+            provider_map = group_sorted['Provider'].to_dict()
+            percentages = group_sorted[metric] / group_sorted[metric].sum() * 100
+            percentages = percentages.apply(lambda x: '{0:.2f}'.format(x))
+            percentage_map = percentages.to_dict()
 
             journals_by_discipline_dict = {
-                'categories': journals, # change this to have dict between journals and counts
-                'providerMap': journals_and_provider_dict,
-                'percentagesMap': journals_and_percentages,
-                'counts': counts
+                'metricMap': metric_map,
+                'providerMap': provider_map,
+                'percentageMap': percentage_map,
+                
             }
             
             ret[metric] = journals_by_discipline_dict
@@ -362,7 +345,6 @@ class Data():
         journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()
         journals_by_provider_df = journals_by_provider_sums[metrics].loc[provider] / 2
         # print(journals_by_provider_df)
-        # print(journals_by_provider_df.loc[provider].sort_values(ascending=False).fillna(0))
         journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
 
         return journals_by_provider_sorted.to_dict()
@@ -385,8 +367,6 @@ class Data():
         
         for metric in metrics:
             journals_by_provider_df = journals_by_provider_sums[metric] / 2
-            # print(journals_by_provider_df)
-            # print(journals_by_provider_df.loc[provider].sort_values(ascending=False).fillna(0))
             journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
             journals_by_provider_dict[metric] = journals_by_provider_sorted.to_dict()
 

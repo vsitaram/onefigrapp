@@ -556,9 +556,9 @@
 
     
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
-      var rawCategories = chartData[metric].categories;
+      var rawCategories = Object.keys(chartData[metric].metricMap);
       // console.log(rawCategories);
-      var rawCounts = chartData[metric].counts;
+      var rawCounts = Object.values(chartData[metric].metricMap); // converting to maps
       // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
@@ -568,7 +568,7 @@
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
-      config.xAxis.percentagesMap = chartData[metric].percentagesMap;
+      config.xAxis.percentageMap = chartData[metric].percentageMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
       config.yAxis.title.text = yAxisTitle;
@@ -600,7 +600,7 @@
                   var s = '<small>'+ this.x + '</small>';
 
                   $.each(this.points, function(i, point) {
-                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentagesMap[this.x] + '% of All ' + point.series.name + ')';
+                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
                   });
 
                   s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
@@ -612,7 +612,7 @@
           },
           xAxis: {
               providerMap: {},
-              percentagesMap: {},
+              percentageMap: {},
               min: 0,
               max: 15,
               scrollbar: {
@@ -674,7 +674,7 @@
     }
 
     function setTable(chartData, metrics) {
-      var categories = chartData[metrics[0]].categories;
+      var categories = Object.keys(chartData[metrics[0]].metricMap);
       /*
       console.log(categories);
       console.log(categories.length);
@@ -688,36 +688,36 @@
       */
       var tableCounts = [];
       tableCounts.push(categories);
+      var newMetrics = [].concat(metrics);
+      newMetrics.splice(1, 0, metrics[0]);
+      console.log(newMetrics);
       
-      var numDownloadsPasses = 0;
-      for(var i = 0; i < metrics.length; i++){
+      for(var i = 0; i < newMetrics.length; i++){
         var newArr = [];
-        if( i == 0 && numDownloadsPasses == 1 ) {
-          for(var j = 0; j < categories.length; j++) {
-            count = chartData[metrics[i]].percentagesMap[categories[j]];
-            newArr.push(count);
-          }
-        }
         for(var j = 0; j < categories.length; j++) {
-          var index = chartData[metrics[i]].categories.indexOf(categories[j]);
-          var count = 0; 
-          if(index != -1) {
-            count = chartData[metrics[i]].counts[index];
+          if(i == 1) {
+            newArr.push(chartData[newMetrics[i]].percentageMap[categories[j]]);
           }
-          newArr.push(count);
+          else {
+            newArr.push(chartData[newMetrics[i]].metricMap[categories[j]]);  
+          }
         }
         tableCounts.push(newArr);
-        if( i == 0 && numDownloadsPasses == 0 ) {
-          i--;
-          numDownloadsPasses++;
-        }
-      }  
+      } 
+
+      var newArr = []; 
+      for(var j = 0; j < categories.length; j++) {
+        provider = chartData[metrics[0]].providerMap[categories[j]];
+        newArr.push(provider);
+      }
+      tableCounts.push(newArr);
+
       console.log(tableCounts);    
 
       // trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
       var tableData = rotate(tableCounts);
       console.log("TABLE DATA");
-      // console.log(tableData)
+      console.log(tableData)
       /*
       var tableBody = document.getElementById('table_body');
       tableBody.innerHTML = "";
@@ -749,6 +749,7 @@
                 { title: "All Time (JR1)" },
                 { title: "Publications" },
                 { title: "Citations" },
+                { title: "Provider(s)" },
             ]
         } );
       }
@@ -800,7 +801,7 @@
               chartData = data;
               console.log(chartData);
               setCharts(chartData, metrics);
-              setTable(chartData, metrics);
+              // setTable(chartData, metrics);
               
             }
           });
