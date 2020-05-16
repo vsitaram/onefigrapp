@@ -62,12 +62,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
-# CORS_ORIGIN_WHITELIST = (
-#     'http://localhost:8000',
-#     'https://onefigrapp.herokuapp.com'
-# )
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8000',
+    'https://onefigrapp.herokuapp.com'
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer'
+    )
+}
 
 ROOT_URLCONF = 'onefigrapp.urls'
 
