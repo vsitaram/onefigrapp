@@ -496,7 +496,7 @@
               console.log(text);
               $('#result_message_container').html(text);
               $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
-    
+              $('#result_discipline').hide();
           },
           onResult: function (node, query, result, resultCount) {
             if (query === "") return;
@@ -714,24 +714,10 @@
 
       console.log(tableCounts);    
 
-      // trClasses = ["journal-title-column", "recent-column", "alltime-column", "publications-column", "citations-column"]
       var tableData = rotate(tableCounts);
       console.log("TABLE DATA");
       console.log(tableData)
-      /*
-      var tableBody = document.getElementById('table_body');
-      tableBody.innerHTML = "";
-      for(var i = 0; i < tableData.length; i++) {
-        var row = document.createElement('tr');
-        for(var j = 0; j < tableData[i].length; j++) {
-          var dataPoint = document.createElement('td');
-          dataPoint.innerHTML = tableData[i][j];
-          dataPoint.classList.add(trClasses[j]);
-          row.appendChild(dataPoint);
-        }
-        tableBody.appendChild(row);
-      }
-      */
+      
       if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
         // alert("Already Created");
           var table = $('#dt-select').DataTable();
