@@ -47,8 +47,6 @@ class Data():
         # print(df)
         return df
 
-    # print(journalsByDisciplineData)
-
     def _make_disciplines_column(self):
         """This generates the disciplines column on the fly for each journal. The disciplines column in a combination of various permutations of each journal's
         domain, field, subfield columns. The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
@@ -313,14 +311,7 @@ class Data():
             
             ret[metric] = journals_by_discipline_dict
             
-        
-
-        # print(ret)
-        # with open('file.txt', 'w') as file:
-        #     file.write(json.dumps(ret))
         return ret
-
-    # figure8('Downloads JR1 2017')
 
     def get_providers_list(self):
         journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False)
