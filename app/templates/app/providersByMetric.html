@@ -131,7 +131,15 @@
           </div>
           
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
+          <div id="loader">
+            <div class="d-flex justify-content-center align-items-center" style="height:475px;">
+              <div class="spinner-border" style="width: 3rem; height: 3rem; color: #E57200;" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Downloads -->
           <div id="charts">
             <!-- Recent Downloads -->
@@ -393,17 +401,7 @@
         return ret;
 
       });
-    }
-
-
-    $('#charts_downloads_alltime').hide();
-    $('#charts_publications').hide();
-    $('#charts_citations').hide();
-    
-    resetMetricColumnHeight();
-
-
-    
+    }   
 
     function removeZeroCountsAndAssociatedJournals(journals, counts) {
       var index = counts.length - 1;
@@ -498,8 +496,6 @@
       
       $.each(chartTitles, function (i, item) {
 
-        
-
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i])
 
         Highcharts.chart(chartIDs[i], config);
@@ -586,10 +582,25 @@
     
 
     $(document).ready(function () {
+      $('#charts_downloads_alltime').hide();
+      $('#charts_publications').hide();
+      $('#charts_citations').hide();
+      
+      resetMetricColumnHeight();
+
       $.ajax({
         url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
         // url : "http://localhost:8000/app/providersByMetric_chart_data/",
         dataType: "json",
+        beforeSend: function () {
+          $("#charts").hide();
+          $("#loader").show();
+          
+        },
+        complete: function () {
+          $("#charts").show();
+          $("#loader").hide();
+        },
         success : function (data) {
           chartData = data;
           console.log(chartData);
@@ -668,10 +679,6 @@
         $("input[id='metrics_citations']").prop('disabled', false); 
       }
     });
-
-
-
-
 
   </script>
 
