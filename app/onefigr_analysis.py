@@ -270,17 +270,6 @@ class Data():
         return journals_and_disciplines_dict
 
     def journals_by_discipline(self, discipline):
-        """Shows distribution of current year article downloads (JR5) by discipline for the specified provider.
-        'Disciplines' is a column we derived from the pre-existing 'fields' column in the 1figr data.
-        Disciplines has mapped those field categories into more UVA specific language
-        
-        Chart Type: Line
-        Y-Axis: Discipline 
-        Y-Axis Data Source: Original 1Figr Dataset, reusable_functions.py
-        
-        X-Axis: Number of JR1 Downloads
-        X-Axis Data Source: Original 1Figr Dataset, reusable_functions.py
-        """
 
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
@@ -322,15 +311,6 @@ class Data():
         return providers_list
 
     def journals_by_provider(self, provider):
-        """ 
-        Creates bar graph of the number of references in each field for input provider. 
-        Chart Type: Bar Graph 
-        Y-Axis: Field 
-        Y-Axis Data Source: Journals Per Provider, Domain
-        X-Axis: Number of References
-        X-Axis Data Source: Journals Per Provider, References
-        References are defined as the number of references made by researchers of your institution to an article from a given journal.'
-         """
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()
@@ -342,15 +322,6 @@ class Data():
 
 
     def providers_by_metric(self):
-        """ 
-        Creates bar graph of the number of references in each field for input provider. 
-        Chart Type: Bar Graph 
-        Y-Axis: Field 
-        Y-Axis Data Source: Journals Per Provider, Domain
-        X-Axis: Number of References
-        X-Axis Data Source: Journals Per Provider, References
-        References are defined as the number of references made by researchers of your institution to an article from a given journal.'
-         """
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()        
