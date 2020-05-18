@@ -209,8 +209,8 @@
       $('#citations').hide();
       
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/providers_list",
-        url : "http://localhost:8000/app/providers_list",
+        url : "https://onefigrapp.herokuapp.com/app/providers_list",
+        // url : "http://localhost:8000/app/providers_list",
         dataType: "json",
         success : function (data) {
           var providersList = data;
@@ -221,8 +221,8 @@
       });
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
-        url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
+        url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
+        // url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
         dataType: "json",
         beforeSend: function () {
           $("#charts").hide();

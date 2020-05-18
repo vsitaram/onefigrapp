@@ -545,18 +545,20 @@
     }
 
     
-    function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
+    function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle, totalCountName) {
       var rawCategories = Object.keys(chartData[metric].metricMap);
       // console.log(rawCategories);
-      var rawCounts = Object.values(chartData[metric].metricMap); // converting to maps
+      var rawCounts = Object.values(chartData[metric].metricMap);
       // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
-      console.log("CATEGORIES AND COUNTS");
-      console.log(categoriesAndCounts);
+      // console.log("CATEGORIES AND COUNTS");
+      // console.log(categoriesAndCounts);
 
-      // console.log(config.xAxis.percentageMap);
-
+      var totalCount = 0;
+      for (var i = 0; i < categoriesAndCounts[1].length; i++) {
+        totalCount += categoriesAndCounts[1][i];
+      }
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
@@ -565,7 +567,6 @@
       config.series[0].data = categoriesAndCounts[1];
       config.yAxis.title.text = yAxisTitle;
       config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
-      console.log(config.xAxis.percentageMap);
 
       return config;
     }
@@ -577,63 +578,68 @@
       seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
       chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
 
-      var chartConfig = {
-          chart: {
-              type: 'bar'
-          },
-          title: {
-              fontFamily: 'Segoe UI',
-              style: {
-                fontWeight: 10,
-                fontSize: 20,
-              }
-          },
-          tooltip: {
-              formatter: function() {
-                  var s = '<small>'+ this.x + '</small>';
-
-                  $.each(this.points, function(i, point) {
-                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
-                  });
-
-                  s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
-                  console.log(chartConfig.xAxis.percentageMap);
-                  return s;
-              },
-              shared: true,
-              useHTML: false
-          },
-          xAxis: {
-              providerMap: {},
-              percentageMap: {},
-              min: 0,
-              max: 15,
-              scrollbar: {
-                  enabled: true
-              },
-              tickLength: 0
-          },
-          yAxis: {
-              title: {
-                  
-              },
-              min: 0,
-          },
-          legend: {
-              enabled: false
-          },
-          series: [{
-              
-          }],
-          credits: {
-              enabled: false
-          },
-      };
+      
       
       $.each(chartTitles, function (i, item) {
 
-        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i]);
-        // var configCopy = JSON.parse(JSON.stringify(config))
+        totalCountName = "totalCount" + i;
+
+        var chartConfig = {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    var s = '<small>'+ this.x + '</small>';
+
+                    $.each(this.points, function(i, point) {
+                        s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
+                        // console.log(point);
+                    });
+
+                    s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
+
+                    return s;
+                },
+                shared: true,
+                useHTML: false
+            },
+            xAxis: {
+                providerMap: {},
+                percentageMap: {},
+                min: 0,
+                max: 15,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
+            },
+            yAxis: {
+                title: {
+                    
+                },
+                min: 0,
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                
+            }],
+            credits: {
+                enabled: false
+            },
+        };
+
+        var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
+        // console.log();
 
         Highcharts.chart(chartIDs[i], config);
       }); 
@@ -740,8 +746,8 @@
       $("#loader").hide();
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
-        url : "http://localhost:8000/app/disciplines_list",
+        url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
+        // url : "http://localhost:8000/app/disciplines_list",
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
@@ -752,8 +758,8 @@
       });
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        url : "http://localhost:8000/app/chart_data/Architecture/",
+        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
+        // url : "http://localhost:8000/app/chart_data/Architecture/",
         dataType: "json",
         beforeSend: function () {
           $("#charts").hide();
@@ -776,8 +782,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
+        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -793,8 +799,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          // var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,
