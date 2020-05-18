@@ -285,6 +285,8 @@
         $('#charts_downloads_recent').hide();
         $('#charts_downloads_alltime').hide();
       }
+
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
@@ -293,7 +295,12 @@
       }          
       else {
         $('#charts_downloads_recent').hide();
+        if( !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
+          $('#metrics_downloads_options').hide();
+          $("input[id='metrics_downloads']").prop('checked', false);
+        }
       }    
+      resetMetricColumnHeight();
     });
     
 
@@ -303,9 +310,12 @@
       }          
       else {
         $('#charts_downloads_alltime').hide();
+        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') ) {
+          $('#metrics_downloads_options').hide();
+          $("input[id='metrics_downloads']").prop('checked', false);
+        }
       }
-
-  
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_publications']").on('change', function() {
@@ -315,6 +325,8 @@
       else {
         $('#charts_publications').hide();
       }
+
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_citations']").on('change', function() {
@@ -323,7 +335,9 @@
       }          
       else {
         $('#charts_citations').hide();
-      }    
+      } 
+
+      resetMetricColumnHeight();   
     });
 
     $('#metrics_show_all').on('click', function() {
@@ -339,6 +353,8 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
+
+      resetMetricColumnHeight();
     });
 
 
@@ -356,52 +372,51 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
       $("input[id='metrics_citations']").prop('checked', false);
+
+      resetMetricColumnHeight();
     });
 
 
     function resetMetricColumnHeight() {
-      $('#metrics_column').height( function() {
-        var ret = 0;
-        if( $(document).width() < 768) {
-          heights = 0;
-          $('#metrics_column').children().each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id') + ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Window height: " + $(window).height());
-          // console.log("Result: " + heights);
 
-          ret =  heights + 64;
-        }
-        else {
-          elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
-          heights = 0;
-          $(elements.join(', ')).each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id')+ ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Document height: " + $(document).height());
-          // console.log("Result: " + ($(document).height() - heights));
+      if( $("#charts > :visible").length <= 1) {
+        $('#metrics_column').height( function() {
+          var ret = 0;
+          if( $(document).width() < 768) {
+            heights = 0;
+            $('#metrics_column').children().each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id') + ": " + heights);
+            });
 
-          ret = $(document).height() - heights - 3 - 1;
-        }
+            return heights + 64;
+          }
+          else {
+            elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
+            heights = 0;
+            $(elements.join(', ')).each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id')+ ": " + heights);
+            });
 
-        return ret;
+            return $(document).height() - heights - 1;
+          }
 
-      });
-    }   
+        });
+      }
+      else {
+        $('#metrics_column').height("auto");
+      }
+      
+    }
 
     function removeZeroCountsAndAssociatedJournals(journals, counts) {
       var index = counts.length - 1;
@@ -585,12 +600,10 @@
       $('#charts_downloads_alltime').hide();
       $('#charts_publications').hide();
       $('#charts_citations').hide();
-      
-      resetMetricColumnHeight();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
-        // url : "http://localhost:8000/app/providersByMetric_chart_data/",
+        // url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
+        url : "http://localhost:8000/app/providersByMetric_chart_data/",
         dataType: "json",
         beforeSend: function () {
           $("#charts").hide();
@@ -612,6 +625,7 @@
 
       $('#downloads_table').hide();
 
+      resetMetricColumnHeight();
     });
 
 

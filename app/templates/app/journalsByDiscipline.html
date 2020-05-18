@@ -75,7 +75,7 @@
     <div class="container-fluid" id="metrics_data">
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
-          <div class="ml-2"> <!-- Use position-fixed class to fix the left column -->
+          <div class="ml-2" id="metrics_column_items"> <!-- Use position-fixed class to fix the left column -->
             <p style="display: hidden;" id="downloads-checked"></p>
             <p style="display: hidden;" id="recent-checked"></p>
             <p style="display: hidden;" id="alltime-checked"></p>
@@ -164,7 +164,7 @@
             </div>
 
           </div>
-          <div class="row align-items-center mb-4">
+          <div class="row align-items-center mb-4" id="metrics_buttons">
             <div class="ml-xl-3 text-center pt-3 col-xl-6">
               <button type="button" class="btn btn-sm text-white" id="metrics_show_all" style="background-color: #E57200;">Show All</button>
             </div>
@@ -328,6 +328,7 @@
         $('#charts_downloads_recent').hide();
         $('#charts_downloads_alltime').hide();
       }
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
@@ -336,7 +337,12 @@
       }          
       else {
         $('#charts_downloads_recent').hide();
+        if( !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
+          $('#metrics_downloads_options').hide();
+          $("input[id='metrics_downloads']").prop('checked', false);
+        }
       }    
+      resetMetricColumnHeight();
     });
     
 
@@ -346,9 +352,12 @@
       }          
       else {
         $('#charts_downloads_alltime').hide();
+        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') ) {
+          $('#metrics_downloads_options').hide();
+          $("input[id='metrics_downloads']").prop('checked', false);
+        }
       }
-
-  
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_publications']").on('change', function() {
@@ -358,6 +367,7 @@
       else {
         $('#charts_publications').hide();
       }
+      resetMetricColumnHeight();
     });
 
     $("input[id='metrics_citations']").on('change', function() {
@@ -366,7 +376,8 @@
       }          
       else {
         $('#charts_citations').hide();
-      }    
+      } 
+      resetMetricColumnHeight();   
     });
 
     $('#metrics_show_all').on('click', function() {
@@ -382,6 +393,8 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
       $("input[id='metrics_citations']").prop('checked', true);
+
+      resetMetricColumnHeight();
     });
 
 
@@ -399,52 +412,51 @@
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
       $("input[id='metrics_citations']").prop('checked', false);
+
+      resetMetricColumnHeight();
     });
 
 
     function resetMetricColumnHeight() {
-      $('#metrics_column').height( function() {
-        var ret = 0;
-        if( $(document).width() < 768) {
-          heights = 0;
-          $('#metrics_column').children().each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id') + ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Window height: " + $(window).height());
-          // console.log("Result: " + heights);
 
-          ret =  heights + 64;
-        }
-        else {
-          elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
-          heights = 0;
-          $(elements.join(', ')).each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id')+ ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Document height: " + $(document).height());
-          // console.log("Result: " + ($(document).height() - heights));
+      if( $("#charts > :visible").length <= 1) {
+        $('#metrics_column').height( function() {
+          var ret = 0;
+          if( $(document).width() < 768) {
+            heights = 0;
+            $('#metrics_column').children().each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id') + ": " + heights);
+            });
+            
+            return heights + 64;
+          }
+          else {
+            elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
+            heights = 0;
+            $(elements.join(', ')).each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id')+ ": " + heights);
+            });
+            
+            return $(document).height() - heights - 1;
+          }
 
-          ret = $(document).height() - heights - 3 - 1;
-        }
-
-        return ret;
-
-      });
-    }     
+        });
+      }
+      else {
+        $('#metrics_column').height("auto");
+      }
+      
+    }       
 
     function loadDisciplinesList(disciplinesList) {
       for(var i = 0; i < disciplinesList.length; i++) {
@@ -543,6 +555,8 @@
       console.log("CATEGORIES AND COUNTS");
       console.log(categoriesAndCounts);
 
+      // console.log(config.xAxis.percentageMap);
+
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
@@ -551,6 +565,7 @@
       config.series[0].data = categoriesAndCounts[1];
       config.yAxis.title.text = yAxisTitle;
       config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
+      console.log(config.xAxis.percentageMap);
 
       return config;
     }
@@ -582,7 +597,7 @@
                   });
 
                   s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
-
+                  console.log(chartConfig.xAxis.percentageMap);
                   return s;
               },
               shared: true,
@@ -618,6 +633,7 @@
       $.each(chartTitles, function (i, item) {
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i]);
+        // var configCopy = JSON.parse(JSON.stringify(config))
 
         Highcharts.chart(chartIDs[i], config);
       }); 
@@ -720,14 +736,12 @@
       $('#charts_downloads_alltime').hide();
       $('#charts_publications').hide();
       $('#charts_citations').hide();
-      
-      resetMetricColumnHeight();
 
       $("#loader").hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
-        // url : "http://localhost:8000/app/disciplines_list",
+        // url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
+        url : "http://localhost:8000/app/disciplines_list",
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
@@ -738,8 +752,8 @@
       });
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        // url : "http://localhost:8000/app/chart_data/Architecture/",
+        // url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
+        url : "http://localhost:8000/app/chart_data/Architecture/",
         dataType: "json",
         beforeSend: function () {
           $("#charts").hide();
@@ -762,14 +776,15 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        // url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
+        url : "http://localhost:8000/app/journals_and_disciplines_map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
-          
         }
       });
+
+      resetMetricColumnHeight();
     });
 
 
@@ -778,8 +793,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
           console.log(queryURL);
           $.ajax({
             url : queryURL,
@@ -798,6 +813,7 @@
               console.log(chartData);
               setCharts(chartData, metrics);
               setTable(chartData, metrics);
+              // resetMetricColumnHeight();
               
             }
           });

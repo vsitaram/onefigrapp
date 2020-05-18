@@ -112,47 +112,44 @@
   <script type="text/javascript">
 
     function resetMetricColumnHeight() {
-      $('#metrics_column').height( function() {
-        var ret = 0;
-        if( $(document).width() < 768) {
-          heights = 0;
-          $('#metrics_column').children().each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id') + ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Window height: " + $(window).height());
-          // console.log("Result: " + heights);
 
-          ret =  heights + 64;
-        }
-        else {
-          elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
-          heights = 0;
-          $(elements.join(', ')).each( function() {
-            marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
-            marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
-            paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
-            paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
-            heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-            // console.log($(this).attr('id')+ ": " + heights);
-          });
-          // alert(heights);
-          // console.log("Total heights: " + heights);
-          // console.log("Document height: " + $(document).height());
-          // console.log("Result: " + ($(document).height() - heights));
+      if( $("#charts > :visible").length <= 1) {
+        $('#metrics_column').height( function() {
+          var ret = 0;
+          if( $(document).width() < 768) {
+            heights = 0;
+            $('#metrics_column').children().each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id') + ": " + heights);
+            });
 
-          ret = $(window).height() - heights - 3 - 2;
-        }
+            return heights + 64;
+          }
+          else {
+            elements = ['nav', '#breadcrumb_container', '#title_description', 'hr'];
+            heights = 0;
+            $(elements.join(', ')).each( function() {
+              marginTop = parseInt($(this).css("marginTop").substring(0, $(this).css("marginTop").indexOf('px')));
+              marginBottom = parseInt($(this).css("marginBottom").substring(0, $(this).css("marginBottom").indexOf('px')));
+              paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
+              paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
+              heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
+              // console.log($(this).attr('id')+ ": " + heights);
+            });
+            
+            return $(document).height() - heights - 1;
+          }
 
-        return ret;
-
-      });
+        });
+      }
+      else {
+        $('#metrics_column').height("auto");
+      }
+      
     }
 
     function loadProvidersListIntoColumn(providersList) {
@@ -210,12 +207,10 @@
       $('#downloads_alltime').hide();
       $('#publications').hide();
       $('#citations').hide();
-
-      resetMetricColumnHeight();
       
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/providers_list",
-        // url : "http://localhost:8000/app/providers_list",
+        // url : "https://onefigrapp.herokuapp.com/app/providers_list",
+        url : "http://localhost:8000/app/providers_list",
         dataType: "json",
         success : function (data) {
           var providersList = data;
@@ -226,8 +221,8 @@
       });
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
-        // url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
+        // url : "https://onefigrapp.herokuapp.com/app/journalsByProvider_chart_data/AIP/",
+        url : "http://localhost:8000/app/journalsByProvider_chart_data/AIP/",
         dataType: "json",
         beforeSend: function () {
           $("#charts").hide();
@@ -247,6 +242,8 @@
           
         }
       });
+
+      resetMetricColumnHeight();
     });
     
     $("#provider_select").on("change", function() {
