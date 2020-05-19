@@ -6,17 +6,22 @@ from . import views
 
 app_name = 'app'
 urlpatterns = [
+	# only views with templates have names
 	path('', views.index, name='index'),
+	path('descriptions/', views.descriptions, name='descriptions'),
 	path('tools/', views.tools, name='tools'),
-	path('journalsByDiscipline/', views.journalsByDiscipline, name='journalsByDiscipline'),
-	path('journalsByProvider/', views.journalsByProvider, name='journalsByProvider'),
-	path('providersByMetric/', views.providersByMetric, name='providersByMetric'),
-	path('disciplines_list/', views.disciplines_list, name='discipline_list'),
-	path('chart_data/<str:discipline>/', views.chart_data, name='chart_data'),
-	path('journals_and_disciplines_map/', views.get_journals_and_disciplines_map, name='journals_and_disciplines_map'),
-	path('providers_list/', views.providers_list, name='providers_list'),
-	path('journalsByProvider_chart_data/<str:provider>/', views.journals_by_provider_chart_data),
-	path('providersByMetric_chart_data/', views.providers_by_metric_chart_data),
+
+	path('journals-by-discipline/', views.journals_by_discipline, name='journalsByDiscipline'),
+	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
+	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
+	path('journals-by-discipline/disciplines-list/', views.disciplines_list),
+
+	path('journals-by-provider/', views.journals_by_provider, name='journalsByProvider'),
+	path('journals-by-provider/providers-list/', views.providers_list),
+	path('journals-by-provider/chart-data/<str:provider>/', views.journals_by_provider_chart_data),
+
+	path('providers-by-metric/', views.providers_by_metric, name='providersByMetric'),	
+	path('providers-by-metric/chart-data/', views.providers_by_metric_chart_data),
 
     path('login/', auth_views.LoginView.as_view(template_name="app/login.html"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

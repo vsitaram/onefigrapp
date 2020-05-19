@@ -23,6 +23,10 @@ def index(request):
     template_name = 'app/index.html'
     return render(request, template_name)
 
+def descriptions(request):
+    template_name = 'app/descriptions.html'
+    return render(request, template_name)
+
 @login_required
 def tools(request):
     template_name = 'app/tools.html'
@@ -30,14 +34,9 @@ def tools(request):
 
 
 @login_required
-def journalsByDiscipline(request):
-    template_name = 'app/journalsByDiscipline.html'
-    context = {
-        # 'disciplines_list': json.dumps(get_disciplines_list()),
-        # 'chart_data': json.dumps(journals_by_discipline()),
-        'journals_and_disciplines_map': json.dumps(data.journals_and_disciplines_map())
-    }
-    return render(request, template_name, context)
+def journals_by_discipline(request):
+    template_name = 'app/journals-by-discipline.html'
+    return render(request, template_name)
 
 
 def function3():
@@ -50,7 +49,7 @@ def disciplines_list(request):
         return Response(data.get_disciplines_list())
 
 @api_view(['GET'])
-def chart_data(request, discipline):
+def journals_by_discipline_chart_data(request, discipline):
     
     if request.method == 'GET':
         query_discipline = unquote(discipline)
@@ -65,13 +64,9 @@ def get_journals_and_disciplines_map(request):
 
 
 @login_required
-def journalsByProvider(request):
-    template_name = 'app/journalsByProvider.html'
-    context = {
-        # 'providers_list': json.dumps(data.get_provider_list()),
-        # 'chart_data': json.dumps(data.journals_by_provider()),
-    }
-    return render(request, template_name, context)  
+def journals_by_provider(request):
+    template_name = 'app/journals-by-provider.html'
+    return render(request, template_name)  
 
 @api_view(['GET'])
 def providers_list(request):
@@ -87,13 +82,9 @@ def journals_by_provider_chart_data(request, provider):
         return Response(data.journals_by_provider(query_provider))
 
 @login_required
-def providersByMetric(request):
-    template_name = 'app/providersByMetric.html'
-    context = {
-        # 'providers_list': json.dumps(data.get_providers_list()),
-        # 'chart_data': json.dumps(data.providers_by_metric()),
-    }
-    return render(request, template_name, context)
+def providers_by_metric(request):
+    template_name = 'app/providers-by-metric.html'
+    return render(request, template_name)
 
 @api_view(['GET'])
 def providers_by_metric_chart_data(request):

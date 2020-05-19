@@ -747,8 +747,8 @@
       $("#loader").hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/disciplines_list/",
-        // url : "http://localhost:8000/app/disciplines_list",
+        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/disciplines-list",
+        url : "http://localhost:8000/app/journals-by-discipline/disciplines-list",
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
@@ -759,8 +759,8 @@
       });
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/chart_data/Architecture/",
-        // url : "http://localhost:8000/app/chart_data/Architecture/",
+        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/Architecture/",
+        url : "http://localhost:8000/app/journals-by-discipline/chart-data/Architecture/",
         dataType: "json",
         beforeSend: function () {
           $("#charts_div").hide();
@@ -783,8 +783,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals_and_disciplines_map/",
-        // url : "http://localhost:8000/app/journals_and_disciplines_map/",
+        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/journals-and-disciplines-map/",
+        url : "http://localhost:8000/app/journals-by-discipline/journals-and-disciplines-map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -800,8 +800,8 @@
         // console.log($("#discipline_select").val());
         // console.log(typeof($("#discipline_select").val()));
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          // var queryURL = "http://localhost:8000/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/chart_data/" + encodeURI($("#discipline_select").val()) + "/"
+          // var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
+          var queryURL = "http://localhost:8000/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
           console.log(queryURL);
           $.ajax({
             url : queryURL,
@@ -856,6 +856,9 @@
         $("input[id='metrics_downloads_options_alltime']").prop('disabled', true);
         $("input[id='metrics_publications']").prop('disabled', true);
         $("input[id='metrics_citations']").prop('disabled', true);
+
+        $("#metrics_downloads_options").show();
+        
       }
       else {
         $("#charts").show();
@@ -871,6 +874,10 @@
         // console.log($('#publications-checked')[0].innerHTML);
         $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
         // console.log($('#citations-checked')[0].innerHTML);
+
+        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') && !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
+          $("#metrics_downloads_options").hide();
+        }
 
         $("input[id='metrics_downloads']").prop('disabled', false);
         $("input[id='metrics_downloads_options_recent']").prop('disabled', false);

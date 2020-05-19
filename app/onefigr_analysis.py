@@ -313,9 +313,9 @@ class Data():
     def journals_by_provider(self, provider):
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-        journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()
-        journals_by_provider_df = journals_by_provider_sums[metrics].loc[provider] / 2
-        # print(journals_by_provider_df)
+        necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
+        journals_by_provider_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()
+        journals_by_provider_df = journals_by_provider_sums.loc[provider] / 2
         journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
 
         return journals_by_provider_sorted.to_dict()
@@ -324,15 +324,25 @@ class Data():
     def providers_by_metric(self):
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-        journals_by_provider_sums = self.original_onefigr_dataset.groupby(['Provider']).sum()        
-        journals_by_provider_dict = { metric: {} for metric in metrics }
+        necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
+        providers_by_metric_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()     
+        providers_by_metric_dict = { metric: {} for metric in metrics }
         
         for metric in metrics:
-            journals_by_provider_df = journals_by_provider_sums[metric] / 2
-            journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
-            journals_by_provider_dict[metric] = journals_by_provider_sorted.to_dict()
+            providers_by_metric_df = providers_by_metric_sums[metric] / 2
+            providers_by_metric_sorted = providers_by_metric_df.sort_values(ascending=False).fillna(0)
+            providers_by_metric_dict[metric] = providers_by_metric_sorted.to_dict()
 
-        return journals_by_provider_dict
+        providers_by_journal_count = self.original_onefigr_dataset[['Journal', 'Provider']].groupby(['Provider']).count() - 1
+        providers_by_journal_dict = providers_by_journal_count['Journal'].to_dict()
+        # print(providers_by_journal_count)
+
+        ret = {
+            'providersByMetric': providers_by_metric_dict,
+            'journalCountMap': providers_by_journal_dict
+        }
+
+        return ret
 
             
 

@@ -431,9 +431,9 @@
 
     
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
-      var rawCategories = Object.keys(chartData[metric])
+      var rawCategories = Object.keys(chartData.providersByMetric[metric])
       // console.log(rawCategories);
-      var rawCounts = Object.values(chartData[metric]);
+      var rawCounts = Object.values(chartData.providersByMetric[metric]);
       // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
@@ -441,7 +441,7 @@
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
-      config.xAxis.providerMap = chartData[metric].journalMap;
+      config.xAxis.journalCountMap = chartData.journalCountMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
       config.yAxis.title.text = yAxisTitle;
@@ -456,60 +456,59 @@
       yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
       seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
       chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
-
-      var chartConfig = {
-          chart: {
-              type: 'bar'
-          },
-          title: {
-              fontFamily: 'Segoe UI',
-              style: {
-                fontWeight: 10,
-                fontSize: 20,
-              }
-          },
-          tooltip: {
-              formatter: function() {
-                  var s = '<small>'+ this.x + '</small>';
-
-                  $.each(this.points, function(i, point) {
-                      s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
-                  });
-
-                  s += '<br/>' + 'Journals: ';
-
-                  return s;
-              },
-              shared: true,
-              useHTML: false
-          },
-          xAxis: {
-              min: 0,
-              max: 15,
-              scrollbar: {
-                  enabled: true
-              },
-              tickLength: 0
-          },
-          yAxis: {
-              title: {
-                  
-              },
-              min: 0,
-          },
-          legend: {
-              enabled: false
-          },
-          series: [{
-              
-          }],
-          credits: {
-              enabled: false
-          },
-      };
-
       
       $.each(chartTitles, function (i, item) {
+
+        var chartConfig = {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                fontFamily: 'Segoe UI',
+                style: {
+                  fontWeight: 10,
+                  fontSize: 20,
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    var s = '<small>'+ this.x + '</small>';
+
+                    $.each(this.points, function(i, point) {
+                        s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>';
+                    });
+
+                    s += '<br/>' + 'Journals: ' + chartConfig.xAxis.journalCountMap[this.x];
+
+                    return s;
+                },
+                shared: true,
+                useHTML: false
+            },
+            xAxis: {
+                min: 0,
+                max: 15,
+                scrollbar: {
+                    enabled: true
+                },
+                tickLength: 0
+            },
+            yAxis: {
+                title: {
+                    
+                },
+                min: 0,
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                
+            }],
+            credits: {
+                enabled: false
+            },
+        };
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i])
 
@@ -543,17 +542,17 @@
     }
 
     function setTable(chartData, metrics) {
-      var categories = Object.keys(chartData[metrics[0]]);
+      var categories = Object.keys(chartData.providersByMetric[metrics[0]]);
       /*
       console.log(categories);
       console.log(categories.length);
-      console.log(chartData[metrics[0]].counts.length);
-      console.log(chartData[metrics[1]].categories.length);
-      console.log(chartData[metrics[1]].counts.length);
-      console.log(chartData[metrics[2]].categories.length);
-      console.log(chartData[metrics[2]].counts.length);
-      console.log(chartData[metrics[3]].categories.length);
-      console.log(chartData[metrics[3]].counts.length);
+      console.log(chartData.providersByMetric[metrics[0]].counts.length);
+      console.log(chartData.providersByMetric[metrics[1]].categories.length);
+      console.log(chartData.providersByMetric[metrics[1]].counts.length);
+      console.log(chartData.providersByMetric[metrics[2]].categories.length);
+      console.log(chartData.providersByMetric[metrics[2]].counts.length);
+      console.log(chartData.providersByMetric[metrics[3]].categories.length);
+      console.log(chartData.providersByMetric[metrics[3]].counts.length);
       */
       var tableCounts = [];
       tableCounts.push(categories);
@@ -561,7 +560,7 @@
       for(var i = 0; i < metrics.length; i++){
         var newArr = [];
         for(var j = 0; j < categories.length; j++) {
-          var count = chartData[metrics[i]][categories[j]];
+          var count = chartData.providersByMetric[metrics[i]][categories[j]];
           newArr.push(count);
         }
         tableCounts.push(newArr);
@@ -602,8 +601,8 @@
       $('#charts_citations').hide();
 
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/providersByMetric_chart_data/",
-        // url : "http://localhost:8000/app/providersByMetric_chart_data/",
+        // url : "https://onefigrapp.herokuapp.com/app/providers-by-metric/chart-data/",
+        url : "http://localhost:8000/app/providers-by-metric/chart-data/",
         dataType: "json",
         beforeSend: function () {
           $("#charts_div").hide();
@@ -657,6 +656,9 @@
         $("input[id='metrics_downloads_options_alltime']").prop('disabled', true);
         $("input[id='metrics_publications']").prop('disabled', true);
         $("input[id='metrics_citations']").prop('disabled', true);
+
+        $("#metrics_downloads_options").show();
+        
       }
       else {
         $("#charts").show();
@@ -672,6 +674,10 @@
         // console.log($('#publications-checked')[0].innerHTML);
         $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
         // console.log($('#citations-checked')[0].innerHTML);
+
+        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') && !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
+          $("#metrics_downloads_options").hide();
+        }
 
         $("input[id='metrics_downloads']").prop('disabled', false);
         $("input[id='metrics_downloads_options_recent']").prop('disabled', false);
