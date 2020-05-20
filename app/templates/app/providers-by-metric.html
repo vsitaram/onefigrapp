@@ -109,11 +109,7 @@
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Providers by Metric Tool</h3>
       <p>Descriptions and important notes</p>
-      <p class="hidden_checkbox_marker" id="downloads-checked"></p>
-      <p class="hidden_checkbox_marker" id="recent-checked"></p>
-      <p class="hidden_checkbox_marker" id="alltime-checked"></p>
-      <p class="hidden_checkbox_marker" id="publications-checked"></p>
-      <p class="hidden_checkbox_marker" id="citations-checked"></p>
+      <p class="mb-4" ><a href="{% url 'app:descriptions' %}">Data Description Page</a></p>
     </div>
     <!-- Description Section End -->
 
@@ -124,6 +120,11 @@
       <div class="row">
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2"> 
+            <p class="hidden_checkbox_marker" id="downloads-checked"></p>
+            <p class="hidden_checkbox_marker" id="recent-checked"></p>
+            <p class="hidden_checkbox_marker" id="alltime-checked"></p>
+            <p class="hidden_checkbox_marker" id="publications-checked"></p>
+            <p class="hidden_checkbox_marker" id="citations-checked"></p>
 
             <!-- Table Toggle Start -->
             <div class="custom-control custom-switch mb-4">
