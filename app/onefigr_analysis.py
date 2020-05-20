@@ -1,45 +1,28 @@
-"""
-Created on Fri Nov 22 09:25:35 2019
-
-@author: ep9k
-"""
-
 import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from matplotlib.ticker import StrMethodFormatter
-import matplotlib.patches as mpatches
-
 import math
 import boto3
 import io
 import json
-# import reusable_functions as 
+
 from django.conf import settings
-# from .reusable_functions import *
 
-
-#Change these global variables to your corresponding filename and institution name
-# filename = '1figr_U_Virginia_Original (1) (1).xlsx'
-# your_institution = 'UVA'
 
 class Data():
     """Object to access all of the 1Figr data"""
     def __init__(self):
+        # To be used for Journals By Discipline
         self.original_onefigr_dataset = self._get_data()
+        # To be used by the other pages
         self.onefigr_dataset_with_disciplines = self._make_disciplines_column()
         
 
     def _get_data(self):
-        # data_AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-        # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-        # AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-        # AWS_DATA_LOCATION = config('AWS_DATA_LOCATION')
-
+        """
+        Fetches dataset from AWS and imports as Pandas DataFrame.
+        """
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         
-
         object_key = 'JournalsPerProvider_withoutQuotes.xls'
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
         data = obj['Body'].read()
@@ -48,10 +31,15 @@ class Data():
         return df
 
     def _make_disciplines_column(self):
-        """This generates the disciplines column on the fly for each journal. The disciplines column in a combination of various permutations of each journal's
-        domain, field, subfield columns. The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
-        not currently exist in the original 1figr dataset and therefore must be generated upon running this function."""
+        """
+        Returns Pandas DataFrame of the originial dataset that includes the disciplines column. 
 
+        The disciplines column in a combination of various permutations of each journal's domain, field, subfield columns. 
+        The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
+        not currently exist in the original 1figr dataset and therefore must be generated upon running this function.
+        """
+
+        # Create a copy of original that will include disciplines column
         onefigr_dataset_with_disciplines = self.original_onefigr_dataset.copy()
 
         #logic for every permutation of domain, field, subfield column with the end result defined in the "disciplines" column    
@@ -252,6 +240,9 @@ class Data():
         return onefigr_dataset_with_disciplines
 
     def get_disciplines_list(self):
+        """
+        Returns list of disciplines
+        """
         disciplines_data = self.onefigr_dataset_with_disciplines.groupby(['Discipline'], as_index=False)
         disciplines_list = []
         for key, item in disciplines_data:
@@ -260,16 +251,28 @@ class Data():
         return disciplines_list
 
     def journals_and_disciplines_map(self):
-        necessary_columns = ['Journal', 'Discipline','Domain']
+        """
+        Returns a dictionary of journals and the associated discipline.
+
+        This will be used for the modal in Journals By Discipline that users use to find the discipline of their journal.
+        """
+        necessary_columns = ['Journal', 'Discipline']
         figr_data = self.onefigr_dataset_with_disciplines[necessary_columns].dropna()
-        # figr_data = figr_data.loc[figr_data['Domain'] != "N/A"]
-        journals = figr_data['Journal'].values.tolist()
-        disciplines = figr_data['Discipline'].values.tolist()
-        journals_and_disciplines_dict = dict(zip(journals, disciplines))
+        journals_and_disciplines_dict = figr_data.to_dict()
 
         return journals_and_disciplines_dict
 
-    def journals_by_discipline(self, discipline):
+    def journals_by_discipline_chart_data(self, discipline):
+        """
+        Given a discpline, this returns a dictionary of all of the data related to the discipline that's necessary for the charts in Journals by Disipline.
+
+        For each metric, there are sorted (decreasing) dictionaries called metricMap, providerMap, and percentageMap. metricMap is a dictionary of journal titles and the respective
+        metric. metricMap is used for the frequencies and categories of the bar charts. providerMap is a dictionary of journal titles and the respective 
+        providers. providerMap is used to show the provider for each journal in the bar charts. Lastly, percentageMap is a dictionary of journal titles and the 
+        respective percentage of the total metric each journal represents. 
+        """
+
+    
 
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
@@ -303,6 +306,9 @@ class Data():
         return ret
 
     def get_providers_list(self):
+        """
+        Returns a list of all providers.
+        """
         journals_by_provider_df = self.original_onefigr_dataset.groupby(['Provider'], as_index=False)
         providers_list = []
         for key, item in journals_by_provider_df:
@@ -310,18 +316,32 @@ class Data():
 
         return providers_list
 
-    def journals_by_provider(self, provider):
+    def journals_by_provider_chart_data(self, provider):
+        """
+        Given a provider, this returns a dictionary of all of the data related to the provider that's necessary for the charts in Journals by Provider.
+
+        The sorted (decreasing) dictionary contains values for each of the four metrics for the provider.
+        """
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
         journals_by_provider_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()
-        journals_by_provider_df = journals_by_provider_sums.loc[provider] / 2
+        # divide by 2 to avoid double counting the provider for the journal group
+        journals_by_provider_df = journals_by_provider_sums.loc[provider] / 2 
         journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
 
         return journals_by_provider_sorted.to_dict()
 
 
-    def providers_by_metric(self):
+    def providers_by_metric_chart_data(self):
+        """
+        This returns a dictionary of all of the data that's necessary for the charts in Providers by Metric.
+
+        There are two dictionaries called providersByMetric and journalCountMap. providersByMetric dictionary of metrics with sorted (decreasing)
+        dictionaries of the providers and the respective values for each metric. providersByMetric is used for the categories and frequencies
+        of the graphs. journalCountMap is a dictionary of providers and the respective number of journals in each provider.
+        """
+
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
@@ -329,10 +349,12 @@ class Data():
         providers_by_metric_dict = { metric: {} for metric in metrics }
         
         for metric in metrics:
-            providers_by_metric_df = providers_by_metric_sums[metric] / 2
+            # divide by 2 to avoid double counting the provider for the journal group
+            providers_by_metric_df = providers_by_metric_sums[metric] / 2 
             providers_by_metric_sorted = providers_by_metric_df.sort_values(ascending=False).fillna(0)
             providers_by_metric_dict[metric] = providers_by_metric_sorted.to_dict()
 
+        # Subtract 1 to avoid counting the provider
         providers_by_journal_count = self.original_onefigr_dataset[['Journal', 'Provider']].groupby(['Provider']).count() - 1
         providers_by_journal_dict = providers_by_journal_count['Journal'].to_dict()
         # print(providers_by_journal_count)

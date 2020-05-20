@@ -13,6 +13,7 @@ from urllib.parse import unquote
 import json
 from .onefigr_analysis import Data
 
+# Instantiate Data object to allow fetching data across all views
 data = Data()
 
 def login(request):
@@ -32,15 +33,11 @@ def tools(request):
     template_name = 'app/tools.html'
     return render(request, template_name)
 
-
+# Journals by Discipline
 @login_required
 def journals_by_discipline(request):
     template_name = 'app/journals-by-discipline.html'
     return render(request, template_name)
-
-
-def function3():
-    return ["asdf","asf"]
 
 @api_view(['GET'])
 def disciplines_list(request):
@@ -53,7 +50,7 @@ def journals_by_discipline_chart_data(request, discipline):
     
     if request.method == 'GET':
         query_discipline = unquote(discipline)
-        return Response(data.journals_by_discipline(discipline)) 
+        return Response(data.journals_by_discipline_chart_data(discipline)) 
 
 @api_view(['GET'])
 def get_journals_and_disciplines_map(request):
@@ -61,8 +58,7 @@ def get_journals_and_disciplines_map(request):
     if request.method == 'GET':
         return Response(data.journals_and_disciplines_map())        
 
-
-
+# Journals by Provider
 @login_required
 def journals_by_provider(request):
     template_name = 'app/journals-by-provider.html'
@@ -79,8 +75,9 @@ def journals_by_provider_chart_data(request, provider):
     
     if request.method == 'GET':
         query_provider = unquote(provider)
-        return Response(data.journals_by_provider(query_provider))
+        return Response(data.journals_by_provider_chart_data(query_provider))
 
+# Providers by Metric
 @login_required
 def providers_by_metric(request):
     template_name = 'app/providers-by-metric.html'
@@ -90,6 +87,6 @@ def providers_by_metric(request):
 def providers_by_metric_chart_data(request):
     
     if request.method == 'GET':
-        return Response(data.providers_by_metric())
+        return Response(data.providers_by_metric_chart_data())
 
     
