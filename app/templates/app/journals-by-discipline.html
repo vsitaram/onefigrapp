@@ -847,8 +847,8 @@
 
       // Asynchronously fetch and load the disciplines dropdown
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/disciplines-list",
-        url : "http://localhost:8000/app/journals-by-discipline/disciplines-list",
+        url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/disciplines-list",
+        // url : "http://localhost:8000/app/journals-by-discipline/disciplines-list",
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
@@ -860,8 +860,8 @@
 
       // Asynchronously fetch and load the default Architecture data into the graphs and table
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/Architecture/",
-        url : "http://localhost:8000/app/journals-by-discipline/chart-data/Architecture/",
+        url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/Architecture/",
+        // url : "http://localhost:8000/app/journals-by-discipline/chart-data/Architecture/",
         dataType: "json",
         beforeSend: function () {
           // Show the spinner while fetching
@@ -887,8 +887,8 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/journals-and-disciplines-map/",
-        url : "http://localhost:8000/app/journals-by-discipline/journals-and-disciplines-map/",
+        url : "https://onefigrapp.herokuapp.com/app/journals-by-discipline/journals-and-disciplines-map/",
+        // url : "http://localhost:8000/app/journals-by-discipline/journals-and-disciplines-map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
@@ -904,8 +904,8 @@
         // into the graphs and table.
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          // var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
-          var queryURL = "http://localhost:8000/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
+          var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
+          // var queryURL = "http://localhost:8000/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
           console.log(queryURL);
           $.ajax({
             url : queryURL,

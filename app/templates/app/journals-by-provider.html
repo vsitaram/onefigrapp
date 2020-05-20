@@ -257,8 +257,8 @@
       
       // Asynchronously fetch and load the providers dropdown
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/providers-list",
-        url : "http://localhost:8000/app/journals-by-provider/providers-list",
+        url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/providers-list",
+        // url : "http://localhost:8000/app/journals-by-provider/providers-list",
         dataType: "json",
         success : function (data) {
           var providersList = data;
@@ -270,8 +270,8 @@
 
       // Asynchronously fetch and load the default AIP data into the graph
       $.ajax({
-        // url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/AIP",
-        url : "http://localhost:8000/app/journals-by-provider/chart-data/AIP/",
+        url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/AIP",
+        // url : "http://localhost:8000/app/journals-by-provider/chart-data/AIP/",
         dataType: "json",
         beforeSend: function () {
           // Show the spinner while fetching
@@ -302,8 +302,8 @@
         // Whenever the provider dropdown changes, make sure the default "Select Provider" option isn't selected and then load the data
         // into the graphs and table.
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
-          var queryURL = "http://localhost:8000/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
-          // var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
+          // var queryURL = "http://localhost:8000/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
+          var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
           console.log(queryURL);
           $.ajax({
             url : queryURL,
