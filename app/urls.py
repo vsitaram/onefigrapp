@@ -15,7 +15,7 @@ urlpatterns = [
 	path('journals-by-discipline/', views.journals_by_discipline, name='journalsByDiscipline'),
 	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
 	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
-	path('journals-by-discipline/disciplines-list/', views.disciplines_list),
+	path('journals-by-discipline/disciplines-list/', views.disciplines_list), 
 
 	# Journals By Provider
 	path('journals-by-provider/', views.journals_by_provider, name='journalsByProvider'),
