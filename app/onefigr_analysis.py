@@ -23,7 +23,7 @@ class Data():
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
         
-        object_key = 'JournalsPerProvider_withoutQuotes.xls'
+        object_key = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'JournalsPerProvider_withoutQuotes.xls'
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
         data = obj['Body'].read()
         df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
