@@ -43,8 +43,6 @@ INSTALLED_APPS = [
 
     
     'app',
-    'storages',
-    'django_cleanup.apps.CleanupConfig',
     'rest_framework',
     'corsheaders'
 
@@ -102,24 +100,6 @@ WSGI_APPLICATION = 'onefigrapp.wsgi.application'
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -149,16 +129,6 @@ DEFAULT_FILE_STORAGE = 'onefigrapp.storage_backends.PrivateFileStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-# This doesn't work with collectstatic for some reason. So, we have to serve static files locally on the cloud
-# Not a huge deal but suboptimal
-# AWS_STATIC_LOCATION = 'static'
-# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STATIC_LOCATION}/'
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-LOGIN_URL = '/app/login/'
-LOGIN_REDIRECT_URL = '/app/'
-LOGOUT_REDIRECT_URL = '/app/'
 
 try:
     from .local_settings import *

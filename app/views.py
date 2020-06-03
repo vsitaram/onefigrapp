@@ -28,13 +28,13 @@ def descriptions(request):
     template_name = 'app/descriptions.html'
     return render(request, template_name)
 
-@login_required
+
 def tools(request):
     template_name = 'app/tools.html'
     return render(request, template_name)
 
 # Journals by Discipline
-@login_required
+
 def journals_by_discipline(request):
     template_name = 'app/journals-by-discipline.html'
     return render(request, template_name)
@@ -59,7 +59,7 @@ def get_journals_and_disciplines_map(request):
         return Response(data.journals_and_disciplines_map())        
 
 # Journals by Provider
-@login_required
+
 def journals_by_provider(request):
     template_name = 'app/journals-by-provider.html'
     return render(request, template_name)  
@@ -78,7 +78,7 @@ def journals_by_provider_chart_data(request, provider):
         return Response(data.journals_by_provider_chart_data(query_provider))
 
 # Providers by Metric
-@login_required
+
 def providers_by_metric(request):
     template_name = 'app/providers-by-metric.html'
     return render(request, template_name)

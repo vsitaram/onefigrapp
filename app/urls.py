@@ -25,7 +25,4 @@ urlpatterns = [
 	# Providers By Metric
 	path('providers-by-metric/', views.providers_by_metric, name='providersByMetric'),	
 	path('providers-by-metric/chart-data/', views.providers_by_metric_chart_data),
-
-    path('login/', auth_views.LoginView.as_view(template_name="app/login.html"), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
