@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [config('ALLOWED_HOST_URL')]
 
@@ -71,7 +71,7 @@ CORS_ORIGIN_WHITELIST = (
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 
