@@ -253,7 +253,7 @@
       
       // Asynchronously fetch and load the providers dropdown
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/providers-list",
+        url : "/app/journals-by-provider/providers-list",
         // url : "http://localhost:8000/app/journals-by-provider/providers-list",
         dataType: "json",
         success : function (data) {
@@ -266,7 +266,7 @@
 
       // Asynchronously fetch and load the default AIP data into the graph
       $.ajax({
-        url : "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/AIP",
+        url : "/app/journals-by-provider/chart-data/AIP",
         // url : "http://localhost:8000/app/journals-by-provider/chart-data/AIP/",
         dataType: "json",
         beforeSend: function () {
@@ -299,7 +299,7 @@
         // into the graphs and table.
         if( $("#provider_select").val() != $("#provider_select").children().first().val() ) {
           // var queryURL = "http://localhost:8000/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
-          var queryURL = "https://onefigrapp.herokuapp.com/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
+          var queryURL = "/app/journals-by-provider/chart-data/" + encodeURI($("#provider_select").val()) + "/";
           console.log(queryURL);
           $.ajax({
             url : queryURL,
