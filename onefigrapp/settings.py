@@ -64,7 +64,7 @@ CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
-    'https://onefigrapp.herokuapp.com'
+    'https://%s' % config('ALLOWED_HOST_URL')
 )
 
 REST_FRAMEWORK = {
