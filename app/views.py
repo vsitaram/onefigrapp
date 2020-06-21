@@ -13,6 +13,9 @@ from urllib.parse import unquote
 import json
 from .onefigr_analysis import Data
 
+# Instantiate Data object to fetch data across all views
+data = Data()
+
 def login(request):
 	template_name = 'app/login.html'
 	return render(request, template_name)
@@ -39,7 +42,7 @@ def journals_by_discipline(request):
 @api_view(['GET'])
 def disciplines_list(request):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         return Response(data.get_disciplines_list())
@@ -47,7 +50,7 @@ def disciplines_list(request):
 @api_view(['GET'])
 def journals_by_discipline_chart_data(request, discipline):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         query_discipline = unquote(discipline)
@@ -56,7 +59,7 @@ def journals_by_discipline_chart_data(request, discipline):
 @api_view(['GET'])
 def get_journals_and_disciplines_map(request):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         return Response(data.journals_and_disciplines_map())        
@@ -70,7 +73,7 @@ def journals_by_provider(request):
 @api_view(['GET'])
 def providers_list(request):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         return Response(data.get_providers_list())
@@ -78,7 +81,7 @@ def providers_list(request):
 @api_view(['GET'])
 def journals_by_provider_chart_data(request, provider):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         query_provider = unquote(provider)
@@ -93,7 +96,7 @@ def providers_by_metric(request):
 @api_view(['GET'])
 def providers_by_metric_chart_data(request):
     # Instantiate Data object to fetch data 
-    data = Data()
+    # data = Data()
     
     if request.method == 'GET':
         return Response(data.providers_by_metric_chart_data())
