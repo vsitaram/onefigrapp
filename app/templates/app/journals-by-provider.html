@@ -266,7 +266,7 @@
 
       // Asynchronously fetch and load the default AIP data into the graph
       $.ajax({
-        url : "/app/journals-by-provider/chart-data/AIP",
+        url : "/app/journals-by-provider/chart-data/" + encodeURIComponent("American Chemical Society (ACS)"),
         // url : "http://localhost:8000/app/journals-by-provider/chart-data/AIP/",
         dataType: "json",
         beforeSend: function () {
