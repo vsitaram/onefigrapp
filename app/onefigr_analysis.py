@@ -10,11 +10,50 @@ from django.conf import settings
 class Data():
     """Object to access all of the 1Figr data"""
     def __init__(self):
+        # New Provider Names
+        self.provider_names_corrections = {
+            "AIP": "American Institute of Physics (AIP)",
+            "American Chemical Society": "American Chemical Society (ACS)",
+            "American Institute of Aeronautics and Astronautics": "American Institute of Aeronautics and Astronautics (AIAA)",
+            "American Mathematical Society": "American Mathematical Society (AMS)",
+            "American Physical Society": "American Physical Society (APS)",
+            "American Psychological Association": "American Psychological Association (APA)",
+            "American Society of Civil Engineers": "American Society of Civil Engineers (ASCE)",
+            "American Society of Mechanical Engineers": "American Society of Mechanical Engineers (ASME)",
+            "Annual Reviews": "Annual Reviews",
+            "Association for Computing Machinery": "Association for Computing Machinery (ACM)",
+            "BioOne": "BioOne",
+            "Brill": "Brill",
+            "Cambridge UP": "Cambridge University Press (CUP)",
+            "DeGruyter": "DeGruyter",
+            "Ebsco": "EBSCO",
+            "Elsevier": "Elsevier",
+            "Elsevier Freedom": "Elsevier Freedom",
+            "Elsevier Subscribed": "Elsevier Subscribed",
+            "Emerald": "Emerald",
+            "Gale": "Gale",
+            "IEEE": "IEEE",
+            "IOPscience": "Institute of Physics (IOP)",
+            "JSTOR": "JSTOR",
+            "Karger": "Karger",
+            "MIT Press": "MIT Press",
+            "Modern Language Association": "Modern Language Association (MLA)",
+            "Ovid": "Ovid",
+            "Oxford UP": "Oxford University Press (OUP)",
+            "Project MUSE": "Project MUSE",
+            "ProQuest": "ProQuest",
+            "Royal Society of Chemistry": "Royal Society of Chemistry (RSC)",
+            "Sage": "Sage",
+            "SPIE": "SPIE",
+            "Springer": "Springer Nature",
+            "Taylor & Francis": "Taylor & Francis",
+            "U Chicago Press": "University of Chicago Press (UCP)",
+            "Wiley": "Wiley"
+        }
         # To be used for Journals By Discipline
         self.original_onefigr_dataset = self._get_data()
         # To be used by the other pages
         self.onefigr_dataset_with_disciplines = self._make_disciplines_column()
-        
 
     def _get_data(self):
         """
@@ -27,6 +66,7 @@ class Data():
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
         data = obj['Body'].read()
         df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
+        df['Provider'] = df['Provider'].apply(lambda x: self.provider_names_corrections[x])
         # print(df)
         return df
 
