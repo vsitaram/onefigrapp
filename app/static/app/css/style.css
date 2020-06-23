@@ -1,0 +1,53 @@
+nav {
+    background-color: #232d4b; 
+}
+
+a.btn {
+    background-color: #E57200;
+}
+
+#breadcrumb_container > div {
+    background-color: #141e3c;
+}
+
+#breadcrumb_container a {
+    color: #E57200;
+}
+
+#breadcrumb_container i {
+    font-size: 12px;
+}
+
+hr {
+    margin-bottom: 0;
+}
+
+.hidden_checkbox_marker {
+    display: hidden;
+}
+
+small {
+    font-size: 0.7em;
+}
+
+#result_discipline {
+    display: hidden;
+}
+
+button.btn {
+    background-color: #E57200;
+}
+
+#loader .d-flex {
+    height: 475px;
+}
+
+#loader .spinner-border {
+    width: 3rem; 
+    height: 3rem; 
+    color: #E57200;
+}
+
+.chart {
+    height: 475px;
+}

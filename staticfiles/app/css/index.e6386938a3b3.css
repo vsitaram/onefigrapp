@@ -1,0 +1,29 @@
+html,
+body,
+header,
+.view {
+    height: 100%; 
+}
+
+@media (max-width: 740px) {
+    html,
+    body,
+    header,
+    .view {
+    height: 100vh;
+    }
+}
+
+.top-nav-collapse {
+    background-color: #232d4b !important;
+}
+
+.navbar:not(.top-nav-collapse) {
+    background: #232d4b !important;
+}
+
+@media (max-width: 991px) {
+    .navbar:not(.top-nav-collapse) {
+    background: #232d4b !important;
+    }
+}
