@@ -298,7 +298,7 @@ class Data():
         """
         necessary_columns = ['Journal', 'Discipline']
         figr_data = self.onefigr_dataset_with_disciplines[necessary_columns].dropna()
-        journals_and_disciplines_dict = figr_data.to_dict()
+        journals_and_disciplines_dict = dict(zip(figr_data['Journal'], figr_data['Discipline']))
 
         return journals_and_disciplines_dict
 

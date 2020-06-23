@@ -647,7 +647,6 @@
       // Asynchronously fetch and load the data into the graphs and table
       $.ajax({
         url : "/app/providers-by-metric/chart-data/",
-        // url : "http://localhost:8000/app/providers-by-metric/chart-data/",
         dataType: "json",
         beforeSend: function () {
           // Show the spinner while fetching
@@ -662,6 +661,7 @@
         },
         success : function (data) {
           // Load the data into the graphs
+          console.log("/app/providers-by-metric/chart-data/");
           chartData = data;
           console.log(chartData);
           setCharts(chartData, metrics);
