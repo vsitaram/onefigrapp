@@ -125,9 +125,6 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-AWS_PRIVATE_FILE_LOCATION = config('AWS_PRIVATE_FILE_LOCATION')
-DEFAULT_FILE_STORAGE = 'onefigrapp.storage_backends.PrivateFileStorage'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
