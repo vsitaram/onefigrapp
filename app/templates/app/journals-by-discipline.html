@@ -864,7 +864,7 @@
         // into the graphs and table.
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          var queryURL = "/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/",
+          var queryURL = "/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
           console.log(queryURL);
           $.ajax({
             url : queryURL,
