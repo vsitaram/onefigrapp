@@ -707,25 +707,21 @@
         
         // destructure providerInfo array into key (journalTitle) and property (providerName)
         // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED GREEN
+        /*
         for (const [journalTitle, providerName] of providerInfo) {
             if (providerName.includes('Elsevier')) {
               console.log(journalTitle, providerName);
             }
         }
-        
-        //console.log(typeof providerInfo[0][1]);
-
-        //for (let provider in providers) {console.log(provider)};
-
-        //for (const item in testing) {console.log(testing[item])};
-
-
-
-        
-
+        */
 
         //This does the charting via Highcharts
-        Highcharts.chart(chartIDs[i], config);
+        //Highcharts.setOptions
+        
+        //HOW TO SET CHART OPTIONS???
+        var chart = new Highcharts.chart(chartIDs[i], config);   //working example
+
+
       }); 
         
     }
