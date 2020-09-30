@@ -67,7 +67,7 @@ class Data():
         data = obj['Body'].read()
         df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
         df['Provider'] = df['Provider'].apply(lambda x: self.provider_names_corrections[x])
-        # print(df)
+        #print(df)
         return df
 
     def _make_disciplines_column(self):

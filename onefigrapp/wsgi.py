@@ -13,5 +13,8 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'onefigrapp.settings')
 
+project_folder = os.path.expanduser('~/onefigrapp')  # adjust as appropriate
+# load_dotenv(os.path.join(project_folder, '.env'))
+
 application = get_wsgi_application()
 

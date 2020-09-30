@@ -4,6 +4,9 @@ env.*
 # Created by https://www.gitignore.io/api/django
 # Edit at https://www.gitignore.io/?templates=django
 
+#Random 
+LOCAL_DEPLOY.txt
+
 ### Django ###
 *.log
 *.pot
