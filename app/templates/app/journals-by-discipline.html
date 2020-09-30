@@ -520,7 +520,7 @@
     }    
 
     function createDisciplineSearch(journalsAndDisciplinesMap) {
-      // Sets up the modal that allows users to find the discipline of their discipline.
+      // Sets up the modal that allows users to find the discipline of their journal.
       // When the user inputs their journal, the result shows up automatically.
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
 
@@ -574,7 +574,7 @@
 
       // Get the discipline the user is searching for
       var discipline = $('#result_discipline').text();
-      console.log(discipline);
+      // console.log(discipline);
 
       // Find and set the discipline in the dropdown
       var options = $('#discipline_select').children();
@@ -700,8 +700,31 @@
         };
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
-        // console.log();
+        console.log('CHART CONFIG',chartConfig.xAxis.providerMap);
+        
+        // providerInfo holds Object of providerMap from config object
+        const providerInfo = Object.entries(config.xAxis.providerMap);
+        
+        // destructure providerInfo array into key (journalTitle) and property (providerName)
+        // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED GREEN
+        for (const [journalTitle, providerName] of providerInfo) {
+            if (providerName.includes('Elsevier')) {
+              console.log(journalTitle, providerName);
+            }
+        }
+        
+        //console.log(typeof providerInfo[0][1]);
 
+        //for (let provider in providers) {console.log(provider)};
+
+        //for (const item in testing) {console.log(testing[item])};
+
+
+
+        
+
+
+        //This does the charting via Highcharts
         Highcharts.chart(chartIDs[i], config);
       }); 
         
@@ -740,7 +763,7 @@
       tableCounts.push(categories);
       var newMetrics = [].concat(metrics);
       newMetrics.splice(1, 0, metrics[0]);
-      console.log(newMetrics);
+      // console.log(newMetrics);
       
       for(var i = 0; i < newMetrics.length; i++){
         var newArr = [];
@@ -764,12 +787,12 @@
       }
       tableCounts.push(newArr);
 
-      console.log(tableCounts);    
+      // console.log(tableCounts);    
 
       // Rotate the table data so that the columns have all of the values
       var tableData = rotate(tableCounts);
-      console.log("TABLE DATA");
-      console.log(tableData)
+      // console.log("TABLE DATA");
+      // console.log(tableData)
       
       // If the table already exists
       if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
@@ -811,9 +834,9 @@
         url : "/app/journals-by-discipline/disciplines-list",
         dataType: "json",
         success : function (data) {
-          console.log("/app/journals-by-discipline/disciplines-list")
+          // console.log("/app/journals-by-discipline/disciplines-list")
           var disciplinesList = data;
-          console.log(disciplinesList);
+          // console.log(disciplinesList);
           loadDisciplinesList(disciplinesList); 
         }
       });
@@ -835,9 +858,8 @@
         },
         success : function (data) {
           // Load the data into the graphs
-          console.log("/app/journals-by-discipline/chart-data/Architecture/");
+          // console.log("/app/journals-by-discipline/chart-data/Architecture/");
           chartData = data;
-          console.log(chartData);
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
@@ -850,7 +872,7 @@
         url : "/app/journals-by-discipline/journals-and-disciplines-map/",
         dataType: "json",
         success : function (data) {
-          console.log("/app/journals-by-discipline/journals-and-disciplines-map/");
+          // console.log("/app/journals-by-discipline/journals-and-disciplines-map/");
           createDisciplineSearch(data);
         }
       });
@@ -865,7 +887,7 @@
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           var queryURL = "/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
-          console.log(queryURL);
+          // console.log(queryURL);
           $.ajax({
             url : queryURL,
             dataType: "json",
@@ -879,9 +901,9 @@
               $("#loader").hide();
             },
             success : function (data) {
-              console.log("/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/");
+              // console.log("/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/");
               chartData = data;
-              console.log(chartData);
+              // console.log(chartData);
               setCharts(chartData, metrics);
               setTable(chartData, metrics);
               // resetMetricColumnHeight();
