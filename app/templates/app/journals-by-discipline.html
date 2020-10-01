@@ -664,8 +664,16 @@
                         s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
                         // console.log(point);
                     });
+                    
+                    var provName = chartConfig.xAxis.providerMap[this.x];
 
-                    s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
+                    if (provName.includes('Elsevier')) {
+                        s += '<br/>' + 'Provider: ' + '<strong>' + chartConfig.xAxis.providerMap[this.x] + '</strong>';
+
+                    }
+                    else { 
+                        s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
+                    }
 
                     return s;
                 },
@@ -691,8 +699,9 @@
             legend: {
                 enabled: false
             },
-            series: [{
-                
+            series: [{     // this controls the data shown in the plots
+              color: barColor()
+ 
             }],
             credits: {
                 enabled: false
@@ -716,17 +725,22 @@
         */
 
         //This does the charting via Highcharts
-        //Highcharts.setOptions
         
         //HOW TO SET CHART OPTIONS???
         var chart = new Highcharts.chart(chartIDs[i], config);   //working example
-
+        console.log(config);
 
       }); 
         
     }
 
     var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers'];
+
+
+    function barColor() {
+      return '#FF00FF'
+    }
+
 
     function rotate(matrix) {
       // Rotates a matrix clockwise. Needed to set the data for the table.
@@ -856,6 +870,7 @@
           // Load the data into the graphs
           // console.log("/app/journals-by-discipline/chart-data/Architecture/");
           chartData = data;
+          console.log(metrics);
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
