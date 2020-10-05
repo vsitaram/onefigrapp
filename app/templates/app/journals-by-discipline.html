@@ -563,7 +563,7 @@
     }
 
     function clearModalText() {
-      // Clears the result whenever the user exits the modal or clicks on the "Select Discipline" button in the modal.
+      // Clears the result whenever the user exits the modal or clicks on the "Use Discipline" button in the modal.
       var title = $("#modal_journal_input").val("");
       var title = $("#result_message_container").text("");
     }
@@ -596,7 +596,7 @@
     }
 
     function removeZeroCountsAndAssociatedJournals(journals, counts) {
-      // Removes zero freqencies from data
+      // Removes zero freqencies from data. No journals with zero use are shown in results.
       var index = counts.length - 1;
       while(counts[index] == 0) {
         journals.pop();
@@ -623,6 +623,22 @@
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
+
+      //START HERE
+      // providerInfo holds Object of providerMap from config object
+      const providerInfo = Object.entries(config.xAxis.providerMap);
+        
+      // destructure providerInfo array into key (journalTitle) and property (providerName)
+      // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED ORANGE
+        
+      
+      for (const [journalTitle, providerName] of providerInfo) {
+        if (providerName.includes('Elsevier')) {
+          providerName.color = '#ff6600'
+        }
+      }
+      
+
       config.xAxis.percentageMap = chartData[metric].percentageMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
@@ -700,7 +716,6 @@
                 enabled: false
             },
             series: [{     // this controls the data shown in the plots
-              color: barColor()
  
             }],
             credits: {
@@ -709,13 +724,14 @@
         };
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
-        console.log('CHART CONFIG',chartConfig.xAxis.providerMap);
+        //console.log('CHART CONFIG',chartConfig.xAxis.providerMap);
         
         // providerInfo holds Object of providerMap from config object
         const providerInfo = Object.entries(config.xAxis.providerMap);
         
         // destructure providerInfo array into key (journalTitle) and property (providerName)
-        // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED GREEN
+        // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED ORANGE
+        
         /*
         for (const [journalTitle, providerName] of providerInfo) {
             if (providerName.includes('Elsevier')) {
@@ -728,18 +744,13 @@
         
         //HOW TO SET CHART OPTIONS???
         var chart = new Highcharts.chart(chartIDs[i], config);   //working example
-        console.log(config);
+        //console.log(config);
 
       }); 
         
     }
 
     var metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers'];
-
-
-    function barColor() {
-      return '#FF00FF'
-    }
 
 
     function rotate(matrix) {
@@ -773,7 +784,6 @@
       tableCounts.push(categories);
       var newMetrics = [].concat(metrics);
       newMetrics.splice(1, 0, metrics[0]);
-      // console.log(newMetrics);
       
       for(var i = 0; i < newMetrics.length; i++){
         var newArr = [];
@@ -796,13 +806,11 @@
         newArr.push(provider);
       }
       tableCounts.push(newArr);
-
-      // console.log(tableCounts);    
+  
 
       // Rotate the table data so that the columns have all of the values
       var tableData = rotate(tableCounts);
-      // console.log("TABLE DATA");
-      // console.log(tableData)
+
       
       // If the table already exists
       if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
@@ -870,7 +878,7 @@
           // Load the data into the graphs
           // console.log("/app/journals-by-discipline/chart-data/Architecture/");
           chartData = data;
-          console.log(metrics);
+          // console.log(metrics);
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
