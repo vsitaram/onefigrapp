@@ -620,28 +620,23 @@
       // console.log("CATEGORIES AND COUNTS");
       // console.log(categoriesAndCounts);
 
+
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
 
-      //START HERE
-      // providerInfo holds Object of providerMap from config object
-      const providerInfo = Object.entries(config.xAxis.providerMap);
-        
-      // destructure providerInfo array into key (journalTitle) and property (providerName)
-      // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED ORANGE
-        
-      
-      for (const [journalTitle, providerName] of providerInfo) {
-        if (providerName.includes('Elsevier')) {
-          providerName.color = '#ff6600'
-        }
-      }
-      
-
       config.xAxis.percentageMap = chartData[metric].percentageMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
+      
+      /*  pythonic expression of what I want to do
+      for i in config.series[0].data:
+        if i > 150:
+          i.color = 'green'
+        else:
+          i.color = 'blue'
+      */
+
       config.yAxis.title.text = yAxisTitle;
       config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
 
@@ -663,7 +658,7 @@
 
         var chartConfig = {
             chart: {
-                type: 'bar'
+                type: 'bar',
             },
             title: {
                 fontFamily: 'Segoe UI',
@@ -716,7 +711,8 @@
                 enabled: false
             },
             series: [{     // this controls the data shown in the plots
- 
+
+              }
             }],
             credits: {
                 enabled: false
