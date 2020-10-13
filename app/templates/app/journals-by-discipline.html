@@ -617,9 +617,6 @@
       // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
-      // console.log("CATEGORIES AND COUNTS");
-      // console.log(categoriesAndCounts);
-
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
@@ -672,6 +669,7 @@
 
                     if (provName.includes('Elsevier')) {
                         s += '<br/>' + 'Provider: ' + '<strong>' + chartConfig.xAxis.providerMap[this.x] + '</strong>';
+                        
 
                     }
                     else { 
@@ -703,7 +701,7 @@
                 enabled: false
             },
             series: [{     // this controls the data shown in the plots
-              
+                grouping: false
             }],
             credits: {
                 enabled: false
@@ -711,25 +709,8 @@
         };
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
-        
-        // providerInfo holds Object of providerMap from config object
-        const providerInfo = Object.entries(config.xAxis.providerMap);
-        
-        // destructure providerInfo array into key (journalTitle) and property (providerName)
-        // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED ORANGE
-        
-        /*
-        for (const [journalTitle, providerName] of providerInfo) {
-            if (providerName.includes('Elsevier')) {
-              console.log(journalTitle, providerName);
-            }
-        }
-        */
 
-        //This does the charting via Highcharts
-        
-        //HOW TO SET CHART OPTIONS???
-        var chart = new Highcharts.chart(chartIDs[i], config);   //working example
+        var chart = new Highcharts.chart(chartIDs[i], config);
 
       }); 
         
@@ -739,6 +720,29 @@
 
 
 
+/*
+//ABANDONDED CODE TO TRY AND MAKE ORANGE BARS FOR ELSEVIER JOURNALS
+
+    function removeZeroCountsAndAssociatedJournalsElsevier(journals, counts, providers) {
+      // Removes zero freqencies from data. No journals with zero use are shown in results. This also removes associated journal provider information
+      var index = counts.length - 1;
+      while(counts[index] == 0) {
+        journals.pop();
+        counts.pop();
+        providers.pop();
+        index--;
+      }
+
+      for (let name of providers) {
+        if (name.includes('Elsevier')) {
+          journals.pop();
+          counts.pop();
+          providers.pop();
+        }
+      }
+
+      return [journals, counts, providers];
+    }
 
 
 
@@ -752,29 +756,21 @@
       // console.log(rawCounts);
       var rawProviders = Object.values(chartData[metric].providerMap);
       
-      
-      //START HERE
 
-      var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
+      var categoriesAndCounts = removeZeroCountsAndAssociatedJournalsElsevier([].concat(rawCategories), [].concat(rawCounts), [].concat(rawProviders));
       
-      const test = categoriesAndCounts.push(rawProviders);
-
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
       config.xAxis.providerMap = chartData[metric].providerMap;
       config.xAxis.percentageMap = chartData[metric].percentageMap;
       config.series[0].name = seriesName;
       config.series[0].data = categoriesAndCounts[1];
-      //config.series[0].color = 'orange'
+      config.series[0].color = 'orange'
       config.yAxis.title.text = yAxisTitle;
       config.yAxis.max = categoriesAndCounts[1][0] * 1.05;
 
       return config;
     }
-
-
-
-
 
     function setChartsElsevier(chartData, metrics) {
       // Creates the charts for just the journals which come from the Elsevier Provider. Those journals are colored with Orange bars instead of the generic blue
@@ -845,7 +841,7 @@
                 enabled: false
             },
             series: [{     // this controls the data shown in the plots
-    
+
             }],
             credits: {
                 enabled: false
@@ -853,34 +849,17 @@
         };
 
         
-        var config = setChartDataElsevier(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
+        var configNoElsevier = setChartDataElsevier(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
         //console.log('CHART CONFIG',chartConfig.xAxis.providerMap);
         
-        // providerInfo holds Object of providerMap from config object
-        const providerInfo = Object.entries(config.xAxis.providerMap);
-        
-        // destructure providerInfo array into key (journalTitle) and property (providerName)
-        // FOR THE MOMENT THIS CAPTURES THOSE BARS THAT SHOULD BE COLORED ORANGE
-        
-        /*
-        for (const [journalTitle, providerName] of providerInfo) {
-            if (providerName.includes('Elsevier')) {
-              console.log(journalTitle, providerName);
-            }
-        }
-        */
-
-        //This does the charting via Highcharts
-        
-        //HOW TO SET CHART OPTIONS???
-        var chart = new Highcharts.chart(chartIDs[i], config);   //working example
+        var chart = new Highcharts.chart(chartIDs[i], configNoElsevier);   //working example
         //console.log(config);
 
       }); 
         
     }
 
-
+*/
 
 
 
@@ -1022,7 +1001,6 @@
           chartData = data;
           // console.log(metrics);
           setCharts(chartData, metrics);
-          setChartsElsevier(chartData, metrics);
           setTable(chartData, metrics);
           
         }
