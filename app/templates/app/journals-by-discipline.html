@@ -64,11 +64,11 @@
         <!-- Metrics Column Start -->
         <div class="col-md-3 pt-3 border-right grey lighten-5" id="metrics_column">
           <div class="ml-2">
-            <p class="hidden_checkbox_marker" id="downloads-checked"></p>
+            <p class="hidden_checkbox_marker" id="citations-checked"></p>
             <p class="hidden_checkbox_marker" id="recent-checked"></p>
             <p class="hidden_checkbox_marker" id="alltime-checked"></p>
             <p class="hidden_checkbox_marker" id="publications-checked"></p>
-            <p class="hidden_checkbox_marker" id="citations-checked"></p>
+
 
             <h4 class="mb-4">Disciplines</h4>
 
@@ -111,7 +111,7 @@
 
             <p class="ml-xl-3 text-center pt-3 col-xl-6">
               <button type="button" class="btn btn text-white"
-              <a href="" data-toggle="modal" data-target="#modalLoginForm">Find my journal's discipline</button></a>
+              <a href="" data-toggle="modal" data-target="#modalLoginForm">Find my journal</button></a>
             </p>
 
 
@@ -185,6 +185,10 @@
           
           <!-- Downloads -->
           <div id="charts">
+            <!-- Citations -->
+            <div class="mt-5" id="charts_citations">
+              <div class="chart" id="charts_citations_chart"></div>
+            </div>
             <!-- Recent Downloads -->
             <div class="mt-3" id="charts_downloads_recent">
               <div class="chart" id="charts_downloads_recent_chart"></div>
@@ -196,10 +200,6 @@
             <!-- Publications -->
             <div class="mt-5" id="charts_publications">
               <div class="chart" id="charts_publications_chart"></div>
-            </div>
-            <!-- Citations -->
-            <div class="mt-5" id="charts_citations">
-              <div class="chart" id="charts_citations_chart"></div>
             </div>
           </div>
           <!-- Table Start-->
@@ -235,24 +235,24 @@
     // Tooltips Initialization
     $(function () {
 
-      //Downloads
-      $("#metrics_downloads_tooltip").tooltip( {
+      // Citations
+      $("#metrics_citations_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: "Individual article downloads (PDF downloads and HTML pageviews) by UVA users. The dataset includes downloads which occurred over a 10 year interval (2008 - 2017), for articles published in any year. Downloads are separated into Same Year Downloads and All Year Downloads. <a href='#'><em>Learn More</em></a>",
+        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
         trigger: "manual" 
       });
 
-      $("#metrics_downloads_tooltip").on("mouseover", function() {
+      $("#metrics_citations_tooltip").on("mouseover", function() {
         $(this).tooltip("show");  
       });
 
-      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
-        $("#metrics_downloads_tooltip").tooltip("hide");  
+      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
       });
 
       $("body").on("click", function() {
-        $("#metrics_downloads_tooltip").tooltip("hide");  
+        $("#metrics_citations_tooltip").tooltip("hide");  
       });
 
       //Same Year Downloads
@@ -315,30 +315,21 @@
         $("#metrics_publications_tooltip").tooltip("hide");  
       });
 
-      // Citations
-      $("#metrics_citations_tooltip").tooltip( {
-        html: true,
-        placement: "right",
-        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
-        trigger: "manual" 
-      });
-
-      $("#metrics_citations_tooltip").on("mouseover", function() {
-        $(this).tooltip("show");  
-      });
-
-      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
-        $("#metrics_citations_tooltip").tooltip("hide");  
-      });
-
-      $("body").on("click", function() {
-        $("#metrics_citations_tooltip").tooltip("hide");  
-      });
  
     });
 
     
     // Checkboxes functioning
+
+    $("input[id='metrics_citations']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#charts_citations').show();
+      }          
+      else {
+        $('#charts_citations').hide();
+      } 
+      resetMetricColumnHeight();   
+    });
 
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
       if( $(this).is(':checked') ) {
@@ -370,45 +361,34 @@
       resetMetricColumnHeight();
     });
 
-    $("input[id='metrics_citations']").on('change', function() {
-      if( $(this).is(':checked') ) {
-          $('#charts_citations').show();
-      }          
-      else {
-        $('#charts_citations').hide();
-      } 
-      resetMetricColumnHeight();   
-    });
 
     //show all button
     $('#metrics_show_all').on('click', function() {
+      $('#charts_citations').show();
       $('#charts_downloads_recent').show();
       $('#charts_downloads_alltime').show();
       $('#charts_publications').show();
-      $('#charts_citations').show();
-
+      
+      $("input[id='metrics_citations']").prop('checked', true);
       $("input[id='metrics_downloads_options_recent']").prop('checked', true);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
 
       resetMetricColumnHeight();
     });
 
     //hide all button
     $('#metrics_hide_all').on('click', function() {
+      $('#charts_citations').hide();
       $('#charts_downloads_recent').hide();
       $('#charts_downloads_alltime').hide();
       $('#charts_publications').hide();
-      $('#charts_citations').hide();
 
-      $("#metrics_downloads_options").hide();
-      $("#metrics_downloads_options_recent_types").hide();
-
+      $("input[id='metrics_citations']").prop('checked', false);
       $("input[id='metrics_downloads_options_recent']").prop('checked', false);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
-      $("input[id='metrics_citations']").prop('checked', false);
+      
 
       resetMetricColumnHeight();
     });
@@ -755,9 +735,9 @@
             data: tableData,
             columns: [
                 { title: "Journal Title" },
-                { title: "Recent (JR5) (Count)" },
-                { title: "Recent (JR5) (Percent)" },
-                { title: "All Time (JR1)" },
+                { title: "Same Year Downloads (Count)" },
+                { title: "Same Year Downloads (Percent)" },
+                { title: "All Year Downloads" },
                 { title: "Publications" },
                 { title: "Citations" },
                 { title: "Provider(s)" },
@@ -771,8 +751,8 @@
     $(document).ready(function () {
       // Start out by hiding the last three graphs and the spinner
       $('#charts_downloads_alltime').hide();
-      $('#charts_publications').hide();
       $('#charts_downloads_recent').hide();
+      $('#charts_publications').hide();
       $("#loader").hide();
 
       // Asynchronously fetch and load the disciplines dropdown
@@ -871,31 +851,27 @@
 
         // Set values into hidden html boxes that represent which checkboxes were originally checked.
         // Doing this allows us to set the checkboxes back to their original states when the user sees the graphs again.
-        $('#downloads-checked').text($("input[id='metrics_downloads']").is(':checked'));
+        $('#citations-checked').text($("input[id='metrics_citations']").is(':checked'));
         $('#recent-checked').text($("input[id='metrics_downloads_options_recent']").is(':checked'));
         $('#alltime-checked').text($("input[id='metrics_downloads_options_alltime']").is(':checked'));
         $('#publications-checked').text($("input[id='metrics_publications']").is(':checked'));
-        $('#citations-checked').text($("input[id='metrics_citations']").is(':checked'));
 
         // Hide the html fields
-        $('#downloads-checked').hide();
+        $('#citations-checked').hide();
         $('#recent-checked').hide();
         $('#alltime-checked').hide();
         $('#publications-checked').hide();
-        $('#citations-checked').hide();
 
         // Check all of the metrics checkboxes and disable them
-        $("input[id='metrics_downloads']").prop('checked', true);
+        $("input[id='metrics_citations']").prop('checked', true);
         $("input[id='metrics_downloads_options_recent']").prop('checked', true);
         $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
         $("input[id='metrics_publications']").prop('checked', true);
-        $("input[id='metrics_citations']").prop('checked', true);
 
-        $("input[id='metrics_downloads']").prop('disabled', true);
+        $("input[id='metrics_citations']").prop('disabled', true);
         $("input[id='metrics_downloads_options_recent']").prop('disabled', true);
         $("input[id='metrics_downloads_options_alltime']").prop('disabled', true);
         $("input[id='metrics_publications']").prop('disabled', true);
-        $("input[id='metrics_citations']").prop('disabled', true);
         $("#metrics_show_all").prop('disabled', true);
         $("#metrics_hide_all").prop('disabled', true);
 
@@ -909,32 +885,26 @@
         $("#downloads_table").hide(); 
 
         // Load the checkboxes to their original states
-        $("input[id='metrics_downloads']").prop('checked', ($('#downloads-checked')[0].innerHTML == 'true'));
-        // console.log($('#downloads-checked')[0].innerHTML);
+        $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
+        // console.log($('#citations-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
         // console.log($('#recent-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
         // console.log($('#alltime-checked')[0].innerHTML);
         $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
         // console.log($('#publications-checked')[0].innerHTML);
-        $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
-        // console.log($('#citations-checked')[0].innerHTML);
 
-        // If both of the downloads metrics are unchecked, just hide those options
-        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') && !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $("#metrics_downloads_options").hide();
-        }
 
         // Enable the checkboxes
-        $("input[id='metrics_downloads']").prop('disabled', false);
+        $("input[id='metrics_citations']").prop('disabled', false); 
         $("input[id='metrics_downloads_options_recent']").prop('disabled', false);
         $("input[id='metrics_downloads_options_alltime']").prop('disabled', false);
         $("input[id='metrics_publications']").prop('disabled', false);
-        $("input[id='metrics_citations']").prop('disabled', false); 
         $("#metrics_show_all").prop('disabled', false);
         $("#metrics_hide_all").prop('disabled', false);
       }
     });
+
 
 
 
