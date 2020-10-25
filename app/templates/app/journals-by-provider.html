@@ -183,6 +183,7 @@
         },
         xAxis: {
             categories: Object.keys(chartData),
+            //categories: ['All Year Downloads', 'Citations', 'Same Year Downloads', 'Publications'],
             tickLength: 0
         },
         yAxis: {
@@ -215,9 +216,8 @@
         url : "/app/journals-by-provider/providers-list",
         dataType: "json",
         success : function (data) {
-          console.log("/app/journals-by-provider/providers-list");
+          //console.log("/app/journals-by-provider/providers-list");
           var providersList = data;
-          console.log(providersList);
           loadProvidersListIntoColumn(providersList);
         }
       });
@@ -240,9 +240,10 @@
         success : function (data) {
           console.log("/app/journals-by-provider/chart-data/" + encodeURIComponent("American Chemical Society (ACS)"));
           // Load the data into the graphs
+          console.log('DATA vales')
+          console.log(Object.values(data));
           var chartData = data;
-          console.log("Chart Data");
-          console.log(chartData);
+
           setChart(chartData);
           // setTable(chartData, metrics);
           
