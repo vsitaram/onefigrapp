@@ -78,26 +78,24 @@
             <h4 class="mb-3">Metrics</h4>
 
             <div class="custom-control custom-checkbox mb-2">
-              <a id="metrics_downloads_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads" checked>
-                <label class="custom-control-label" for="metrics_downloads">Downloads</label>
+              <a id="metrics_citations_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_citations" checked>
+                <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
               </a>
             </div>
 
-            <div id="metrics_downloads_options" class="ml-4">
-              <div class="custom-control custom-checkbox mb-2">
-                <a id="metrics_downloads_options_recent_tooltip">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
-                  <label class="custom-control-label" for="metrics_downloads_options_recent">Same Year Downloads</label>
-                </a>
-              </div>             
+            <div class="custom-control custom-checkbox mb-2">
+              <a id="metrics_downloads_options_recent_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent">
+                <label class="custom-control-label" for="metrics_downloads_options_recent">Same Year Downloads</label>
+              </a>
+            </div>
 
-              <div class="custom-control custom-checkbox mb-2">
-                <a id="metrics_downloads_options_alltime_tooltip">
-                  <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
-                  <label class="custom-control-label" for="metrics_downloads_options_alltime">All Year Downloads</label>
-                </a>
-              </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <a id="metrics_downloads_options_alltime_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
+                <label class="custom-control-label" for="metrics_downloads_options_alltime">All Year Downloads</label>
+              </a>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
@@ -107,12 +105,6 @@
               </a>
             </div>
 
-            <div class="custom-control custom-checkbox mb-2">
-              <a id="metrics_citations_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_citations">
-                <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
-              </a>
-            </div>
 
           </div>
           <div class="row align-items-center mb-4">
@@ -193,27 +185,27 @@
     // Tooltips Initialization
     $(function () {
 
-      //Downloads
-      $("#metrics_downloads_tooltip").tooltip( {
+      // Citations
+      $("#metrics_citations_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: "Individual article downloads (PDF downloads and HTML pageviews) by UVA users. The dataset includes downloads which occurred over a 10 year interval (2008 - 2017), for articles published in any year. Downloads are separated into Same Year Downloads and All Year Downloads. <a href='#'><em>Learn More</em></a>",
+        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
         trigger: "manual" 
       });
 
-      $("#metrics_downloads_tooltip").on("mouseover", function() {
+      $("#metrics_citations_tooltip").on("mouseover", function() {
         $(this).tooltip("show");  
       });
 
-      $("#metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
-        $("#metrics_downloads_tooltip").tooltip("hide");  
+      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
+        $("#metrics_citations_tooltip").tooltip("hide");  
       });
 
       $("body").on("click", function() {
-        $("#metrics_downloads_tooltip").tooltip("hide");  
+        $("#metrics_citations_tooltip").tooltip("hide");  
       });
       
-      //Recent Downloads
+      //Same Year Downloads
       $("#metrics_downloads_options_recent_tooltip").tooltip( {
         html: true,
         placement: "right",
@@ -233,7 +225,7 @@
         $("#metrics_downloads_options_recent_tooltip").tooltip("hide");  
       });
 
-      // All Time Downloads
+      // All Year Downloads
       $("#metrics_downloads_options_alltime_tooltip").tooltip( {
         html: true,
         placement: "right",
@@ -273,95 +265,12 @@
         $("#metrics_publications_tooltip").tooltip("hide");  
       });
 
-      // Citations
-      $("#metrics_citations_tooltip").tooltip( {
-        html: true,
-        placement: "right",
-        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
-        trigger: "manual" 
-      });
-
-      $("#metrics_citations_tooltip").on("mouseover", function() {
-        $(this).tooltip("show");  
-      });
-
-      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_publications_tooltip").on("mouseover", function() {
-        $("#metrics_citations_tooltip").tooltip("hide");  
-      });
-
-      $("body").on("click", function() {
-        $("#metrics_citations_tooltip").tooltip("hide");  
-      });
- 
     });
 
        
     // Checkboxes functioning
 
-    // When the metrics_downloads input changes
-    $("input[id='metrics_downloads']").on('change', function() {
-      // If it's checked,
-      if( $(this).is(':checked') ) {
-        // Show the options for alltime and recent downloads
-        $('#metrics_downloads_options').show();
-        // If the option for recent downloads is checked, 
-        if( $("input[id='metrics_downloads_options_recent']").is(':checked')) {
-          // Show the Recent Downloads Chart
-          $('#charts_downloads_recent').show();
-        }
-        // Same logic for alltime downloads
-        if( $("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $('#charts_downloads_alltime').show();
-        }
-      } else {
-        // Otherwise, hide the options and the checkboxes
-        $('#metrics_downloads_options').hide();
-        $('#charts_downloads_recent').hide();
-        $('#charts_downloads_alltime').hide();
-      }
-      // The reset the height of the metrics column
-      resetMetricColumnHeight();
-    });
-
-    $("input[id='metrics_downloads_options_recent']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#charts_downloads_recent').show();
-      }          
-      else {
-        $('#charts_downloads_recent').hide();
-        if( !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
-          $('#metrics_downloads_options').hide();
-          $("input[id='metrics_downloads']").prop('checked', false);
-        }
-      }    
-      resetMetricColumnHeight();
-    });
-    
-
-    $("input[id='metrics_downloads_options_alltime']").on('change', function() {
-      if( $("input[id='metrics_downloads']").is(':checked') && $(this).is(':checked') ) {
-          $('#charts_downloads_alltime').show();
-      }          
-      else {
-        $('#charts_downloads_alltime').hide();
-        if( !$("input[id='metrics_downloads_options_recent']").is(':checked') ) {
-          $('#metrics_downloads_options').hide();
-          $("input[id='metrics_downloads']").prop('checked', false);
-        }
-      }
-      resetMetricColumnHeight();
-    });
-
-    $("input[id='metrics_publications']").on('change', function() {
-      if( $(this).is(':checked') ) {
-          $('#charts_publications').show();
-      }          
-      else {
-        $('#charts_publications').hide();
-      }
-      resetMetricColumnHeight();
-    });
-
+    // citations
     $("input[id='metrics_citations']").on('change', function() {
       if( $(this).is(':checked') ) {
           $('#charts_citations').show();
@@ -372,38 +281,66 @@
       resetMetricColumnHeight();   
     });
 
+    // same year downloads
+    $("input[id='metrics_downloads_options_recent']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#charts_downloads_recent').show();
+      }          
+      else {
+        $('#charts_downloads_recent').hide();
+      }
+      resetMetricColumnHeight();
+    });
+
+    // all year downloads
+    $("input[id='metrics_downloads_options_alltime']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#charts_downloads_alltime').show();
+      }          
+      else {
+        $('#charts_downloads_alltime').hide();
+      }
+      resetMetricColumnHeight();
+    });
+
+    // publications
+    $("input[id='metrics_publications']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#charts_publications').show();
+      }          
+      else {
+        $('#charts_publications').hide();
+      }
+      resetMetricColumnHeight();
+    });
+
+
+
     $('#metrics_show_all').on('click', function() {
+      $('#charts_citations').show();
       $('#charts_downloads_recent').show();
       $('#charts_downloads_alltime').show();
       $('#charts_publications').show();
-      $('#charts_citations').show();
 
-      $("#metrics_downloads_options").show();
-
-      $("input[id='metrics_downloads']").prop('checked', true);
+      $("input[id='metrics_citations']").prop('checked', true);
       $("input[id='metrics_downloads_options_recent']").prop('checked', true);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
       $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_citations']").prop('checked', true);
 
       resetMetricColumnHeight();
     });
 
 
     $('#metrics_hide_all').on('click', function() {
+      $('#charts_citations').hide();
       $('#charts_downloads_recent').hide();
       $('#charts_downloads_alltime').hide();
       $('#charts_publications').hide();
-      $('#charts_citations').hide();
 
-      $("#metrics_downloads_options").hide();
-      $("#metrics_downloads_options_recent_types").hide();
-
-      $("input[id='metrics_downloads']").prop('checked', false);
+      $("input[id='metrics_citations']").prop('checked', false);
       $("input[id='metrics_downloads_options_recent']").prop('checked', false);
       $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
       $("input[id='metrics_publications']").prop('checked', false);
-      $("input[id='metrics_citations']").prop('checked', false);
 
       resetMetricColumnHeight();
     });
@@ -626,8 +563,8 @@
             data: tableData,
             columns: [
                 { title: "Provider" },
-                { title: "Recent (JR5)" },
-                { title: "All Time (JR1)" },
+                { title: "Same Year Downloads" },
+                { title: "All Year Downloads" },
                 { title: "Publications" },
                 { title: "Citations" },
             ]
@@ -641,8 +578,8 @@
     $(document).ready(function () {
       // Start out by hiding the last three graphs and the spinner
       $('#charts_downloads_alltime').hide();
+      $('#charts_downloads_recent').hide();
       $('#charts_publications').hide();
-      $('#charts_citations').hide();
       $("#loader").hide();
 
       // Asynchronously fetch and load the data into the graphs and table

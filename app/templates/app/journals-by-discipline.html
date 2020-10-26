@@ -129,21 +129,21 @@
 
             <div class="custom-control custom-checkbox mb-2">
               <a id="metrics_citations_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_citations">
+                <input type="checkbox" class="custom-control-input" id="metrics_citations" checked>
                 <label class="custom-control-label" for="metrics_citations">Citations by UVA Authors</label>
               </a>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
               <a id="metrics_downloads_options_recent_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent" checked>
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent">
                 <label class="custom-control-label" for="metrics_downloads_options_recent">Same Year Downloads</label>
               </a>
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
               <a id="metrics_downloads_options_alltime_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime" checked>
+                <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_alltime">
                 <label class="custom-control-label" for="metrics_downloads_options_alltime">All Year Downloads</label>
               </a>
             </div>
@@ -315,12 +315,12 @@
         $("#metrics_publications_tooltip").tooltip("hide");  
       });
 
- 
     });
 
     
     // Checkboxes functioning
 
+    // citations
     $("input[id='metrics_citations']").on('change', function() {
       if( $(this).is(':checked') ) {
           $('#charts_citations').show();
@@ -331,6 +331,7 @@
       resetMetricColumnHeight();   
     });
 
+    // same year downloads
     $("input[id='metrics_downloads_options_recent']").on('change', function() {
       if( $(this).is(':checked') ) {
           $('#charts_downloads_recent').show();
@@ -341,6 +342,7 @@
       resetMetricColumnHeight();
     });
 
+    // all year downloads
     $("input[id='metrics_downloads_options_alltime']").on('change', function() {
       if( $(this).is(':checked') ) {
           $('#charts_downloads_alltime').show();
@@ -351,6 +353,7 @@
       resetMetricColumnHeight();
     });
 
+    // publications
     $("input[id='metrics_publications']").on('change', function() {
       if( $(this).is(':checked') ) {
           $('#charts_publications').show();
@@ -595,6 +598,22 @@
                   fontWeight: 10,
                   fontSize: 20,
                 }
+            },
+            plotOptions: {
+             series: {
+               dataLabels: {
+                  enabled: true,
+                  inside: true,
+                  align: 'right',
+                  color: 'black',
+                  formatter: function () {
+                        if(chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
+               //         return chartConfig.xAxis.providerMap[this.x];
+                      return "Elsevier";
+                   } else return "";
+                  },
+               },
+              },
             },
             tooltip: {
                 formatter: function() {
