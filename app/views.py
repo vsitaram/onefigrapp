@@ -17,8 +17,8 @@ from .onefigr_analysis import Data
 data = Data()
 
 def login(request):
-	template_name = 'app/login.html'
-	return render(request, template_name)
+    template_name = 'app/login.html'
+    return render(request, template_name)
 
 def index(request):
     template_name = 'app/index.html'
@@ -33,11 +33,14 @@ def tools(request):
     template_name = 'app/tools.html'
     return render(request, template_name)
 
+
+
 # Journals by Discipline
 
 def journals_by_discipline(request):
     template_name = 'app/journals-by-discipline.html'
     return render(request, template_name)
+
 
 @api_view(['GET'])
 def disciplines_list(request):
@@ -64,28 +67,39 @@ def get_journals_and_disciplines_map(request):
     if request.method == 'GET':
         return Response(data.journals_and_disciplines_map())        
 
-# Journals by Provider
 
-def journals_by_provider(request):
-    template_name = 'app/journals-by-provider.html'
-    return render(request, template_name)  
+
+# Journals by Discipline - Elsevier
+
+def journals_by_discipline_elsevier(request):
+    template_name = 'app/journals-by-discipline-elsevier.html'
+    return render(request, template_name)   
 
 @api_view(['GET'])
-def providers_list(request):
+def disciplines_list(request):
     # Instantiate Data object to fetch data 
     # data = Data()
     
     if request.method == 'GET':
-        return Response(data.get_providers_list())
+        return Response(data.get_disciplines_list())
 
 @api_view(['GET'])
-def journals_by_provider_chart_data(request, provider):
+def journals_by_discipline_chart_data(request, discipline):
     # Instantiate Data object to fetch data 
     # data = Data()
     
     if request.method == 'GET':
-        query_provider = unquote(provider)
-        return Response(data.journals_by_provider_chart_data(query_provider))
+        query_discipline = unquote(discipline)
+        return Response(data.journals_by_discipline_chart_data(discipline)) 
+
+@api_view(['GET'])
+def get_journals_and_disciplines_map(request):
+    # Instantiate Data object to fetch data 
+    # data = Data()
+    
+    if request.method == 'GET':
+        return Response(data.journals_and_disciplines_map()) 
+
 
 # Providers by Metric
 
