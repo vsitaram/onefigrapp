@@ -17,7 +17,7 @@ urlpatterns = [
 	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
 	path('journals-by-discipline/disciplines-list/', views.disciplines_list), 
 
-	# Journals By Provider
+	# Journals By Discipline (Elsevier)
 	path('journals-by-discipline-elsevier/', views.journals_by_discipline_elsevier, name='journalsByDisciplineElsevier'),
 	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
 	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),

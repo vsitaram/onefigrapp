@@ -84,7 +84,7 @@ def disciplines_list(request):
         return Response(data.get_disciplines_list())
 
 @api_view(['GET'])
-def journals_by_discipline_chart_data(request, discipline):
+def journals_by_discipline_chart_data_elsevier(request, discipline):
     # Instantiate Data object to fetch data 
     # data = Data()
     

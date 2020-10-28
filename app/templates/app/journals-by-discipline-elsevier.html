@@ -538,16 +538,39 @@
       $("#discipline_select").change();
     }
 
-    function removeZeroCountsAndAssociatedJournals(journals, counts) {
+// WHY ISNT THIS WORKING????
+    function removeZeroCountsAndAssociatedJournals(journals, counts, providers) {
       // Removes zero freqencies from data. No journals with zero use are shown in results.
+      // Also removes all journals that are NOT in the Elsevier provider
+      
+      //console.log('Round1', journals.length, counts.length, providers.length);
+
       var index = counts.length - 1;
       while(counts[index] == 0) {
         journals.pop();
         counts.pop();
+        providers.pop()
         index--;
       }
 
-      return [journals, counts];
+      //console.log('Round2', journals.length, counts.length, providers.length);
+
+/*
+      for (let name of providers) {
+        if (!name.includes('Elsevier')) {
+          journals.pop();
+          counts.pop();
+          providers.pop();
+        }
+      }
+*/
+      //console.log('Round3', journals.length, counts.length, providers.length);
+      //console.log(' ');
+
+      //console.log(providers);
+
+
+      return [journals, counts, providers];
     }
 
     
@@ -558,8 +581,11 @@
       // console.log(rawCategories);
       var rawCounts = Object.values(chartData[metric].metricMap);
       // console.log(rawCounts);
+      var rawProviders = Object.values(chartData[metric].providerMap)
+      // console.log(rawProviders);
 
-      var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
+
+      var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts), [].concat(rawProviders));
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
