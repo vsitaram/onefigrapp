@@ -312,8 +312,6 @@ class Data():
         respective percentage of the total metric each journal represents. 
         """
 
-    
-
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
 
@@ -358,10 +356,11 @@ class Data():
         respective percentage of the total metric each journal represents. 
         """
 
-    
-
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
+
+        #this line actually filters the data only to include the Elsevier provider
+        original_1figr_data_with_disciplines = original_1figr_data_with_disciplines[original_1figr_data_with_disciplines['Provider'] == 'Elsevier']
 
         journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
 
@@ -403,21 +402,6 @@ class Data():
 
         return providers_list
 
-    def journals_by_provider_chart_data(self, provider):
-        """
-        Given a provider, this returns a dictionary of all of the data related to the provider that's necessary for the charts in Journals by Provider.
-
-        The sorted (decreasing) dictionary contains values for each of the four metrics for the provider.
-        """
-
-        metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
-        necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
-        journals_by_provider_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()
-        # divide by 2 to avoid double counting the provider for the journal group
-        journals_by_provider_df = journals_by_provider_sums.loc[provider] / 2 
-        journals_by_provider_sorted = journals_by_provider_df.sort_values(ascending=False).fillna(0)
-
-        return journals_by_provider_sorted.to_dict()
 
 
     def providers_by_metric_chart_data(self):
@@ -452,5 +436,8 @@ class Data():
         }
 
         return ret
+
+
+
 
 

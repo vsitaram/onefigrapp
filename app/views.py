@@ -90,7 +90,7 @@ def journals_by_discipline_chart_data_elsevier(request, discipline):
     
     if request.method == 'GET':
         query_discipline = unquote(discipline)
-        return Response(data.journals_by_discipline_chart_data(discipline)) 
+        return Response(data.journals_by_discipline_chart_data_elsevier(discipline)) 
 
 @api_view(['GET'])
 def get_journals_and_disciplines_map(request):
