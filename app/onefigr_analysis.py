@@ -315,6 +315,9 @@ class Data():
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
 
+        original_1figr_data_with_disciplines = original_1figr_data_with_disciplines[original_1figr_data_with_disciplines['Provider'] == 'Elsevier']
+
+
         journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
