@@ -311,12 +311,8 @@ class Data():
         providers. providerMap is used to show the provider for each journal in the bar charts. Lastly, percentageMap is a dictionary of journal titles and the 
         respective percentage of the total metric each journal represents. 
         """
-
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
-
-        original_1figr_data_with_disciplines = original_1figr_data_with_disciplines[original_1figr_data_with_disciplines['Provider'] == 'Elsevier']
-
 
         journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
 
@@ -358,7 +354,6 @@ class Data():
         providers. providerMap is used to show the provider for each journal in the bar charts. Lastly, percentageMap is a dictionary of journal titles and the 
         respective percentage of the total metric each journal represents. 
         """
-
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
 

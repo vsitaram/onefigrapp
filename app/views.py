@@ -41,31 +41,35 @@ def journals_by_discipline(request):
     template_name = 'app/journals-by-discipline.html'
     return render(request, template_name)
 
-
-@api_view(['GET'])
-def disciplines_list(request):
-    # Instantiate Data object to fetch data 
-    # data = Data()
-    
-    if request.method == 'GET':
-        return Response(data.get_disciplines_list())
-
 @api_view(['GET'])
 def journals_by_discipline_chart_data(request, discipline):
     # Instantiate Data object to fetch data 
     # data = Data()
-    
     if request.method == 'GET':
         query_discipline = unquote(discipline)
-        return Response(data.journals_by_discipline_chart_data(discipline)) 
+        return Response(data.journals_by_discipline_chart_data(discipline))
 
 @api_view(['GET'])
 def get_journals_and_disciplines_map(request):
     # Instantiate Data object to fetch data 
     # data = Data()
-    
     if request.method == 'GET':
-        return Response(data.journals_and_disciplines_map())        
+        return Response(data.journals_and_disciplines_map()) 
+
+@api_view(['GET'])
+def disciplines_list(request):
+    # Instantiate Data object to fetch data 
+    # data = Data()
+    if request.method == 'GET':
+        return Response(data.get_disciplines_list())
+
+ 
+
+       
+
+
+
+
 
 
 
@@ -76,14 +80,6 @@ def journals_by_discipline_elsevier(request):
     return render(request, template_name)   
 
 @api_view(['GET'])
-def disciplines_list(request):
-    # Instantiate Data object to fetch data 
-    # data = Data()
-    
-    if request.method == 'GET':
-        return Response(data.get_disciplines_list())
-
-@api_view(['GET'])
 def journals_by_discipline_chart_data_elsevier(request, discipline):
     # Instantiate Data object to fetch data 
     # data = Data()
@@ -92,13 +88,29 @@ def journals_by_discipline_chart_data_elsevier(request, discipline):
         query_discipline = unquote(discipline)
         return Response(data.journals_by_discipline_chart_data_elsevier(discipline)) 
 
-@api_view(['GET'])
-def get_journals_and_disciplines_map(request):
-    # Instantiate Data object to fetch data 
-    # data = Data()
-    
-    if request.method == 'GET':
-        return Response(data.journals_and_disciplines_map()) 
+
+#@api_view(['GET'])
+#def disciplines_list(request):
+#    # Instantiate Data object to fetch data 
+#    # data = Data()
+#    
+#    if request.method == 'GET':
+#        return Response(data.get_disciplines_list())
+
+
+#@api_view(['GET'])
+#def get_journals_and_disciplines_map(request):
+#    # Instantiate Data object to fetch data 
+#    # data = Data()
+#    
+#    if request.method == 'GET':
+#        return Response(data.journals_and_disciplines_map()) 
+
+
+
+
+
+
 
 
 # Providers by Metric
