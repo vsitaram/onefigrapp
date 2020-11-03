@@ -13,15 +13,16 @@ urlpatterns = [
 
 	# Journals by Discipline
 	path('journals-by-discipline/', views.journals_by_discipline, name='journalsByDiscipline'),
-	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
-	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
 	path('journals-by-discipline/disciplines-list/', views.disciplines_list), 
+	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
+	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
 
 	# Journals By Discipline (Elsevier)
 	path('journals-by-discipline-elsevier/', views.journals_by_discipline_elsevier, name='journalsByDisciplineElsevier'),
-	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data_elsevier),
-	path('journals-by-discipline/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
-	path('journals-by-discipline/disciplines-list/', views.disciplines_list), 
+	path('journals-by-discipline-elsevier/disciplines-list/', views.disciplines_list), 
+	path('journals-by-discipline-elsevier/journals-and-disciplines-map/', views.get_journals_and_disciplines_map),
+	path('journals-by-discipline-elsevier/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data_elsevier),
+
 
 	# Providers By Metric
 	path('providers-by-metric/', views.providers_by_metric, name='providersByMetric'),	

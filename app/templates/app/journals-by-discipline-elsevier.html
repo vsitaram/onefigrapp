@@ -558,6 +558,8 @@
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle, totalCountName) {
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
+      console.log(chartData);
+
       var rawCategories = Object.keys(chartData[metric].metricMap);
       // console.log(rawCategories);
       var rawCounts = Object.values(chartData[metric].metricMap);
@@ -606,22 +608,6 @@
                   fontSize: 20,
                 }
             },
-            plotOptions: {
-             series: {
-               dataLabels: {
-                  enabled: true,
-                  inside: true,
-                  align: 'right',
-                  color: 'black',
-                  formatter: function () {
-                        if(chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
-               //         return chartConfig.xAxis.providerMap[this.x];
-                      return "Elsevier";
-                   } else return "";
-                  },
-               },
-              },
-            },
             tooltip: {
                 formatter: function() {
                     var s = '<small>'+ this.x + '</small>';
@@ -635,8 +621,6 @@
 
                     if (provName.includes('Elsevier')) {
                         s += '<br/>' + 'Provider: ' + '<strong>' + chartConfig.xAxis.providerMap[this.x] + '</strong>';
-                        
-
                     }
                     else { 
                         s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
@@ -783,10 +767,9 @@
 
       // Asynchronously fetch and load the disciplines dropdown
       $.ajax({
-        url : "/app/journals-by-discipline/disciplines-list",
+        url : "/app/journals-by-discipline-elsevier/disciplines-list",
         dataType: "json",
         success : function (data) {
-          // console.log("/app/journals-by-discipline/disciplines-list")
           var disciplinesList = data;
           // console.log(disciplinesList);
           loadDisciplinesList(disciplinesList); 
@@ -795,7 +778,7 @@
 
       // Asynchronously fetch and load the default Architecture data into the graphs and table
       $.ajax({
-        url : "/app/journals-by-discipline/chart-data/Architecture/",
+        url : "/app/journals-by-discipline-elsevier/chart-data/Architecture/",
         dataType: "json",
         beforeSend: function () {
           // Show the spinner while fetching
@@ -810,7 +793,6 @@
         },
         success : function (data) {
           // Load the data into the graphs
-          // console.log("/app/journals-by-discipline/chart-data/Architecture/");
           chartData = data;
           // console.log(metrics);
           setCharts(chartData, metrics);
@@ -822,10 +804,9 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "/app/journals-by-discipline/journals-and-disciplines-map/",
+        url : "/app/journals-by-discipline-elsevier/journals-and-disciplines-map/",
         dataType: "json",
         success : function (data) {
-          // console.log("/app/journals-by-discipline/journals-and-disciplines-map/");
           createDisciplineSearch(data);
         }
       });
@@ -839,7 +820,7 @@
         // into the graphs and table.
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
-          var queryURL = "/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
+          var queryURL = "/app/journals-by-discipline-elsevier/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
           // console.log(queryURL);
           $.ajax({
             url : queryURL,
@@ -854,7 +835,6 @@
               $("#loader").hide();
             },
             success : function (data) {
-              // console.log("/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/");
               chartData = data;
               // console.log(chartData);
               setCharts(chartData, metrics);
