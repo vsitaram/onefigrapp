@@ -561,9 +561,9 @@
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
       var rawCategories = Object.keys(chartData[metric].metricMap);
-      // console.log(rawCategories);
+      //console.log(rawCategories);
       var rawCounts = Object.values(chartData[metric].metricMap);
-      // console.log(rawCounts);
+      //console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
 
@@ -585,10 +585,10 @@
     function setCharts(chartData, metrics) {
       // Creates the charts
 
-      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Publications', 'Journals by Citations'];
-      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
-      seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
-      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
+      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Citations', 'Journals by Publications'];
+      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Citations', 'Number of Publications'];
+      seriesNames = ["Downloads", "Downloads", "Citations", "Publications"];
+      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_citations_chart', 'charts_publications_chart'];
       
       $.each(chartTitles, function (i, item) {
 
@@ -707,6 +707,15 @@
       //                      [7, 4]
     }
 
+
+    function swapElement(array, indexA, indexB) {
+    // this is used to swap elements for final reodering of data for data tables view
+
+      var tmp = array[indexA];
+      array[indexA] = array[indexB];
+      array[indexB] = tmp;
+    }
+
     function setTable(chartData, metrics) {
       // Sets the data for the table.
 
@@ -739,7 +748,17 @@
         newArr.push(provider);
       }
       tableCounts.push(newArr);
+
+
+      //tableCounts holds data in arrays, read for charting in the data table, but first data needs to be reordered somewhat
+      // putting citations at 1 index
+      swapElement(tableCounts, 5, 1);
+      // putting publications at 2 index
+      swapElement(tableCounts, 4, 2);
+      // putting all time downloads at same year downloads(count) at 3 index
+      swapElement(tableCounts, 5, 3);
   
+      console.log(tableCounts);
 
       // Rotate the table data so that the columns have all of the values
       var tableData = rotate(tableCounts);
@@ -760,11 +779,11 @@
             data: tableData,
             columns: [
                 { title: "Journal Title" },
+                { title: "Citations" },
+                { title: "Publications" },
                 { title: "Same Year Downloads (Count)" },
                 { title: "Same Year Downloads (Percent)" },
                 { title: "All Year Downloads" },
-                { title: "Publications" },
-                { title: "Citations" },
                 { title: "Provider(s)" },
             ]
         } );

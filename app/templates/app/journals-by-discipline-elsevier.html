@@ -562,7 +562,7 @@
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle, totalCountName) {
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
-      // console.log(chartData);
+      // console.log(metric);
 
       var rawCategories = Object.keys(chartData[metric].metricMap);
       // console.log(rawCategories);
@@ -573,6 +573,8 @@
 
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
+
+      console.log(categoriesAndCounts);
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
@@ -592,10 +594,11 @@
     function setCharts(chartData, metrics) {
       // Creates the charts
 
-      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Publications', 'Journals by Citations'];
-      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Publications', 'Number of Citations'];
-      seriesNames = ["Downloads", "Downloads", "Publications", "Citations"];
-      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_publications_chart', 'charts_citations_chart'];
+      //
+      chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Citations', 'Journals by Publications'];
+      yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Citations', 'Number of Publications'];
+      seriesNames = ["Downloads", "Downloads", "Citations", "Publications"];
+      chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_citations_chart', 'charts_publications_chart'];
       
       $.each(chartTitles, function (i, item) {
 
@@ -663,6 +666,7 @@
         };
 
         var config = setChartData(chartConfig, metrics[i], chartData, chartTitles[i], seriesNames[i], yAxisTitles[i], totalCountName);
+
 
         var chart = new Highcharts.chart(chartIDs[i], config);
 
