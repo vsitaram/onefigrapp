@@ -421,7 +421,7 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id') + ": " + heights);
+
             });
 
             // Add 64 pixels to that total height            
@@ -438,7 +438,7 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id')+ ": " + heights);
+
             });
             
             // Subtract that total from the height of the window (not document)
@@ -464,7 +464,7 @@
         if(i == 0) newOption.selected = true;
         newOption.innerHTML = disciplinesList[i];
         $( "#discipline_select" ).append(newOption);
-        // console.log(disciplinesList[i]);
+
       }
     }    
 
@@ -486,8 +486,6 @@
               event.preventDefault();
               $('#result-container').text('');
               var text = item.display + " is in the <b>" + journalsAndDisciplinesMap[item.display] + "</b> discipline";
-              // console.log(item);
-              // console.log(text);
               $('#result_message_container').html(text);
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
               $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
@@ -523,13 +521,11 @@
 
       // Get the discipline the user is searching for
       var discipline = $('#result_discipline').text();
-      // console.log(discipline);
 
       // Find and set the discipline in the dropdown
       var options = $('#discipline_select').children();
       if (discipline != null) {
         for (var i = 1; i < options.length; i++) {
-          // console.log(options[i].value);
           if (discipline.localeCompare(options[i].value) == 0) {
             options[i].selected = true;
             break;
@@ -561,9 +557,7 @@
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
       var rawCategories = Object.keys(chartData[metric].metricMap);
-      //console.log(rawCategories);
       var rawCounts = Object.values(chartData[metric].metricMap);
-      //console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
 
@@ -627,7 +621,7 @@
 
                     $.each(this.points, function(i, point) {
                         s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
-                        // console.log(point);
+
                     });
                     
                     var provName = chartConfig.xAxis.providerMap[this.x];
@@ -752,14 +746,14 @@
 
       //tableCounts holds data in arrays, read for charting in the data table, but first data needs to be reordered somewhat
       // putting citations at 1 index
-      swapElement(tableCounts, 5, 1);
+      swapElement(tableCounts, 4, 1);
       // putting publications at 2 index
-      swapElement(tableCounts, 4, 2);
-      // putting all time downloads at same year downloads(count) at 3 index
-      swapElement(tableCounts, 5, 3);
-  
-      console.log(tableCounts);
+      swapElement(tableCounts, 5, 2);
+      // putting same year downloads (count) at index 3
+      swapElement(tableCounts, 4, 3);
+      //the others are in the correct index location
 
+  
       // Rotate the table data so that the columns have all of the values
       var tableData = rotate(tableCounts);
 
@@ -804,9 +798,7 @@
         url : "/app/journals-by-discipline/disciplines-list",
         dataType: "json",
         success : function (data) {
-          // console.log("/app/journals-by-discipline/disciplines-list")
           var disciplinesList = data;
-          // console.log(disciplinesList);
           loadDisciplinesList(disciplinesList); 
         }
       });
@@ -828,9 +820,8 @@
         },
         success : function (data) {
           // Load the data into the graphs
-          // console.log("/app/journals-by-discipline/chart-data/Architecture/");
           chartData = data;
-          // console.log(metrics);
+          
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
@@ -843,7 +834,6 @@
         url : "/app/journals-by-discipline/journals-and-disciplines-map/",
         dataType: "json",
         success : function (data) {
-          // console.log("/app/journals-by-discipline/journals-and-disciplines-map/");
           createDisciplineSearch(data);
         }
       });
@@ -858,7 +848,6 @@
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           var queryURL = "/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
-          // console.log(queryURL);
           $.ajax({
             url : queryURL,
             dataType: "json",
@@ -872,9 +861,9 @@
               $("#loader").hide();
             },
             success : function (data) {
-              // console.log("/app/journals-by-discipline/chart-data/" + encodeURI($("#discipline_select").val()) + "/");
               chartData = data;
-              // console.log(chartData);
+              
+
               setCharts(chartData, metrics);
               setTable(chartData, metrics);
               // resetMetricColumnHeight();
@@ -933,13 +922,12 @@
 
         // Load the checkboxes to their original states
         $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
-        // console.log($('#citations-checked')[0].innerHTML);
+
         $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
-        // console.log($('#publications-checked')[0].innerHTML);
+
         $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
-        // console.log($('#recent-checked')[0].innerHTML);
+
         $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
-        // console.log($('#alltime-checked')[0].innerHTML);
 
 
 
