@@ -306,10 +306,10 @@ class Data():
         """
         Given a discpline, this returns a dictionary of all of the data related to the discipline that's necessary for the charts in Journals by Disipline.
 
-        For each metric, there are sorted (decreasing) dictionaries called metricMap, providerMap, and percentageMap. metricMap is a dictionary of journal titles and the respective
-        metric. metricMap is used for the frequencies and categories of the bar charts. providerMap is a dictionary of journal titles and the respective 
-        providers. providerMap is used to show the provider for each journal in the bar charts. Lastly, percentageMap is a dictionary of journal titles and the 
-        respective percentage of the total metric each journal represents. 
+        For each metric, there are sorted (decreasing) dictionaries called metricMap, providerMap, and percentageMap. 
+            metricMap is a dictionary of journal titles and the respective metric. metricMap is used for the frequencies and categories of the bar charts. 
+            providerMap is a dictionary of journal titles and the respective providers. providerMap is used to show the provider for each journal in the bar charts. 
+            Lastly, percentageMap is a dictionary of journal titles and the respective percentage of the total metric each journal represents. 
         """
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Journal', 'Provider', 'Discipline']
         original_1figr_data_with_disciplines = self._make_disciplines_column()[necessary_columns]
@@ -317,14 +317,24 @@ class Data():
         journals_by_discipline_df = original_1figr_data_with_disciplines.groupby(['Discipline'], as_index=False)
 
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
+        
         ret = {}
 
         for metric in metrics:
 
             group = journals_by_discipline_df.get_group(discipline)[['Journal','Provider', metric]].groupby(['Journal']).agg({metric: 'sum', 'Provider': lambda x: ', '.join(x)})
+            
+            #For 'References' and 'Publications', for some reason the data was being multiplied by the number of providers.
+            #these if statements devide the value by the number of providers
+            if metric == 'References':
+                group['References'] = group['References']/group['Provider'].str.split(",").str.len()
+
+            if metric == 'Papers':
+                group['Papers'] = group['Papers']/group['Provider'].str.split(",").str.len()
+
             group_sorted = group.sort_values(by=[metric], ascending=False, kind='mergesort').fillna(0)
-            # print(group_sorted.to_string())
-            # print(group_sorted.columns)
+            
+
             metric_map = group_sorted[metric].to_dict()
             provider_map = group_sorted['Provider'].to_dict()
             percentages = group_sorted[metric] / group_sorted[metric].sum() * 100
