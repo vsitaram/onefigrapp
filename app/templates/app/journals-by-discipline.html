@@ -434,8 +434,10 @@
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
 
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
+
       $.typeahead({
         input: '#modal_journal_input',
+        maxItem: 250,    //shows number of items in the dropdown menu
         order: "desc",
         source: {
             data: journalTitles

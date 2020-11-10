@@ -376,7 +376,6 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id') + ": " + heights);
             });
 
             // Add 64 pixels to that total height            
@@ -393,7 +392,6 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id')+ ": " + heights);
             });
             
             // Subtract that total from the height of the window (not document)
@@ -419,7 +417,6 @@
         if(i == 0) newOption.selected = true;
         newOption.innerHTML = disciplinesList[i];
         $( "#discipline_select" ).append(newOption);
-        // console.log(disciplinesList[i]);
       }
     }    
 
@@ -431,6 +428,7 @@
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
       $.typeahead({
         input: '#modal_journal_input',
+        maxItem: 250,  //shows number of items in the dropdown menu
         order: "desc",
         source: {
             data: journalTitles
@@ -441,8 +439,6 @@
               event.preventDefault();
               $('#result-container').text('');
               var text = item.display + " is in the <b>" + journalsAndDisciplinesMap[item.display] + "</b> discipline";
-              // console.log(item);
-              // console.log(text);
               $('#result_message_container').html(text);
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
               $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
@@ -478,13 +474,11 @@
 
       // Get the discipline the user is searching for
       var discipline = $('#result_discipline').text();
-      // console.log(discipline);
 
       // Find and set the discipline in the dropdown
       var options = $('#discipline_select').children();
       if (discipline != null) {
         for (var i = 1; i < options.length; i++) {
-          // console.log(options[i].value);
           if (discipline.localeCompare(options[i].value) == 0) {
             options[i].selected = true;
             break;
@@ -519,19 +513,14 @@
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle, totalCountName) {
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
-      // console.log(metric);
 
       var rawCategories = Object.keys(chartData[metric].metricMap);
-      // console.log(rawCategories);
       var rawCounts = Object.values(chartData[metric].metricMap);
-      // console.log(rawCounts);
       var rawProviders = Object.values(chartData[metric].providerMap)
-      // console.log(rawProviders);
 
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
 
-      console.log(categoriesAndCounts);
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
@@ -578,7 +567,6 @@
 
                     $.each(this.points, function(i, point) {
                         s += '<br/>'+ point.series.name +': '+ '<b>' + point.y + '</b>' + ' (' + chartConfig.xAxis.percentageMap[this.x] + '% of All ' + point.series.name + ')';
-                        // console.log(point);
                     });
                     
                     var provName = chartConfig.xAxis.providerMap[this.x];
@@ -764,7 +752,6 @@
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
-          // console.log(disciplinesList);
           loadDisciplinesList(disciplinesList); 
         }
       });
@@ -787,7 +774,6 @@
         success : function (data) {
           // Load the data into the graphs
           chartData = data;
-          // console.log(metrics);
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
@@ -814,7 +800,6 @@
         
         if( $("#discipline_select").val() != $("#discipline_select").children().first().val() ) {
           var queryURL = "/app/journals-by-discipline-elsevier/chart-data/" + encodeURI($("#discipline_select").val()) + "/";
-          // console.log(queryURL);
           $.ajax({
             url : queryURL,
             dataType: "json",
@@ -829,10 +814,8 @@
             },
             success : function (data) {
               chartData = data;
-              // console.log(chartData);
               setCharts(chartData, metrics);
               setTable(chartData, metrics);
-              // resetMetricColumnHeight();
               
             }
           });
@@ -887,13 +870,9 @@
 
         // Load the checkboxes to their original states
         $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
-        // console.log($('#citations-checked')[0].innerHTML);
         $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
-        // console.log($('#publications-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
-        // console.log($('#recent-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
-        // console.log($('#alltime-checked')[0].innerHTML);
 
 
 

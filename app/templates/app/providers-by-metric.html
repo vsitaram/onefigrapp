@@ -331,7 +331,6 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id') + ": " + heights);
             });
 
             // Add 64 pixels to that total height            
@@ -348,7 +347,6 @@
               paddingTop = parseInt($(this).css("paddingTop").substring(0, $(this).css("paddingTop").indexOf('px')));
               paddingBottom = parseInt($(this).css("paddingBottom").substring(0, $(this).css("paddingBottom").indexOf('px')));
               heights = heights + marginTop + marginBottom + paddingTop + paddingBottom + $(this).height();
-              // console.log($(this).attr('id')+ ": " + heights);
             });
             
             // Subtract that total from the height of the window (not document)
@@ -380,12 +378,9 @@
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle) {
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
       var rawCategories = Object.keys(chartData.providersByMetric[metric])
-      // console.log(rawCategories);
       var rawCounts = Object.values(chartData.providersByMetric[metric]);
-      // console.log(rawCounts);
 
       var categoriesAndCounts = removeZeroCountsAndAssociatedJournals([].concat(rawCategories), [].concat(rawCounts));
-      // console.log(categoriesAndCounts);
 
       config.title.text = chartTitle;
       config.xAxis.categories = categoriesAndCounts[0];
@@ -508,12 +503,9 @@
         }
         tableCounts.push(newArr);
       }  
-      console.log(tableCounts);  
 
       // Rotate the table data so that the columns have all of the values
       var tableData = rotate(tableCounts);
-      console.log("TABLE DATA");
-      console.log(tableData)  
 
       // If the table already exists
       if ( $.fn.dataTable.isDataTable( '#dt-select' ) ) {
@@ -566,9 +558,7 @@
         },
         success : function (data) {
           // Load the data into the graphs
-          console.log("/app/providers-by-metric/chart-data/");
           chartData = data;
-          console.log(chartData);
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
@@ -631,15 +621,10 @@
 
         // Load the checkboxes to their original states
         $("input[id='metrics_downloads']").prop('checked', ($('#downloads-checked')[0].innerHTML == 'true'));
-        // console.log($('#downloads-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_recent']").prop('checked', ($('#recent-checked')[0].innerHTML == 'true'));
-        // console.log($('#recent-checked')[0].innerHTML);
         $("input[id='metrics_downloads_options_alltime']").prop('checked', ($('#alltime-checked')[0].innerHTML == 'true'));
-        // console.log($('#alltime-checked')[0].innerHTML);
         $("input[id='metrics_publications']").prop('checked', ($('#publications-checked')[0].innerHTML == 'true'));
-        // console.log($('#publications-checked')[0].innerHTML);
         $("input[id='metrics_citations']").prop('checked', ($('#citations-checked')[0].innerHTML == 'true'));
-        // console.log($('#citations-checked')[0].innerHTML);
 
         // If both of the downloads metrics are unchecked, just hide those options
         if( !$("input[id='metrics_downloads_options_recent']").is(':checked') && !$("input[id='metrics_downloads_options_alltime']").is(':checked') ) {
