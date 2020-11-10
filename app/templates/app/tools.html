@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>UVA RDS - Tools</title>
+  <title>UVA Library Journal Usage Data</title>
   
   {% load static %}
 
@@ -36,9 +36,12 @@
   <main class="mt-5">
     <div class="container">
       <h3 class="mb-4 wow fadeIn" data-wow-delay="0.2s">Tools</h3>
-      <p>Discipline - Each journal is classified as belonging to one, and only one, discipline. Disciplines were derived by our team from the original three-level classification system from 1Science/Science-Metrix using Domain-->Field-->Subfield. The original Science-Metrix classification had 6 domains, 22 fields, and 176 subfields; we have attempted to map the Fields more closely to areas of study at UVA. These resulting “Disciplines” were formed from the Fields by adding or removing Subfields. There are 20 mutually exclusive Disciplines.</p>
+      <p><b>What is this?</b> - This tool was built to allow UVA affiliates to explore usage of various journal packages. The project falls under the Sustainable Scholarship initiative at the UVA Library. </p>
+      <p><b>Tools</b> - Several tools are available within this site, primarily broken into two types: Journals by Discipline, and Providers by Metric. </p>
+      <p><b>Journals by Discipline</b> - Each journal is classified as belonging to one, and only one, discipline. Disciplines were derived from the original three-level classification system from 1Science/Science-Metrix using Domain-->Field-->Subfield. The original Science-Metrix classification had 6 domains, 22 fields, and 176 subfields; we have attempted to map the Fields more closely to areas of study at UVA. These resulting “disciplines” were formed from the Fields by adding or removing Subfields. There are 20 mutually exclusive disciplines.
+      Interdisciplinary journals can be challenging to locate in this discipline hierarchy; therefore, we have provided a search link within the Journals by Discipline tools.</p>
       <p>Interdisciplinary journals can be challenging to locate in this Discipline hierarchy; therefore, we have provided a “Which discipline is my journal in?” link under the Disciplines dropdown menu within the Journals by Discipline Tool.</p>
-      <p>Provider - Each journal is made available to UVA by one or more providers (publisher, aggregator, or archive). The list of providers include publishers like Elsevier, Sage, and SpringerNature, but also aggregators like EBSCO and ProQuest, as well as the archive JSTOR. Some individual journals change publishers over time, or are available both through a publisher and an aggregator/archive. This means that a single journal may show up in the listing for more than one provider. There are 35 providers in the 1Science dataset.</p>
+      <p><b>Providers by Metric</b> - Each journal is made available to UVA by one or more providers. The list of providers include publishers like Elsevier, Sage, and SpringerNature, but also aggregators like EBSCO and ProQuest, as well as the archive JSTOR. Some individual journals change publishers over time, or are available both through a publisher and an aggregator/archive. This means that a single journal may show up in the listing for more than one provider. There are 35 providers listed in this dataset.</p>
 
       <hr class="orange lighten-4 my-5">
 
@@ -55,7 +58,7 @@
                           <div class="card-body container">
                               <div class="row mb-2">
                                   <!--Title-->
-                                  <h4 class="card-title col text-center">Journals by Discipline (Includes All Providers)</h4>      
+                                  <h4 class="card-title col text-center" style="height:2.75rem;">Journals by Discipline</h4> 
                               </div>
                               
                               <div class="row mb-2">
@@ -67,7 +70,7 @@
 
                               <div class="row d-flex justify-content-center">
                                   <div>
-                                      <a href="{% url 'app:journalsByDiscipline' %}" class="btn btn-sm text-white" style="background-color: #E57200">Get Started</a>  
+                                      <a href="{% url 'app:journalsByDiscipline' %}" class="btn btn-sm text-white" style="background-color: #E57200">EXPLORE JOURNALS BY DISCIPLINE</a>  
                                   </div>
                               </div> 
                                                   
@@ -85,7 +88,7 @@
                           <div class="card-body container">
                               <div class="row mb-2">
                                   <!--Title-->
-                                  <h4 class="card-title col text-center">Journals by Discipline (Elsevier Only)</h4>      
+                                  <h4 class="card-title col text-center" style="height:2.75rem;">Journals by Discipline (Elsevier only)</h4>      
                               </div>
                               
                               <div class="row mb-2">
@@ -97,7 +100,7 @@
 
                               <div class="row d-flex justify-content-center">
                                   <div>
-                                      <a href="{% url 'app:journalsByDisciplineElsevier' %}" class="btn btn-sm text-white" style="background-color: #E57200">Get Started</a>  
+                                      <a href="{% url 'app:journalsByDisciplineElsevier' %}" class="btn btn-sm text-white" style="background-color: #E57200">EXPLORE ELSEVIER JOURNALS</a>  
                                   </div>
                               </div> 
                                                   
@@ -115,19 +118,19 @@
                           <div class="card-body container">
                               <div class="row mb-2">
                                   <!--Title-->
-                                  <h4 class="card-title col text-center">Providers By Metric (Includes all Providers)</h4>      
+                                  <h4 class="card-title col text-center" style="height:2.75rem;">Providers By Metric</h4>      
                               </div>
                               
                               <div class="row mb-2">
                                   <!--Text-->
                                   <p class="card-text col-12 text-center">
-                                      See how journal providers are used across the University.
+                                      See how journal providers are used across the University. All providers included.
                                   </p>
                               </div> 
 
                               <div class="row d-flex justify-content-center">
                                   <div>
-                                      <a href="{% url 'app:providersByMetric' %}" class="btn btn-sm text-white" style="background-color: #E57200">Get Started</a>  
+                                      <a href="{% url 'app:providersByMetric' %}" class="btn btn-sm text-white" style="background-color: #E57200">EXPLORE PROVIDERS</a>  
                                   </div>
                               </div> 
                                                   

@@ -49,8 +49,8 @@
     <!-- Description Section Start -->
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Providers by Metric Tool</h3>
-      <p>This tool is used to compare a chosen metric across all the providers. The provider is the entity which provides electronic access to each journal. Here, you can choose a metric (downloads, publications, citations) and all journals within each discipline are aggregated to produce a total number, which is then displayed per provider.</p>
-      <p class="mb-4" ><a href="{% url 'app:descriptions' %}">Data Description Page</a></p>
+      <p>This tool is used to compare a chosen metric across all the providers. The provider is the entity which grants electronic access to each journal. To use this tool, choose citations, downloads, or publications below. Aggregated numbers, broken down by provider, will be shown on the right.</p>
+      <p class="mb-4" ><a href="{% url 'app:descriptions' %}">Learn more about this data</a></p>
     </div>
     <!-- Description Section End -->
 
@@ -85,6 +85,13 @@
             </div>
 
             <div class="custom-control custom-checkbox mb-2">
+              <a id="metrics_publications_tooltip">
+                <input type="checkbox" class="custom-control-input" id="metrics_publications">
+                <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
+              </a>
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
               <a id="metrics_downloads_options_recent_tooltip">
                 <input type="checkbox" class="custom-control-input" id="metrics_downloads_options_recent">
                 <label class="custom-control-label" for="metrics_downloads_options_recent">Same Year Downloads</label>
@@ -98,22 +105,11 @@
               </a>
             </div>
 
-            <div class="custom-control custom-checkbox mb-2">
-              <a id="metrics_publications_tooltip">
-                <input type="checkbox" class="custom-control-input" id="metrics_publications">
-                <label class="custom-control-label" for="metrics_publications">Publications by UVA Authors</label>
-              </a>
-            </div>
+
 
 
           </div>
           <div class="row align-items-center mb-4">
-            <div class="ml-xl-3 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_show_all">Show All</button>
-            </div>
-            <div class="ml-xl-n5 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_hide_all">Hide All</button>
-            </div>
           </div>
           <!-- Metrics Checkboxes and Buttons End -->
         </div>
@@ -135,6 +131,14 @@
 
           <!-- Downloads -->
           <div id="charts">
+            <!-- Citations -->
+            <div class="mt-5" id="charts_citations">
+              <div class="chart" id="charts_citations_chart"></div>
+            </div>
+            <!-- Publications -->
+            <div class="mt-5" id="charts_publications">
+              <div class="chart" id="charts_publications_chart"></div>
+            </div>
             <!-- Recent Downloads -->
             <div class="mt-3" id="charts_downloads_recent">
               <div class="chart" id="charts_downloads_recent_chart"></div>
@@ -143,14 +147,8 @@
             <div class="mt-5" id="charts_downloads_alltime">
               <div class="chart" id="charts_downloads_alltime_chart"></div>
             </div>
-            <!-- Publications -->
-            <div class="mt-5" id="charts_publications">
-              <div class="chart" id="charts_publications_chart"></div>
-            </div>
-            <!-- Citations -->
-            <div class="mt-5" id="charts_citations">
-              <div class="chart" id="charts_citations_chart"></div>
-            </div>
+
+
           </div>
           <!-- Table Start-->
           <div id="downloads_table" class="mt-3 ml-4">
@@ -189,7 +187,7 @@
       $("#metrics_citations_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
+        title: "Number of references made by UVA researchers to an article from a given journal.",
         trigger: "manual" 
       });
 
@@ -205,11 +203,31 @@
         $("#metrics_citations_tooltip").tooltip("hide");  
       });
       
+      // Publications
+      $("#metrics_publications_tooltip").tooltip( {
+        html: true,
+        placement: "right",
+        title: "Number of articles published in peer-reviewed journals for which at least one author was affiliated with UVA.",
+        trigger: "manual" 
+      });
+
+      $("#metrics_publications_tooltip").on("mouseover", function() {
+        $(this).tooltip("show");  
+      });
+
+      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
+      $("body").on("click", function() {
+        $("#metrics_publications_tooltip").tooltip("hide");  
+      });
+
       //Same Year Downloads
       $("#metrics_downloads_options_recent_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published during 2017. This is a measurement of the currency of the materials being accessed, and can help to show the relative use of current material vs. older material for a particular journal (see “All Year Downloads”). Note: the original 1Science dataset was obtained in 2018, with data through 2017. <a href="#""><em>Learn More</em></a>',
+        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published during 2017. This is a measurement of the currency of the materials being accessed, and can help to show the relative use of current material vs. older material for a particular journal (see “All Year Downloads”). Note: the original 1Science dataset was obtained in 2018, with data through 2017.',
         trigger: "manual" 
       });
 
@@ -229,7 +247,7 @@
       $("#metrics_downloads_options_alltime_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published in any year (2017 and earlier). This gives us a sense of the overall usage by UVA users. We can compare the ratio of “Same Year Downloads” to “All Year Downloads” to gain insight into the relative importance to UVA users of current content versus older content for a particular journal. <a href="#"><em>Learn More</em></a>',
+        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published in any year (2017 and earlier). This gives us a sense of the overall usage by UVA users. We can compare the ratio of “Same Year Downloads” to “All Year Downloads” to gain insight into the relative importance to UVA users of current content versus older content for a particular journal.',
         trigger: "manual" 
       });
 
@@ -243,26 +261,6 @@
 
       $("body").on("click", function() {
         $("#metrics_downloads_options_alltime_tooltip").tooltip("hide");  
-      });
-
-      // Publications
-      $("#metrics_publications_tooltip").tooltip( {
-        html: true,
-        placement: "right",
-        title: "Number of articles published in peer-reviewed journals for which at least one author was affiliated with UVA. <a href='#'><em>Learn More</em></a>",
-        trigger: "manual" 
-      });
-
-      $("#metrics_publications_tooltip").on("mouseover", function() {
-        $(this).tooltip("show");  
-      });
-
-      $("#metrics_downloads_tooltip, #metrics_downloads_options_recent_tooltip, #metrics_downloads_options_alltime_tooltip, #metrics_citations_tooltip").on("mouseover", function() {
-        $("#metrics_publications_tooltip").tooltip("hide");  
-      });
-
-      $("body").on("click", function() {
-        $("#metrics_publications_tooltip").tooltip("hide");  
       });
 
     });
@@ -279,6 +277,17 @@
         $('#charts_citations').hide();
       } 
       resetMetricColumnHeight();   
+    });
+
+    // publications
+    $("input[id='metrics_publications']").on('change', function() {
+      if( $(this).is(':checked') ) {
+          $('#charts_publications').show();
+      }          
+      else {
+        $('#charts_publications').hide();
+      }
+      resetMetricColumnHeight();
     });
 
     // same year downloads
@@ -300,48 +309,6 @@
       else {
         $('#charts_downloads_alltime').hide();
       }
-      resetMetricColumnHeight();
-    });
-
-    // publications
-    $("input[id='metrics_publications']").on('change', function() {
-      if( $(this).is(':checked') ) {
-          $('#charts_publications').show();
-      }          
-      else {
-        $('#charts_publications').hide();
-      }
-      resetMetricColumnHeight();
-    });
-
-
-
-    $('#metrics_show_all').on('click', function() {
-      $('#charts_citations').show();
-      $('#charts_downloads_recent').show();
-      $('#charts_downloads_alltime').show();
-      $('#charts_publications').show();
-
-      $("input[id='metrics_citations']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-
-      resetMetricColumnHeight();
-    });
-
-
-    $('#metrics_hide_all').on('click', function() {
-      $('#charts_citations').hide();
-      $('#charts_downloads_recent').hide();
-      $('#charts_downloads_alltime').hide();
-      $('#charts_publications').hide();
-
-      $("input[id='metrics_citations']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
-      $("input[id='metrics_publications']").prop('checked', false);
-
       resetMetricColumnHeight();
     });
 
