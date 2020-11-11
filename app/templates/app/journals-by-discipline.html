@@ -50,9 +50,12 @@
     <!-- Description Section Start -->
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Journals by Discipline Tool</h3>
-      <p>This tool provides a view of the usage of our collection in a specified Discipline. Select a Discipline and then view metrics available for each title assigned to that Discipline. All journals by Discipline which have at least one (1) of the chosen metric (downloads, publications, citations) are displayed. Journals which have zero (0) use for a given metric are not displayed. To see all journals by metric within a discipline (including those with zero usage), select the “Show Data in Table” view option, just below the Disciplines dropdown menu. 
+      <p>This tool provides a view of journal usage within a specified discipline. To use the tool below, select a discipline on the left. Metrics available for each title assigned to that discipline will appear on the right.
+      All journals with one or more downloads, publications, or citations are displayed. Journals which have zero downloads, publications, or citations are not displayed. To see all journals within a discipline (including those with zero usage), select the “Show Data in Table” option on the left side. 
+      Each journal is classified as belonging to one, and only one, discipline. Use the “Find my Journal” button below to search for disciplines associated with specific journal titles.
+
       </p>
-      <p class="mb-4" ><a href="{% url 'app:descriptions' %}">Data Description Page</a></p>
+      <p class="mb-4" ><a href="{% url 'app:descriptions' %}">Learn more about this data</a></p>
     </div>
     <!-- Description Section End -->
 
@@ -109,12 +112,6 @@
             </div>
 
 
-            <p class="ml-xl-3 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn text-white"
-              <a href="" data-toggle="modal" data-target="#modalLoginForm">Find my journal</button></a>
-            </p>
-
-
             <!-- Find Discipline for Your Journal End -->
 
             <!-- Table Toggle Start -->
@@ -157,13 +154,11 @@
 
           </div>
           <div class="row align-items-center mb-4" id="metrics_buttons">
-            <div class="ml-xl-3 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_show_all">Show All</button>
-            </div>
-            <div class="ml-xl-n5 text-center pt-3 col-xl-6">
-              <button type="button" class="btn btn-sm text-white" id="metrics_hide_all">Hide All</button>
-            </div>
           </div>
+
+            <p class="ml-xl-3 text-center pt-3 col-xl-6">
+              <button type="button" class="btn btn text-white" a href="" data-toggle="modal" data-target="#modalLoginForm">Find my journal</button></a>
+            </p>
 
           <!-- Metrics Checkboxes and Buttons End -->
         </div>
@@ -240,7 +235,7 @@
       $("#metrics_citations_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: "Number of references made by UVA researchers to an article from a given journal. <a href='#'><em>Learn More</em></a>",
+        title: "Number of references made by UVA researchers to an article from a given journal.",
         trigger: "manual" 
       });
 
@@ -260,7 +255,7 @@
       $("#metrics_publications_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: "Number of articles published in peer-reviewed journals for which at least one author was affiliated with UVA. <a href='#'><em>Learn More</em></a>",
+        title: "Number of articles published in peer-reviewed journals for which at least one author was affiliated with UVA.",
         trigger: "manual" 
       });
 
@@ -280,7 +275,7 @@
       $("#metrics_downloads_options_recent_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published during 2017. This is a measurement of the currency of the materials being accessed, and can help to show the relative use of current material vs. older material for a particular journal (see “All Year Downloads”). Note: the original 1Science dataset was obtained in 2018, with data through 2017. <a href="#""><em>Learn More</em></a>',
+        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published during 2017. This is a measurement of the currency of the materials being accessed, and can help to show the relative use of current material vs. older material for a particular journal (see “All Year Downloads”). Note: the original 1Science dataset was obtained in 2018, with data through 2017.',
         trigger: "manual" 
       });
 
@@ -300,7 +295,7 @@
       $("#metrics_downloads_options_alltime_tooltip").tooltip( {
         html: true,
         placement: "right",
-        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published in any year (2008-2017). This gives us a sense of the overall usage by UVA users. We can compare the ratio of “Same Year Downloads” to “All Year Downloads” to gain insight into the relative importance to UVA users of current content versus older content for a particular journal. <a href="#"><em>Learn More</em></a>',
+        title: 'Number of article downloads by UVA users which occurred in 2017 for articles published in any year (2008-2017). This gives us a sense of the overall usage by UVA users. We can compare the ratio of “Same Year Downloads” to “All Year Downloads” to gain insight into the relative importance to UVA users of current content versus older content for a particular journal.',
         trigger: "manual" 
       });
 
@@ -364,41 +359,6 @@
       else {
         $('#charts_downloads_alltime').hide();
       }
-      resetMetricColumnHeight();
-    });
-
-
-    //show all button
-    $('#metrics_show_all').on('click', function() {
-      $('#charts_citations').show();
-      $('#charts_publications').show();
-      $('#charts_downloads_recent').show();
-      $('#charts_downloads_alltime').show();
-
-      
-      $("input[id='metrics_citations']").prop('checked', true);
-      $("input[id='metrics_publications']").prop('checked', true);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', true);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', true);
-
-
-      resetMetricColumnHeight();
-    });
-
-    //hide all button
-    $('#metrics_hide_all').on('click', function() {
-      $('#charts_citations').hide();
-      $('#charts_publications').hide();
-      $('#charts_downloads_recent').hide();
-      $('#charts_downloads_alltime').hide();
-
-
-      $("input[id='metrics_citations']").prop('checked', false);
-      $("input[id='metrics_publications']").prop('checked', false);
-      $("input[id='metrics_downloads_options_recent']").prop('checked', false);
-      $("input[id='metrics_downloads_options_alltime']").prop('checked', false);
-      
-
       resetMetricColumnHeight();
     });
 
@@ -474,8 +434,10 @@
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
 
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
+
       $.typeahead({
         input: '#modal_journal_input',
+        maxItem: 250,    //shows number of items in the dropdown menu
         order: "desc",
         source: {
             data: journalTitles
