@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>UVA RDS - Journals by Discipline (Elsevier Only)</title>
+  <title>UVA Library Journal Usage Data</title>
 
   {% load static %}
 
@@ -50,7 +50,7 @@
     <!-- Description Section Start -->
     <div class="container my-5" id="title_description">
       <h3 class="mb-4">Journals by Discipline Tool (Elsevier Only)</h3>
-      <p>This tool provides a view of journal usage within a specified discipline from Elsevier only. To use the tool below, select a discipline on the left. Metrics available for each title assigned to that discipline will appear on the right.
+      <p>This tool provides a view of journal usage within a specified discipline from Elsevier <i>only</i>. To use the tool below, select a discipline on the left. Metrics available for each title assigned to that discipline will appear on the right.
       All journals with one or more citations, downloads, or publications are displayed. Journals which have zero citations, downloads, or publications are not displayed. To see all journals within a discipline (including those with zero usage), select the “Show Data in Table” option on the left side. 
       Each journal is classified as belonging to one, and only one, discipline. Use the “Find my Journal” button below to search for disciplines associated with specific journal titles.
  
@@ -428,7 +428,7 @@
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
       $.typeahead({
         input: '#modal_journal_input',
-        maxItem: 250,  //shows number of items in the dropdown menu
+        maxItem: 100,  //shows number of items in the dropdown menu
         order: "desc",
         source: {
             data: journalTitles
