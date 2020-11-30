@@ -417,7 +417,6 @@
 
     function loadDisciplinesList(disciplinesList) {
       // Loads the list of disciplines into the dropdown.
-
       for(var i = 0; i < disciplinesList.length; i++) {
         var newOption = document.createElement('option');
         newOption.setAttribute('value', disciplinesList[i]);
@@ -706,14 +705,16 @@
       tableCounts.push(newArr);
 
 
-      //tableCounts holds data in arrays, read for charting in the data table, but first data needs to be reordered somewhat
+      // tableCounts holds data in arrays, read for charting in the data table, but first data needs to be reordered somewhat
+      // original order of data: journal name, citations, publications, same year downloads (jr5), all year downloads (jr1), current year percentage, provider name
       // putting citations at 1 index
       swapElement(tableCounts, 4, 1);
       // putting publications at 2 index
       swapElement(tableCounts, 5, 2);
-      // putting same year downloads (count) at index 3
+      // putting same year downloads (jr5) at 3 index
       swapElement(tableCounts, 4, 3);
-      //the others are in the correct index location
+      // puttinng same year downloads (jr5) percentage at 4 index
+      swapElement(tableCounts, 5, 4);
 
   
       // Rotate the table data so that the columns have all of the values
@@ -783,7 +784,7 @@
         success : function (data) {
           // Load the data into the graphs
           chartData = data;
-          
+    
           setCharts(chartData, metrics);
           setTable(chartData, metrics);
           
