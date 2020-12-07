@@ -438,10 +438,16 @@
               // Automatically display the result in the modal
               event.preventDefault();
               $('#result-container').text('');
-              var text = item.display + " is in the <b>" + journalsAndDisciplinesMap[item.display] + "</b> discipline";
+              var disciplineName = journalsAndDisciplinesMap[item.display][0]
+              var providerName = journalsAndDisciplinesMap[item.display][1]
+
+              if (providerName === 'Elsevier') { var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the <b>" + providerName + "</b> provider."; 
+              } else { var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the  <b>" + providerName + "</b> provider. <br> <br> You will not see this journal here as this is the <b> Elsevier only </b> tool. To view this journal please use the all providers tool."
+              }
+              
               $('#result_message_container').html(text);
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
-              $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
+              $('#result_discipline').html(journalsAndDisciplinesMap[item.display][0]);
               $('#result_discipline').hide();
           },
           onResult: function (node, query, result, resultCount) {
@@ -787,6 +793,7 @@
 
       $.ajax({
         url : "/app/journals-by-discipline-elsevier/journals-and-disciplines-map/",
+        //THIS URL TRACES BACK TO onefigr_analysis.py > journals_and_disciplines_map() function. Also traces through views.py and urls.py
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
