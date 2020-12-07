@@ -296,9 +296,12 @@ class Data():
 
         This will be used for the modal in Journals By Discipline that users use to find the discipline of their journal.
         """
-        necessary_columns = ['Journal', 'Discipline']
+        necessary_columns = ['Journal', 'Discipline', 'Provider']
         figr_data = self.onefigr_dataset_with_disciplines[necessary_columns].dropna()
-        journals_and_disciplines_dict = dict(zip(figr_data['Journal'], figr_data['Discipline']))
+
+
+        #WHAT I NEED TO DO IS LIKE THIS EXAMPLE: {Journal: (Discipline, Provider)}
+        journals_and_disciplines_dict = dict(zip(figr_data['Journal'], zip(figr_data['Discipline'], figr_data['Provider'])))
 
         return journals_and_disciplines_dict
 

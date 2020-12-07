@@ -416,6 +416,9 @@
 
 
     function loadDisciplinesList(disciplinesList) {
+      console.log('Disciplines List');
+      console.log(disciplinesList);
+
       // Loads the list of disciplines into the dropdown.
       for(var i = 0; i < disciplinesList.length; i++) {
         var newOption = document.createElement('option');
@@ -427,10 +430,13 @@
       }
     }    
 
+
     function createDisciplineSearch(journalsAndDisciplinesMap) {
       // Sets up the modal that allows users to find the discipline of their journal.
       // When the user inputs their journal, the result shows up automatically.
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
+      console.log('Create Discipline Search');
+      console.log(journalsAndDisciplinesMap);
 
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
 
@@ -446,7 +452,10 @@
               // Automatically display the result in the modal
               event.preventDefault();
               $('#result-container').text('');
-              var text = item.display + " is in the <b>" + journalsAndDisciplinesMap[item.display] + "</b> discipline";
+              var disciplineName = journalsAndDisciplinesMap[item.display][0]
+              var providerName = journalsAndDisciplinesMap[item.display][1]
+
+              var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the <b>" + providerName + "</b> provider.";
               $('#result_message_container').html(text);
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
               $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
