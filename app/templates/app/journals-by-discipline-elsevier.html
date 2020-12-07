@@ -792,7 +792,7 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "/app/journals-by-discipline-elsevier/journals-and-disciplines-map/",
+        url : "/app/journals-by-discipline-elsevier/journals-disciplines-and-providers-map/",
         //THIS URL TRACES BACK TO onefigr_analysis.py > journals_and_disciplines_map() function. Also traces through views.py and urls.py
         dataType: "json",
         success : function (data) {

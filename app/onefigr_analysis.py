@@ -290,20 +290,19 @@ class Data():
 
         return disciplines_list
 
-    def journals_and_disciplines_map(self):
+    def journals_disciplines_and_providers_map(self):
         """
-        Returns a dictionary of journals and the associated discipline.
+        Returns a dictionary of journals and the associated discipline and provider in a list.
+        ex: {New England Journal of Medicine: ['Health Sciences', 'Elsevier']}
 
-        This will be used for the modal in Journals By Discipline that users use to find the discipline of their journal.
+        This will be used for the modal in 'Find My Journal' that users use to find the discipline of their journal.
         """
         necessary_columns = ['Journal', 'Discipline', 'Provider']
         figr_data = self.onefigr_dataset_with_disciplines[necessary_columns].dropna()
 
+        journals_disciplines_and_providers_dict = dict(zip(figr_data['Journal'], zip(figr_data['Discipline'], figr_data['Provider'])))
 
-        #WHAT I NEED TO DO IS LIKE THIS EXAMPLE: {Journal: (Discipline, Provider)}
-        journals_and_disciplines_dict = dict(zip(figr_data['Journal'], zip(figr_data['Discipline'], figr_data['Provider'])))
-
-        return journals_and_disciplines_dict
+        return journals_disciplines_and_providers_dict
 
     def journals_by_discipline_chart_data(self, discipline):
         """

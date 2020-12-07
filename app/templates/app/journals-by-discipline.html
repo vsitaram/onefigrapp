@@ -803,7 +803,7 @@
       $('#downloads_table').hide();
 
       $.ajax({
-        url : "/app/journals-by-discipline/journals-and-disciplines-map/",
+        url : "/app/journals-by-discipline/journals-disciplines-and-providers-map/",
         dataType: "json",
         success : function (data) {
           createDisciplineSearch(data);
