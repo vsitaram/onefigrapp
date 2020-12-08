@@ -438,11 +438,13 @@
               // Automatically display the result in the modal
               event.preventDefault();
               $('#result-container').text('');
+              
+              var journalName = item.display
               var disciplineName = journalsAndDisciplinesMap[item.display][0]
               var providerName = journalsAndDisciplinesMap[item.display][1]
 
-              if (providerName === 'Elsevier') { var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the <b>" + providerName + "</b> provider."; 
-              } else { var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the  <b>" + providerName + "</b> provider. <br> <br> You will not see this journal here as this is the <b> Elsevier only </b> tool. To view this journal please use the all providers tool."
+              if (providerName === 'Elsevier') { var text = "<b>" + journalName + "</b> is in the <b>" + disciplineName + "</b> discipline, provided by <b>" + providerName + "</b>."; 
+              } else { var text = "<b>" + journalName + "</b> is in the <b>" + disciplineName + "</b> discipline, provided by <b>" + providerName + "</b>. <br> <br> You will not see this journal here as this is the <b> Elsevier only </b> version of the tool. To view this journal, please use the general <b> Journals By Discipline </b> tool."
               }
               
               $('#result_message_container').html(text);

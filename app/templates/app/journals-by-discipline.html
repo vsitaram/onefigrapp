@@ -452,10 +452,12 @@
               // Automatically display the result in the modal
               event.preventDefault();
               $('#result-container').text('');
+              
+              var journalName = item.display
               var disciplineName = journalsAndDisciplinesMap[item.display][0]
               var providerName = journalsAndDisciplinesMap[item.display][1]
 
-              var text = item.display + " is in the <b>" + disciplineName + "</b> discipline and the <b>" + providerName + "</b> provider.";
+              var text = "<b>" + journalName + "</b> is in the <b>" + disciplineName + "</b> discipline, provided by <b>" + providerName + "</b>.";
               $('#result_message_container').html(text);
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
               $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
