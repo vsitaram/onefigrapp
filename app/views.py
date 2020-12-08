@@ -50,11 +50,11 @@ def journals_by_discipline_chart_data(request, discipline):
         return Response(data.journals_by_discipline_chart_data(discipline))
 
 @api_view(['GET'])
-def get_journals_and_disciplines_map(request):
+def get_journals_disciplines_and_providers_map(request):
     # Instantiate Data object to fetch data 
     # data = Data()
     if request.method == 'GET':
-        return Response(data.journals_and_disciplines_map()) 
+        return Response(data.journals_disciplines_and_providers_map()) 
 
 @api_view(['GET'])
 def disciplines_list(request):
