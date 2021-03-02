@@ -54,25 +54,54 @@ class Data():
         self.original_onefigr_dataset = self._get_data()
         # To be used by the other pages
         self.onefigr_dataset_with_disciplines = self._make_disciplines_column()
+        
+        #to be used to get supplemental dataset, which allows comparison for Elsevier journals UVA doesn't subscribe to anymore
+        self.supplemental_data = self._get_supplemental_data()
+
+
+    def _check_AWS_bucket(self):
+        """
+        Checks: available AWS s3 buckets in UVA library organization,
+                name of current working AWS bucket,
+                files inside current working AWS bucket
+        """
+        #print names of all AWS buckets in UVA library organization
+        s3 = boto3.resource('s3')
+        for bucket in s3.buckets.all():
+           print(bucket.name)
+        print()
+
+        #print name of current AWS bucket
+        print(settings.AWS_STORAGE_BUCKET_NAME)
+        print()
+        
+        #print names of all files in AWS S3 bucket
+        s3 = boto3.resource('s3')
+        my_bucket = s3.Bucket('onefigrappdev.lib.virginia.edu')
+        for file in my_bucket.objects.all():
+           print(file.key)
+
+
 
     def _get_data(self):
         """
-        Fetches dataset from AWS and imports as Pandas DataFrame.
+        Fetches main dataset (JournalsPerProvider_withoutQuotes.xls) from AWS and imports as Pandas DataFrame.
         """
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        
+    
+        #this retrieves data from AWS 
         object_key = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'JournalsPerProvider_withoutQuotes.xls'
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
         data = obj['Body'].read()
         df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
         df['Provider'] = df['Provider'].apply(lambda x: self.provider_names_corrections[x])
-        #print(df)
         return df
+
 
     def _make_disciplines_column(self):
         """
-        Returns Pandas DataFrame of the originial dataset that includes the disciplines column. 
+        Returns Pandas DataFrame of the original dataset (JournalsPerProvider_withoutQuotes.xls) that includes the disciplines column. 
 
         The disciplines column in a combination of various permutations of each journal's domain, field, subfield columns. 
         The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
@@ -422,8 +451,7 @@ class Data():
         dictionaries of the providers and the respective values for each metric. providersByMetric is used for the categories and frequencies
         of the graphs. journalCountMap is a dictionary of providers and the respective number of journals in each provider.
         """
-
-
+    
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
         providers_by_metric_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()     
@@ -446,6 +474,88 @@ class Data():
         }
 
         return ret
+
+
+
+    def _get_supplemental_data(self):
+        """
+        Fetches datasets from AWS
+        supplemental dataset = (ElsevierNotSubscribed.xls) 
+        original dataset = (JournalsPerProvider_withoutQuotes.xls)
+        
+        The supplemental dataset is a list of Elsevier titles that UVA no longer subscribes to (as of Spring 2021)
+        For records in the supplemental dataset, we have an ISSN number. The journal name column not completely correct.
+        
+        Using the ISSN of the supplemental dataset, we take the matching ISSN from the original dataset to construct the 'compare' column
+        Then, using the 'compare' column in the supplemental dataset, we merge the original dataset, for the purposes of getting the original journal title
+
+        We drop the unneeded columns after merging and finally return a list of journal titles (from the original dataset)
+        """
+        
+        client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+
+        #get original dataset
+        object_key1 = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'JournalsPerProvider_withoutQuotes.xls'
+        obj1 = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key1)
+        data1 = obj1['Body'].read()
+        df_original = pd.read_excel(io.BytesIO(data1), encoding='utf-8', skiprows=8)
+
+        # #get supplemental dataset
+        object_key2 = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'ElsevierNotSubscribed.xls'
+        obj2 = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key2)
+        data2 = obj2['Body'].read()
+        df_supplemental = pd.read_excel(io.BytesIO(data2), encoding='utf-8')
+
+        #iterate through ISSNs of df_supplemental to find their match in ISSNs of df_original
+        match_col = df_original['ISSN/eISSN'].astype(str)
+        partial_col = df_supplemental['issn'].astype(str)
+
+        series = []
+        for partial_str in partial_col:
+            for match_str in match_col:
+                if partial_str in match_str:
+                    series.append(match_str)
+                    break  #there should not be duplicates, but just in case this matches first value found in match_col
+            else:   #for loop did not break = no match found
+                series.append(None)
+
+        #construct 'compare' column in df_supplemental from series of issns
+        df_supplemental['compare'] = series
+
+        #converts empty values to None value
+        df_supplemental['compare'].replace('', None, inplace=True)
+
+        #use original dataset ISSN to get journal title ['Journal'] into supplemental dataframe, via a merge
+        df_supplemental = pd.merge(df_supplemental, df_original, how='left', left_on='compare', right_on='ISSN/eISSN')
+
+        #for some reason the previous step produces a lot of duplicate results, which are dropped
+        df_supplemental = df_supplemental.drop_duplicates(subset='issn', keep='last')
+
+        #drop unneccessary columns from dataframe
+        columns_to_drop = ['Unnamed: 0','Sort','Provider','Type','Downloads \nJR1 2014-2017','Downloads JR1 2017','Downloads JR5 2017 in 2017','References',
+        'Papers','Synthetic \nUsage','Journal \nTier','Subfield \nTier','Duplicates (JR1 2017)','Papers.1','%','Trend','Papers.2','ARIF',
+        'Domain','Field','Subfield',2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,'2008.1','2009.1','2010.1','2011.1','2012.1','2013.1',
+        '2014.1','2015.1','2016.1','2017.1','2008.2','2009.2','2010.2','2011.2','2012.2','2013.2','2014.2','2015.2','2016.2','2017.2','2008.3',
+        '2009.3','2010.3','2011.3','2012.3','2013.3','2014.3','2015.3','2016.3','2017.3','2008.4','2009.4','2010.4','2011.4','2012.4','2013.4',
+        '2014.4','2015.4','2016.4','2017.4','2015.5','2016.5','2017.5',2018,'Unnamed: 77','Unnamed: 78']
+
+        df_supplemental.drop(columns_to_drop, inplace=True, axis=1)
+
+        #makes final list of journal titles for use later
+        journal_titles_list = df_supplemental['Journal'].tolist()
+
+        return journal_titles_list
+
+
+
+
+    
+
+
+    
+
+
 
 
 

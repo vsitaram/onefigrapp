@@ -16,12 +16,14 @@ urlpatterns = [
 	path('journals-by-discipline/disciplines-list/', views.disciplines_list), 
 	path('journals-by-discipline/journals-disciplines-and-providers-map/', views.get_journals_disciplines_and_providers_map),
 	path('journals-by-discipline/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data),
+	#add path calling new method (something like get_supplemental_data)
 
 	# Journals By Discipline (Elsevier)
 	path('journals-by-discipline-elsevier/', views.journals_by_discipline_elsevier, name='journalsByDisciplineElsevier'),
 	path('journals-by-discipline-elsevier/disciplines-list/', views.disciplines_list), 
 	path('journals-by-discipline-elsevier/journals-disciplines-and-providers-map/', views.get_journals_disciplines_and_providers_map),
 	path('journals-by-discipline-elsevier/chart-data/<str:discipline>/', views.journals_by_discipline_chart_data_elsevier),
+	#add path calling new method (something like get_supplemental_data)
 
 
 	# Providers By Metric

@@ -416,8 +416,8 @@
 
 
     function loadDisciplinesList(disciplinesList) {
-      console.log('Disciplines List');
-      console.log(disciplinesList);
+      // console.log('Disciplines List');
+      // console.log(disciplinesList);
 
       // Loads the list of disciplines into the dropdown.
       for(var i = 0; i < disciplinesList.length; i++) {
@@ -435,8 +435,8 @@
       // Sets up the modal that allows users to find the discipline of their journal.
       // When the user inputs their journal, the result shows up automatically.
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
-      console.log('Create Discipline Search');
-      console.log(journalsAndDisciplinesMap);
+      //console.log('Create Discipline Search');
+      //console.log(journalsAndDisciplinesMap);
 
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
 
@@ -456,11 +456,13 @@
               var journalName = item.display
               var disciplineName = journalsAndDisciplinesMap[item.display][0]
               var providerName = journalsAndDisciplinesMap[item.display][1]
+              //console.log('hello world');
 
               var text = "<b>" + journalName + "</b> is in the <b>" + disciplineName + "</b> discipline, provided by <b>" + providerName + "</b>.";
               $('#result_message_container').html(text);
+
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
-              $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
+              $('#result_discipline').html(journalsAndDisciplinesMap[item.display][0]);    //discipline is first item in results
               $('#result_discipline').hide();
           },
           onResult: function (node, query, result, resultCount) {
@@ -687,6 +689,8 @@
 
       var categories = Object.keys(chartData[metrics[0]].metricMap);
   
+
+      console.log(chartData);
       // Create a matrix with data of all of the metrics
       var tableCounts = [];
       tableCounts.push(categories);
@@ -804,6 +808,7 @@
 
       $('#downloads_table').hide();
 
+      // This calls data from django API view
       $.ajax({
         url : "/app/journals-by-discipline/journals-disciplines-and-providers-map/",
         dataType: "json",

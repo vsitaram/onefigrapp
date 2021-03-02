@@ -63,12 +63,6 @@ def disciplines_list(request):
     if request.method == 'GET':
         return Response(data.get_disciplines_list())
 
- 
-
-       
-
-
-
 
 
 
