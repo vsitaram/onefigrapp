@@ -593,8 +593,10 @@
                   align: 'right',
                   color: 'black',
                   formatter: function () {
-                        //console.log(chartConfig.xAxis.categories); //this holds the journal name
-                        if(chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
+                    // this.x holds x axis value (chart is tipped sideways)
+                        if (supplementalData.includes(this.x)) {
+                          return "No Longer Available";
+                        } else if (chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
                           return "Elsevier";
                         } else return "";
                       },
