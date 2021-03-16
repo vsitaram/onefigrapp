@@ -420,7 +420,23 @@
       }
     }    
 
+    function getSupplementalData() {
+    // makes ajax call to fetch supplemental journal titles list from 
+
+      var supplementalData = "";
+      $.ajax({
+        url: "/app/journals-by-discipline-elsevier/supplemental-titles-list/",
+        dataType: "json",
+        async: false,
+        success: function(data) {
+          supplementalData = data;
+        }
+      });
+      return supplementalData;
+    }
+
     function createDisciplineSearch(journalsAndDisciplinesMap) {
+      // This is for the 'Find My Journal' button
       // Sets up the modal that allows users to find the discipline of their journal.
       // When the user inputs their journal, the result shows up automatically.
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
@@ -521,7 +537,6 @@
     function setChartData(config, metric, chartData, chartTitle, seriesName, yAxisTitle, totalCountName) {
       // Sets the data into a config JSON object that is used for the charts. Executed in setCharts().
 
-
       var rawCategories = Object.keys(chartData[metric].metricMap);
       var rawCounts = Object.values(chartData[metric].metricMap);
       var rawProviders = Object.values(chartData[metric].providerMap)
@@ -548,7 +563,9 @@
     function setCharts(chartData, metrics) {
       // Creates the charts
 
-      //
+      // gets supplemental journal title list
+      var supplementalData = getSupplementalData();
+
       chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Citations', 'Journals by Publications'];
       yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Citations', 'Number of Publications'];
       seriesNames = ["Downloads", "Downloads", "Citations", "Publications"];
@@ -568,6 +585,22 @@
                   fontWeight: 10,
                   fontSize: 20,
                 }
+            },
+            plotOptions: {
+              series: {
+                dataLabels: {
+                  enabled: true,
+                  inside: true,
+                  align: 'right',
+                  color: 'black',
+                  formatter: function() {
+                    //this.x holds x axis value (chart is turned sideways)
+                    if (supplementalData.includes(this.x)) {
+                      return "Elsevier, no longer available";
+                    } else return "";
+                  }
+                }
+              }
             },
             tooltip: {
                 formatter: function() {

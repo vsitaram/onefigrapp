@@ -63,14 +63,12 @@ def disciplines_list(request):
     if request.method == 'GET':
         return Response(data.get_disciplines_list())
 
- 
-
-       
-
-
-
-
-
+@api_view(['GET'])
+def supplemental_titles_list(request):
+    # Instantiate Data object to fetch data 
+    # data = Data()
+    if request.method == 'GET':
+        return Response(data.get_supplemental_data())
 
 
 # Journals by Discipline - Elsevier

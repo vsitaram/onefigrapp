@@ -416,9 +416,6 @@
 
 
     function loadDisciplinesList(disciplinesList) {
-      console.log('Disciplines List');
-      console.log(disciplinesList);
-
       // Loads the list of disciplines into the dropdown.
       for(var i = 0; i < disciplinesList.length; i++) {
         var newOption = document.createElement('option');
@@ -426,17 +423,30 @@
         if(i == 0) newOption.selected = true;
         newOption.innerHTML = disciplinesList[i];
         $( "#discipline_select" ).append(newOption);
-
       }
-    }    
+    }     
+
+
+    function getSupplementalData() {
+    // makes ajax call to fetch supplemental journal titles list from 
+
+      var supplementalData = "";
+      $.ajax({
+        url: "/app/journals-by-discipline/supplemental-titles-list/",
+        dataType: "json",
+        async: false,
+        success: function(data) {
+          supplementalData = data;
+        }
+      });
+      return supplementalData;
+    }
 
 
     function createDisciplineSearch(journalsAndDisciplinesMap) {
       // Sets up the modal that allows users to find the discipline of their journal.
       // When the user inputs their journal, the result shows up automatically.
       // The result is hidden so that we can pull the value and place it into the dropdown in findAndSetDisciplineForJournal()
-      console.log('Create Discipline Search');
-      console.log(journalsAndDisciplinesMap);
 
       var journalTitles = Object.keys(journalsAndDisciplinesMap);
 
@@ -459,8 +469,9 @@
 
               var text = "<b>" + journalName + "</b> is in the <b>" + disciplineName + "</b> discipline, provided by <b>" + providerName + "</b>.";
               $('#result_message_container').html(text);
+
               // Place the result into result_discipline so that we can use that value to load the dropdown in findAndSetDisciplineForJournal()
-              $('#result_discipline').html(journalsAndDisciplinesMap[item.display]);
+              $('#result_discipline').html(journalsAndDisciplinesMap[item.display][0]);    //discipline is first item in results
               $('#result_discipline').hide();
           },
           onResult: function (node, query, result, resultCount) {
@@ -550,12 +561,15 @@
 
     function setCharts(chartData, metrics) {
       // Creates the charts
+      
+      //gets supplemental journal title list
+      var supplementalData = getSupplementalData();
 
       chartTitles = ['Journals by Downloads - Recent', 'Journals by Downloads - All Years', 'Journals by Citations', 'Journals by Publications'];
       yAxisTitles = ['Number of Downloads', 'Number of Downloads', 'Number of Citations', 'Number of Publications'];
       seriesNames = ["Downloads", "Downloads", "Citations", "Publications"];
       chartIDs = ['charts_downloads_recent_chart', 'charts_downloads_alltime_chart', 'charts_citations_chart', 'charts_publications_chart'];
-      
+
       $.each(chartTitles, function (i, item) {
 
         totalCountName = "totalCount" + i;
@@ -578,14 +592,16 @@
                   inside: true,
                   align: 'right',
                   color: 'black',
-                  formatter: function () {
-                        if(chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
-               //         return chartConfig.xAxis.providerMap[this.x];
-                      return "Elsevier";
-                   } else return "";
+                  formatter: function() {
+                    // this.x holds x axis value (chart is turned sideways)
+                        if (supplementalData.includes(this.x)) {
+                          return "Elsevier, no Longer available";
+                        } else if (chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
+                          return "Elsevier";
+                        } else return "";
+                      },
+                    },
                   },
-               },
-              },
             },
             tooltip: {
                 formatter: function() {
@@ -600,8 +616,6 @@
 
                     if (provName.includes('Elsevier')) {
                         s += '<br/>' + 'Provider: ' + '<strong>' + chartConfig.xAxis.providerMap[this.x] + '</strong>';
-                        
-
                     }
                     else { 
                         s += '<br/>' + 'Provider: ' + chartConfig.xAxis.providerMap[this.x];
@@ -777,7 +791,7 @@
         }
       });
 
-      // Asynchronously fetch and load the default Architecture data into the graphs and table
+      // Asynchronously fetch and load the default Architecture data into the graphs and table      
       $.ajax({
         url : "/app/journals-by-discipline/chart-data/Architecture/",
         dataType: "json",
@@ -797,13 +811,13 @@
           chartData = data;
     
           setCharts(chartData, metrics);
-          setTable(chartData, metrics);
-          
+          setTable(chartData, metrics);          
         }
       });
 
       $('#downloads_table').hide();
 
+      // This calls data from disciplines and providers map from Django API view
       $.ajax({
         url : "/app/journals-by-discipline/journals-disciplines-and-providers-map/",
         dataType: "json",
@@ -813,6 +827,7 @@
       });
 
       resetMetricColumnHeight();
+
     });
 
 

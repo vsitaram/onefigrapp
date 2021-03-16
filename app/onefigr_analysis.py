@@ -54,25 +54,54 @@ class Data():
         self.original_onefigr_dataset = self._get_data()
         # To be used by the other pages
         self.onefigr_dataset_with_disciplines = self._make_disciplines_column()
+        
+        #to be used to get supplemental dataset, which allows comparison for Elsevier journals UVA doesn't subscribe to anymore
+        self.supplemental_data = self.get_supplemental_data()
+
+
+    def _check_AWS_bucket(self):
+        """
+        Checks: available AWS s3 buckets in UVA library organization,
+                name of current working AWS bucket,
+                files inside current working AWS bucket
+        """
+        #print names of all AWS buckets in UVA library organization
+        s3 = boto3.resource('s3')
+        for bucket in s3.buckets.all():
+           print(bucket.name)
+        print()
+
+        #print name of current AWS bucket
+        print(settings.AWS_STORAGE_BUCKET_NAME)
+        print()
+        
+        #print names of all files in AWS S3 bucket
+        s3 = boto3.resource('s3')
+        my_bucket = s3.Bucket('onefigrappdev.lib.virginia.edu')
+        for file in my_bucket.objects.all():
+           print(file.key)
+
+
 
     def _get_data(self):
         """
-        Fetches dataset from AWS and imports as Pandas DataFrame.
+        Fetches main dataset (JournalsPerProvider_withoutQuotes.xls) from AWS and imports as Pandas DataFrame.
         """
         client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
-        
+    
+        #this retrieves data from AWS 
         object_key = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'JournalsPerProvider_withoutQuotes.xls'
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
         data = obj['Body'].read()
         df = pd.read_excel(io.BytesIO(data), encoding='utf-8', skiprows=8)
         df['Provider'] = df['Provider'].apply(lambda x: self.provider_names_corrections[x])
-        #print(df)
         return df
+
 
     def _make_disciplines_column(self):
         """
-        Returns Pandas DataFrame of the originial dataset that includes the disciplines column. 
+        Returns Pandas DataFrame of the original dataset (JournalsPerProvider_withoutQuotes.xls) that includes the disciplines column. 
 
         The disciplines column in a combination of various permutations of each journal's domain, field, subfield columns. 
         The discipline column is meant to be something more analagous to departments at the university. The disciplines column does
@@ -422,8 +451,7 @@ class Data():
         dictionaries of the providers and the respective values for each metric. providersByMetric is used for the categories and frequencies
         of the graphs. journalCountMap is a dictionary of providers and the respective number of journals in each provider.
         """
-
-
+    
         metrics = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers']
         necessary_columns = ['Downloads JR5 2017 in 2017', 'Downloads JR1 2017', 'References', 'Papers', 'Provider']
         providers_by_metric_sums = self.original_onefigr_dataset[necessary_columns].groupby(['Provider']).sum()     
@@ -446,6 +474,42 @@ class Data():
         }
 
         return ret
+
+
+
+    def get_supplemental_data(self):
+        """
+        Fetches datasets from AWS
+        supplemental dataset = (ElsevierNotSubscribed.xls) 
+        
+        The supplemental dataset is a list of Elsevier titles that UVA no longer subscribes to (as of Spring 2021).
+
+        We return a list of the supplemental titles.
+        """
+        
+        client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+
+        #get supplemental dataset
+        object_key = settings.AWS_PRIVATE_FILE_LOCATION + '/' + 'ElsevierNotSubscribed.xls'
+        obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_key)
+        data = obj['Body'].read()
+        df = pd.read_excel(io.BytesIO(data), encoding='utf-8')
+
+        # gets unique journal titles from title column and puts them into list
+        supplemental_titles_list = df['Journal'].unique().tolist()
+
+        return supplemental_titles_list
+
+
+
+
+    
+
+
+    
+
+
 
 
 
