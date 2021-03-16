@@ -592,10 +592,10 @@
                   inside: true,
                   align: 'right',
                   color: 'black',
-                  formatter: function () {
-                    // this.x holds x axis value (chart is tipped sideways)
+                  formatter: function() {
+                    // this.x holds x axis value (chart is turned sideways)
                         if (supplementalData.includes(this.x)) {
-                          return "No Longer Available";
+                          return "Elsevier, no Longer available";
                         } else if (chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
                           return "Elsevier";
                         } else return "";
@@ -613,8 +613,6 @@
                     });
                     
                     var provName = chartConfig.xAxis.providerMap[this.x];
-
-                    var queryURL = "journals-by-discipline/supplemental-titles-list/";
 
                     if (provName.includes('Elsevier')) {
                         s += '<br/>' + 'Provider: ' + '<strong>' + chartConfig.xAxis.providerMap[this.x] + '</strong>';
@@ -790,16 +788,6 @@
         success : function (data) {
           var disciplinesList = data;
           loadDisciplinesList(disciplinesList); 
-        }
-      });
-
-      // Asynchronously fetch and load supplemental dataset. List of elsevier journals we no longer subscribe to
-      $.ajax({
-        url: '/app/journals-by-discipline/supplemental-titles-list/',
-        dataType: "json",
-          success: function(data) {
-          var supplementalData = data;
-          getSupplementalData(supplementalData);
         }
       });
 
