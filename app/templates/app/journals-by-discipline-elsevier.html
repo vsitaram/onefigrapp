@@ -796,11 +796,10 @@
         dataType: "json",
         success : function (data) {
           var disciplinesList = data;
-          // there must not be any elsevier journals in the 'Visual and Performing Arts' discipline. I remove this from the disciplinesList so it is not an option
+
+          // there aren't any elsevier journals in the 'Visual and Performing Arts' discipline. I remove this from the disciplinesList so it is not an option
           var index = disciplinesList.indexOf("Visual & Performing Arts");
           disciplinesList.splice(index, 1);
-          
-          console.log(disciplinesList);
 
           loadDisciplinesList(disciplinesList); 
         }
