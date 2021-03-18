@@ -595,7 +595,7 @@
                   formatter: function() {
                     // this.x holds x axis value (chart is turned sideways)
                         if (supplementalData.includes(this.x)) {
-                          return "Elsevier, no Longer available";
+                          return "Elsevier, not subscribed";
                         } else if (chartConfig.xAxis.providerMap[this.x].includes('Elsevier')) {
                           return "Elsevier";
                         } else return "";
