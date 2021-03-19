@@ -12,7 +12,7 @@ django-cors-headers==3.2.1
 django-heroku==0.3.1
 django-sslserver==0.22
 django-storages==1.9.1
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 docutils==0.15.2
 gunicorn==20.0.4
 holidays==0.10.2
